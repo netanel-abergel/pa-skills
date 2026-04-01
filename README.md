@@ -37,3 +37,4 @@ Skills should be:
 - Example data uses placeholders only
 | [pa-eval](./pa-eval/SKILL.md) | Structured PA performance evaluation and scoring |
 | [self-learning](./self-learning/SKILL.md) | Continuous self-improvement: capture, reflect, update behavior |
+| [spawn-subagent](./spawn-subagent/SKILL.md) | Delegate long or blocking tasks to isolated subagents — keeps main session responsive |
