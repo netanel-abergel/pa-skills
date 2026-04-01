@@ -42,7 +42,6 @@ Do not improvise. If no skill matches, say so and ask the owner.
 | "save this" / "backup" / "push to git" | git-backup |
 | "what was discussed in [group]" | whatsapp-memory |
 | "find new skill ideas" / "what skills are trending" | skill-scout |
-| "what temperature should I use" / "task type temperature" | dynamic-temperature |
 
 ---
 
@@ -103,7 +102,6 @@ What kind of task is this?
 | **spawn-subagent** | Architecture | Delegate long or blocking tasks |
 | **whatsapp-diagnostics** | Health | Debug WhatsApp connectivity |
 | **whatsapp-memory** | Memory | Per-conversation context tracking |
-| **dynamic-temperature** | Quality | Select LLM temperature by task type |
 
 ---
 
