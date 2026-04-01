@@ -35,3 +35,5 @@ Skills should be:
 - Generic (no hardcoded personal data)
 - Self-contained (all instructions in SKILL.md)
 - Example data uses placeholders only
+| [pa-eval](./pa-eval/SKILL.md) | Structured PA performance evaluation and scoring |
+| [self-learning](./self-learning/SKILL.md) | Continuous self-improvement: capture, reflect, update behavior |
