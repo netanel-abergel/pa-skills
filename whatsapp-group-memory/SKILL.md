@@ -1,9 +1,9 @@
 ---
-name: group-memory
+name: whatsapp-group-memory
 description: "Maintain separate memory contexts per WhatsApp group. Use when: the agent participates in multiple WhatsApp groups and needs to track topics, decisions, people, and context per group separately. Prevents context bleed between groups and enables targeted recall per group."
 ---
 
-# Group Memory Skill
+# WhatsApp Group Memory Skill
 
 Separate, searchable memory per WhatsApp group — prevents mixing context between family, work, and PA groups.
 
