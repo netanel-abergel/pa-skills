@@ -158,3 +158,9 @@ When a new skill is added to the library:
 4. Add to any relevant **Multi-Skill Workflows**
 
 Keep this file as the single source of truth for skill routing.
+
+---
+
+## Auto-Updated
+
+This skill is updated automatically when new skills are added. See skill-scout for how new skills are discovered.
