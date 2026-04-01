@@ -41,3 +41,4 @@ Skills should be:
 | [skill-scout](./skill-scout/SKILL.md) | Weekly automated skill discovery — searches the web for new skill ideas and delivers a scored digest |
 | [git-backup](./git-backup/SKILL.md) | Backup workspace to GitHub — token discovery, repo setup, auto-push |
 | [whatsapp-memory](./whatsapp-memory/SKILL.md) | Separate memory context per WhatsApp group — prevents context bleed |
+| [supervisor](./supervisor/SKILL.md) | Central status dashboard — full report per group, task, issue, and system health |

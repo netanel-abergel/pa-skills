@@ -180,3 +180,15 @@ When a new skill is added:
 - **This skill itself:** Very cheap — it's a lookup table, any model works.
 - **Routing decision:** If unsure, lean toward a smaller, cheaper skill first.
 - **Don't over-spawn:** Use subagents only when the task would actually block the main session.
+
+---
+
+## Supervisor (Status Dashboard)
+
+| Trigger | Action |
+|---|---|
+| "מה הסטטוס" / "what's the status" | supervisor |
+| "supervisor" | supervisor |
+| "מה קורה" / "give me a summary" | supervisor |
+
+The supervisor skill aggregates: active tasks, billing issues, group activity, pending follow-ups, and system health into one structured report.
