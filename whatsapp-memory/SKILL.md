@@ -1,5 +1,5 @@
 ---
-name: whatsapp-group-memory
+name: whatsapp-memory
 description: "Maintain separate memory contexts per WhatsApp conversation — both groups and direct messages (DMs). Use when: tracking what was discussed with a specific person or in a specific group, recalling past context before responding, logging decisions or key facts from a conversation, or preventing context bleed between different chats."
 ---
 

@@ -172,7 +172,7 @@ This skill is updated automatically when new skills are added. See skill-scout f
 | Skill | Category | Complexity | Best For |
 |---|---|---|---|
 | **git-backup** | Memory | Low | Backup workspace to GitHub — token discovery, auto-push |
-| **whatsapp-group-memory** | Memory | Low | Per-WhatsApp-group context: decisions, people, topics per group |
+| **whatsapp-memory** | Memory | Low | Per-WhatsApp-group context: decisions, people, topics per group |
 | **skill-scout** | Discovery | Medium | Weekly web search for new skill ideas |
 
 ### New Trigger Phrases
@@ -180,23 +180,23 @@ This skill is updated automatically when new skills are added. See skill-scout f
 | If the owner says... | Use skill |
 |---|---|
 | "save this" / "backup" / "push to git" | git-backup |
-| "what was discussed in [group]" | whatsapp-group-memory |
-| "what do you know about [group]" | whatsapp-group-memory |
+| "what was discussed in [group]" | whatsapp-memory |
+| "what do you know about [group]" | whatsapp-memory |
 | "find new skill ideas" / "what skills are trending" | skill-scout |
 
 ### New Multi-Skill Workflows
 
 **After any group conversation:**
 ```
-whatsapp-group-memory (log decisions/people) → git-backup (persist to GitHub)
+whatsapp-memory (log decisions/people) → git-backup (persist to GitHub)
 ```
 
 **Weekly maintenance:**
 ```
-whatsapp-group-memory (weekly digest per group) → owner-briefing (include group highlights) → git-backup
+whatsapp-memory (weekly digest per group) → owner-briefing (include group highlights) → git-backup
 ```
 
 **Memory before context compaction:**
 ```
-whatsapp-group-memory (flush group contexts) → git-backup (push everything)
+whatsapp-memory (flush group contexts) → git-backup (push everything)
 ```
