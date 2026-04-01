@@ -204,5 +204,6 @@ sessions_spawn(
     mode="run",
     runtime="subagent",
     runTimeoutSeconds=180
+    # Optionally override model: model="your-provider/your-capable-model"
 )
 ```

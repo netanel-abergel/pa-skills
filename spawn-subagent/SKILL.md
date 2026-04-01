@@ -203,7 +203,8 @@ sessions_spawn(
     task="[Complex analysis task]",
     mode="run",
     runtime="subagent",
-    model="anthropic/claude-opus-4-6"  # Override model for this task
+    model="your-provider/your-model"  # Override model for this task
+    # Examples: "anthropic/claude-opus-4-6", "openai/gpt-4o", "google/gemini-1.5-pro"
 )
 ```
 

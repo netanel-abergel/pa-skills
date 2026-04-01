@@ -41,55 +41,99 @@ Have a great day! 🙌
 ### 1. Get Today's Calendar Events
 
 ```bash
+#!/bin/bash
+set -e
+
 TODAY=$(date -u +%Y-%m-%dT00:00:00Z)
-TOMORROW=$(date -u -d '+1 day' +%Y-%m-%dT00:00:00Z)
+# Cross-platform tomorrow: Linux uses -d, macOS uses -v
+TOMORROW=$(date -u -d '+1 day' +%Y-%m-%dT00:00:00Z 2>/dev/null || date -u -v+1d +%Y-%m-%dT00:00:00Z)
 
 GOG_ACCOUNT=owner@company.com gog calendar events primary \
   --from "$TODAY" \
   --to "$TOMORROW" \
+  2>/dev/null \
   | python3 -c "
 import sys, json
-events = json.load(sys.stdin)
+try:
+    raw = sys.stdin.read().strip()
+    events = json.loads(raw) if raw else []
+except json.JSONDecodeError:
+    events = []
 print('📅 TODAY\'S MEETINGS')
-for e in sorted(events, key=lambda x: x.get('start', {}).get('dateTime', '')):
-    start = e.get('start', {}).get('dateTime', '')[:16].replace('T', ' ')
-    summary = e.get('summary', 'Untitled')
-    print(f'• {start} — {summary}')
+if not events:
+    print('• No events found')
+else:
+    for e in sorted(events, key=lambda x: x.get('start', {}).get('dateTime', '')):
+        start = e.get('start', {}).get('dateTime', '')[:16].replace('T', ' ')
+        summary = e.get('summary', 'Untitled')
+        print(f'• {start} — {summary}')
 "
 ```
 
 ### 2. Get Urgent Emails
 
 ```bash
+#!/bin/bash
+set -e
+
 GOG_ACCOUNT=owner@company.com gog gmail search \
   'is:unread newer_than:1d' \
   --max 5 \
+  2>/dev/null \
   | python3 -c "
 import sys, json
-emails = json.load(sys.stdin)
+try:
+    raw = sys.stdin.read().strip()
+    emails = json.loads(raw) if raw else []
+except json.JSONDecodeError:
+    emails = []
 print('📬 EMAILS NEEDING ATTENTION')
-for e in emails:
-    sender = e.get('from', 'Unknown')
-    subject = e.get('subject', '(no subject)')
-    print(f'• {sender} — \"{subject}\"')
+if not emails:
+    print('• No urgent emails')
+else:
+    for e in emails:
+        sender = e.get('from', 'Unknown')
+        subject = e.get('subject', '(no subject)')
+        print(f'• {sender} — \"{subject}\"')
 "
 ```
 
 ### 3. Pull Open Tasks (monday.com)
 
 ```bash
-MONDAY_TOKEN=$(cat ~/.credentials/monday-api-token.txt)
-curl -s -X POST https://api.monday.com/v2 \
+#!/bin/bash
+set -e
+
+MONDAY_TOKEN_FILE="$HOME/.credentials/monday-api-token.txt"
+if [ ! -f "$MONDAY_TOKEN_FILE" ]; then
+  echo "✅ OPEN TASKS"
+  echo "• (monday.com token not configured)"
+  exit 0
+fi
+
+MONDAY_TOKEN=$(cat "$MONDAY_TOKEN_FILE")
+BOARD_ID="BOARD_ID"  # replace with actual board ID
+
+RESPONSE=$(curl -s -X POST https://api.monday.com/v2 \
   -H "Content-Type: application/json" \
   -H "Authorization: $MONDAY_TOKEN" \
-  -d "{\"query\": \"{ boards(ids: [BOARD_ID]) { items_page(limit: 5) { items { name state } } } }\" }" \
-  | python3 -c "
+  -d "{\"query\": \"{ boards(ids: [$BOARD_ID]) { items_page(limit: 5) { items { name state } } } }\"}")
+
+echo "$RESPONSE" | python3 -c "
 import sys, json
-d = json.load(sys.stdin)
-items = d['data']['boards'][0]['items_page']['items']
+try:
+    d = json.loads(sys.stdin.read())
+    items = d['data']['boards'][0]['items_page']['items']
+except (KeyError, IndexError, json.JSONDecodeError) as e:
+    print('✅ OPEN TASKS')
+    print(f'• (could not fetch: {e})')
+    sys.exit(0)
 print('✅ OPEN TASKS')
-for item in items:
-    if item['state'] != 'done':
+open_items = [i for i in items if i.get('state') != 'done']
+if not open_items:
+    print('• None — all clear!')
+else:
+    for item in open_items:
         print(f'• {item[\"name\"]}')
 "
 ```
@@ -168,3 +212,18 @@ A lighter version for end of day — what's tomorrow:
 ```
 
 Send at 18:00 on working days.
+
+---
+
+## Model Compatibility
+
+This skill works with any LLM model. The briefing generation requires only basic summarization and formatting.
+
+| Task | Minimum Model |
+|---|---|
+| Fetching calendar/email data | Any (CLI-based, no LLM needed) |
+| Formatting and sending briefing | Any small/lightweight model |
+| Identifying "urgent" signals | Small–Medium model |
+| Adding personalized commentary | Medium model recommended |
+
+No provider-specific APIs or features are used. The gog CLI handles all Google Workspace access.

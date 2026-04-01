@@ -83,3 +83,16 @@ When helping someone debug, walk through these checks:
 - Prefer a short practical explanation first, then commands/examples.
 - If they ask for exact usage, provide step-by-step guidance.
 - If they ask where things are stored, provide the path but never dump secrets.
+
+## Model Compatibility
+
+This skill is an **orientation guide** — it explains concepts and gives commands. Any LLM model can use it.
+
+| Task | Minimum Model |
+|---|---|
+| Explaining the owner-vs-agent distinction | Any |
+| Providing gog command examples | Any |
+| Troubleshooting calendar auth issues | Small–Medium |
+| Diagnosing multi-account or domain-restriction issues | Medium recommended |
+
+No model-specific APIs or reasoning features are required. All commands use the `gog` CLI, which is model-agnostic.

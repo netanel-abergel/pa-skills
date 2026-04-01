@@ -83,7 +83,7 @@ PA not responding?
    ```bash
    openclaw status
    ```
-3. Check if API key is valid:
+3. Check if API key is valid (use the command matching your LLM provider):
    ```bash
    # For Anthropic
    curl -s -o /dev/null -w "%{http_code}" \
@@ -91,6 +91,15 @@ PA not responding?
      -H "anthropic-version: 2023-06-01" \
      https://api.anthropic.com/v1/models
    # Expected: 200. If 401 → invalid key. If 402 → billing.
+
+   # For OpenAI
+   curl -s -o /dev/null -w "%{http_code}" \
+     -H "Authorization: Bearer $OPENAI_API_KEY" \
+     https://api.openai.com/v1/models
+
+   # For Google
+   curl -s -o /dev/null -w "%{http_code}" \
+     "https://generativelanguage.googleapis.com/v1beta/models?key=$GOOGLE_API_KEY"
    ```
 4. Check recent errors:
    ```bash
@@ -103,22 +112,44 @@ PA not responding?
 
 ```bash
 #!/bin/bash
+# whatsapp-health-check.sh
+# Model-agnostic: checks whichever LLM provider API key is configured
+set -e
+
 echo "=== WhatsApp Diagnostics ==="
 
 echo -n "Gateway status: "
-openclaw gateway status 2>&1 | grep -o "running\|stopped\|error" | head -1
+openclaw gateway status 2>&1 | grep -o "running\|stopped\|error" | head -1 || echo "unknown"
 
 echo -n "API key valid: "
-STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
-  -H "x-api-key: ${ANTHROPIC_API_KEY:-none}" \
-  -H "anthropic-version: 2023-06-01" \
-  https://api.anthropic.com/v1/models 2>/dev/null)
-case $STATUS in
-  200) echo "✅ valid" ;;
-  401) echo "❌ invalid key" ;;
-  402) echo "⚠️ billing error" ;;
-  *)   echo "? HTTP $STATUS" ;;
-esac
+check_api_key() {
+  if [ -n "${ANTHROPIC_API_KEY:-}" ]; then
+    STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+      -H "x-api-key: ${ANTHROPIC_API_KEY}" \
+      -H "anthropic-version: 2023-06-01" \
+      https://api.anthropic.com/v1/models 2>/dev/null)
+    PROVIDER="Anthropic"
+  elif [ -n "${OPENAI_API_KEY:-}" ]; then
+    STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+      -H "Authorization: Bearer ${OPENAI_API_KEY}" \
+      https://api.openai.com/v1/models 2>/dev/null)
+    PROVIDER="OpenAI"
+  elif [ -n "${GOOGLE_API_KEY:-}" ]; then
+    STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+      "https://generativelanguage.googleapis.com/v1beta/models?key=${GOOGLE_API_KEY}" 2>/dev/null)
+    PROVIDER="Google"
+  else
+    echo "⚠️ no API key env var found (checked ANTHROPIC_API_KEY, OPENAI_API_KEY, GOOGLE_API_KEY)"
+    return
+  fi
+  case $STATUS in
+    200) echo "✅ valid ($PROVIDER)" ;;
+    401) echo "❌ invalid key ($PROVIDER)" ;;
+    402) echo "⚠️ billing error ($PROVIDER)" ;;
+    *)   echo "? HTTP $STATUS ($PROVIDER)" ;;
+  esac
+}
+check_api_key
 
 echo -n "Recent errors: "
 ERROR_COUNT=$(openclaw logs --last 100 2>/dev/null | grep -ic error || echo 0)
@@ -151,3 +182,13 @@ Include in escalation report:
 - **Monitor with heartbeat:** Check Messages count during heartbeat routine
 - **Backup phone number:** Note the phone number used — needed for re-linking
 - **Don't use same number on two devices:** WhatsApp only allows one active session
+
+---
+
+## Model Compatibility
+
+This skill is entirely model-agnostic. All diagnostics are CLI-based (bash commands, curl, openclaw CLI) — the LLM is only used to interpret outputs and decide which step to take next.
+
+- Any LLM model is sufficient for following this decision tree
+- The API key check commands in Case 3 cover Anthropic, OpenAI, and Google — adapt to your provider
+- No provider-specific reasoning is required

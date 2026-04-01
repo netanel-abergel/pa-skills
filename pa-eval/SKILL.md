@@ -168,13 +168,37 @@ A (36–40) | B (28–35) | C (20–27) | D (<20)
 ## Storing Eval Data
 
 ```bash
-mkdir -p ~/.openclaw/workspace/.learnings/eval
+#!/bin/bash
+set -e
 
-# Save eval
-cat > ~/.openclaw/workspace/.learnings/eval/$(date +%Y-%m-%d).md << 'EOF'
+EVAL_DIR="$HOME/.openclaw/workspace/.learnings/eval"
+mkdir -p "$EVAL_DIR"
+DATE=$(date +%Y-%m-%d)
+EVAL_FILE="$EVAL_DIR/$DATE.md"
+
+# Save eval (replace [eval content] with actual content)
+cat > "$EVAL_FILE" << 'EOF'
 [eval content]
 EOF
 
+echo "Saved to $EVAL_FILE"
+
 # View history
-ls ~/.openclaw/workspace/.learnings/eval/
+echo "Eval history:"
+ls "$EVAL_DIR/"
 ```
+
+---
+
+## Model Compatibility
+
+This skill works with any LLM model that can follow structured templates.
+
+| Task | Minimum Model |
+|---|---|
+| Filling in the weekly eval template | Any |
+| Scoring dimensions from memory | Small–Medium |
+| Pattern analysis across multiple evals | Medium model recommended |
+| Generating trend analysis and recommendations | Medium–Large |
+
+No provider-specific APIs are used. Eval data is stored as plain markdown files — readable and editable by any LLM or human.

@@ -40,8 +40,8 @@ For each PA in directory:
 📊 PA Network Status — [DATE]
 
 ✅ ONLINE (X/Y)
-• Aria (Jane's PA) — last seen 2h ago, Claude Sonnet 4.6, calendar ✅
-• Rex (John's PA) — last seen 30m ago, GPT-4o, calendar ✅
+• Aria (Jane's PA) — last seen 2h ago, [Model Name], calendar ✅
+• Rex (John's PA) — last seen 30m ago, [Model Name], calendar ✅
 
 ⚠️ ISSUES
 • Nova (Sarah's PA) — billing error since 14:00
@@ -90,7 +90,7 @@ Add these fields to each PA entry in `pa-directory.json` to track status:
 ```json
 {
   "name": "Aria",
-  "model": "claude-sonnet-4-6",
+  "model": "your-llm-model",
   "last_seen": "2026-04-01T10:00:00Z",
   "calendar_connected": true,
   "billing_error": false,
@@ -98,6 +98,8 @@ Add these fields to each PA entry in `pa-directory.json` to track status:
   "status": "active"
 }
 ```
+
+> Replace `"your-llm-model"` with the actual model identifier used by this PA (e.g. `"gpt-4o"`, `"gemini-1.5-pro"`, `"claude-haiku-20240307"`, etc.).
 
 ---
 
@@ -107,3 +109,17 @@ Run status checks:
 - **Daily at 09:00** — full network report to admin
 - **On billing error detection** — immediate partial report
 - **On demand** — when admin asks "what's the status?"
+
+---
+
+## Model Compatibility
+
+This skill works with any LLM model — status checks are rule-based and data-driven, not reasoning-heavy.
+
+| Task | Minimum Model |
+|---|---|
+| Reading directory and generating report | Any |
+| Interpreting billing logs | Any |
+| Composing alert messages | Any (small/lightweight models sufficient) |
+
+No model-specific features are used. The `model` field in `pa-directory.json` is purely informational metadata about each PA — it does not affect how this skill runs.

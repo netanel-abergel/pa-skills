@@ -137,3 +137,20 @@ Key rules to include:
 [ ] Added to PA network directory
 [ ] Announced in PA coordination group
 ```
+
+---
+
+## Model Compatibility
+
+This skill works with any LLM model capable of following multi-step instructions.
+
+| Task | Minimum Model |
+|---|---|
+| Guiding through onboarding steps | Any |
+| Troubleshooting WhatsApp issues | Small–Medium |
+| Troubleshooting calendar/email access | Small–Medium |
+| Customizing SOUL.md for the owner | Medium recommended (better tone/personalization) |
+
+The onboarding process is primarily procedural — no model-specific features are required. Any model that can follow instructions and respond to user confirmations will work.
+
+> **Note:** OpenClaw supports multiple LLM providers (Anthropic, OpenAI, Google, etc.). During account setup, the owner selects their preferred model provider. The onboarding steps are the same regardless of provider.

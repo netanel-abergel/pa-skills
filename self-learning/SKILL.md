@@ -52,10 +52,15 @@ Event → Capture → Reflect → Update Behavior → Verify
 ### Quick Log Script
 
 ```bash
-LOG_FILE="$HOME/.openclaw/workspace/.learnings/LEARNINGS.md"
+#!/bin/bash
+set -e
+
+LEARNINGS_DIR="$HOME/.openclaw/workspace/.learnings"
+mkdir -p "$LEARNINGS_DIR"
+LOG_FILE="$LEARNINGS_DIR/LEARNINGS.md"
 DATE=$(date +%Y-%m-%d)
-CATEGORY="correction"  # change as needed
-TITLE="Short description"
+CATEGORY="${1:-correction}"  # pass as first argument, or edit here
+TITLE="${2:-Short description}"  # pass as second argument, or edit here
 
 cat >> "$LOG_FILE" << EOF
 
@@ -89,9 +94,23 @@ Run every 7 days. Review all log entries from the past week.
 ### Pattern Detection
 
 ```bash
-# Count corrections by topic
-grep "correction" ~/.openclaw/workspace/.learnings/LEARNINGS.md \
+#!/bin/bash
+set -e
+
+LEARNINGS_FILE="$HOME/.openclaw/workspace/.learnings/LEARNINGS.md"
+
+if [ ! -f "$LEARNINGS_FILE" ]; then
+  echo "No learnings file found at $LEARNINGS_FILE"
+  exit 0
+fi
+
+echo "=== Top Correction Patterns ==="
+grep "correction" "$LEARNINGS_FILE" \
   | sed 's/.*| //' | sort | uniq -c | sort -rn | head -10
+
+echo ""
+echo "=== All Categories ==="
+grep -oP '\| \K\w+(?= \|)' "$LEARNINGS_FILE" | sort | uniq -c | sort -rn
 ```
 
 ### Weekly Reflection Template
@@ -139,13 +158,33 @@ grep "correction" ~/.openclaw/workspace/.learnings/LEARNINGS.md \
 ### How to Promote
 
 ```bash
-# Example: add a rule to SOUL.md
-echo "\n## Learned Rule — YYYY-MM-DD\n- [Rule text]" \
-  >> ~/.openclaw/workspace/SOUL.md
+#!/bin/bash
+set -e
 
-# Mark as applied in LEARNINGS.md
-sed -i 's/Applied to: none yet/Applied to: SOUL.md/' \
-  ~/.openclaw/workspace/.learnings/LEARNINGS.md
+SOUL_FILE="$HOME/.openclaw/workspace/SOUL.md"
+LEARNINGS_FILE="$HOME/.openclaw/workspace/.learnings/LEARNINGS.md"
+DATE=$(date +%Y-%m-%d)
+RULE="[Rule text — replace this]"
+
+if [ ! -f "$SOUL_FILE" ]; then
+  echo "ERROR: SOUL.md not found at $SOUL_FILE"
+  exit 1
+fi
+
+# Append learned rule to SOUL.md
+printf "\n## Learned Rule — %s\n- %s\n" "$DATE" "$RULE" >> "$SOUL_FILE"
+echo "Added rule to SOUL.md"
+
+# Mark learning as applied (only marks the first "none yet" occurrence — run again for others)
+if [ -f "$LEARNINGS_FILE" ]; then
+  # GNU sed (-i) and macOS sed (-i '') differ — handle both
+  if sed --version 2>/dev/null | grep -q GNU; then
+    sed -i "s/Applied to: none yet/Applied to: SOUL.md ($DATE)/" "$LEARNINGS_FILE"
+  else
+    sed -i '' "s/Applied to: none yet/Applied to: SOUL.md ($DATE)/" "$LEARNINGS_FILE"
+  fi
+  echo "Marked as applied in LEARNINGS.md"
+fi
 ```
 
 ---
@@ -193,7 +232,42 @@ Self-learning feeds directly into evaluation:
 Run a combined report monthly:
 
 ```bash
-echo "Corrections this month: $(grep -c correction ~/.openclaw/workspace/.learnings/LEARNINGS.md)"
-echo "Errors this month: $(wc -l < ~/.openclaw/workspace/.learnings/ERRORS.md)"
-echo "Features requested: $(grep -c '^##' ~/.openclaw/workspace/.learnings/FEATURE_REQUESTS.md)"
+#!/bin/bash
+LEARNINGS_DIR="$HOME/.openclaw/workspace/.learnings"
+
+echo "=== Monthly Learning Report ==="
+
+LEARNINGS_FILE="$LEARNINGS_DIR/LEARNINGS.md"
+ERRORS_FILE="$LEARNINGS_DIR/ERRORS.md"
+FEATURES_FILE="$LEARNINGS_DIR/FEATURE_REQUESTS.md"
+
+if [ -f "$LEARNINGS_FILE" ]; then
+  echo "Corrections logged: $(grep -c 'correction' "$LEARNINGS_FILE" || echo 0)"
+  echo "Positive signals: $(grep -c 'positive_signal' "$LEARNINGS_FILE" || echo 0)"
+else
+  echo "LEARNINGS.md not found"
+fi
+
+if [ -f "$ERRORS_FILE" ]; then
+  echo "Error entries: $(wc -l < "$ERRORS_FILE")"
+fi
+
+if [ -f "$FEATURES_FILE" ]; then
+  echo "Feature requests: $(grep -c '^##' "$FEATURES_FILE" || echo 0)"
+fi
 ```
+
+---
+
+## Model Compatibility
+
+This skill works with any LLM model. The core loop is procedural:
+
+| Task | Minimum Model |
+|---|---|
+| Logging a correction or event | Any |
+| Weekly pattern detection | Any (grep/bash handles the heavy lifting) |
+| Identifying which file to update | Any |
+| Writing nuanced behavioral rules to SOUL.md | Medium model recommended |
+
+No provider-specific features are used. All learning data is stored in plain markdown files — portable across LLM providers and agent platforms.
