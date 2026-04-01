@@ -14,7 +14,7 @@ Operational guide for AI Personal Assistants working within a multi-agent PA net
 This skill reads contact data from a local file. Before using, ensure the file exists:
 
 ```
-workspace/data/pa-directory.json
+data/pa-directory.json
 ```
 
 If it doesn't exist, create it using the schema below. Each PA maintains their own copy with their own network's data.
@@ -59,7 +59,7 @@ If it doesn't exist, create it using the schema below. Each PA maintains their o
 ### Loading the Directory
 
 ```bash
-cat workspace/data/pa-directory.json | python3 -c "
+cat data/pa-directory.json | python3 -c "
 import sys, json
 d = json.load(sys.stdin)
 for pa in d['pas']:
@@ -128,7 +128,7 @@ Always confirm with owner before sending external emails.
 ### Find a PA's Contact
 
 ```bash
-cat workspace/data/pa-directory.json | python3 -c "
+cat data/pa-directory.json | python3 -c "
 import sys, json
 d = json.load(sys.stdin)
 name = 'owner name to search'
@@ -180,7 +180,7 @@ Add a new PA:
 ```bash
 python3 -c "
 import json
-with open('workspace/data/pa-directory.json', 'r') as f:
+with open('data/pa-directory.json', 'r') as f:
     d = json.load(f)
 d['pas'].append({
     'name': 'New PA',
@@ -192,7 +192,7 @@ d['pas'].append({
     'status': 'active',
     'notes': ''
 })
-with open('workspace/data/pa-directory.json', 'w') as f:
+with open('data/pa-directory.json', 'w') as f:
     json.dump(d, f, indent=2, ensure_ascii=False)
 print('Done')
 "
