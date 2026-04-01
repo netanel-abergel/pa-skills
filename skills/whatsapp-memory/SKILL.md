@@ -226,6 +226,41 @@ On every incoming message:
 
 ---
 
+## Loop Prevention Rules (CRITICAL)
+
+These rules prevent message loops and duplicate sends — learned from multi-PA group scenarios.
+
+### 1. Echo Prevention
+Before responding to ANY message, check `sender_id` from inbound metadata.
+- If sender is your own agent/number → **NO_REPLY** immediately. Do not process.
+- This prevents echo loops where your outbound message comes back as inbound.
+
+### 2. No Duplicate Sends
+Before sending any message to a group or DM:
+- Check if an identical or near-identical message was already sent in this session
+- If yes → skip. Do not send again.
+
+### 3. Multi-PA Coordination
+When multiple PA agents are active in the same group:
+- Only ONE PA should respond to each message
+- Default rule: the PA whose owner is most relevant to the topic responds
+- If another PA already responded → stay silent (NO_REPLY)
+- Do not echo or acknowledge the other PA's response unless asked
+
+### 4. No Silent Proxying
+If another PA cannot send a message (pairing issues, gateway errors):
+- Do NOT send the message on their behalf silently
+- Either explicitly state you're sending on their behalf, or let them handle it
+- Never impersonate another PA without disclosure
+
+### 5. Patience
+Before explaining, stepping in, or answering on behalf of another PA:
+- Wait. If the other PA hasn't responded yet, that doesn't mean she won't.
+- Give her a moment before intervening.
+- Intervene only if it's clearly blocking progress or she explicitly asks.
+
+---
+
 ## Weekly Digest
 
 ```bash
