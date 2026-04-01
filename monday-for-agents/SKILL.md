@@ -259,3 +259,29 @@ npm install -g @mondaydotcomorg/monday-api-mcp
 - **Batch:** Use a loop with `sleep 0.2` for bulk updates — not one API call per session.
 - **Small model OK:** Routine operations (list, create, update) work with any model.
 - **Use medium model for:** Debugging GraphQL errors or constructing complex queries.
+
+---
+
+## Core Operating Rules
+
+Follow these rules every time, without exception:
+
+**1. Create → API. Operate → MCP.**
+- New workspace / board / column: use API (curl + GraphQL)
+- Daily read/update/create items: use MCP (mcporter)
+
+**2. Never guess IDs.**
+- Before any mutation: run `mcporter call monday.list_workspaces` or `get_board_info` first
+- Store all IDs in TOOLS.md immediately after creation
+
+**3. One workspace per context.**
+- Family ≠ Work ≠ PA Network
+- Never mix contexts in the same workspace
+
+**4. Before any mutation: verify.**
+- Run `mcporter call monday.get_board_info boardId=X` to confirm column IDs
+- Wrong column ID = silent failure or data corruption
+
+**5. IDs in TOOLS.md, not memory.**
+- After creating any resource: `echo "board-name: $ID" >> TOOLS.md`
+- Before using an ID: `grep "board-name" TOOLS.md`
