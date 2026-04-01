@@ -40,4 +40,4 @@ Skills should be:
 | [spawn-subagent](./spawn-subagent/SKILL.md) | Delegate long or blocking tasks to isolated subagents — keeps main session responsive |
 | [skill-scout](./skill-scout/SKILL.md) | Weekly automated skill discovery — searches the web for new skill ideas and delivers a scored digest |
 | [git-backup](./git-backup/SKILL.md) | Backup workspace to GitHub — token discovery, repo setup, auto-push |
-| [group-memory](./group-memory/SKILL.md) | Separate memory context per WhatsApp group — prevents context bleed |
+| [whatsapp-group-memory](./whatsapp-group-memory/SKILL.md) | Separate memory context per WhatsApp group — prevents context bleed |
