@@ -137,14 +137,107 @@ monday_query '{"query": "{ boards(ids: [BOARD_ID]) { columns { id title type } }
 
 ---
 
-## Part 5 — Integration with Ocana
+## Part 5 — monday.com MCP Server
+
+The official monday.com MCP server lets OpenClaw agents interact with monday.com through the Model Context Protocol — no need to hand-craft GraphQL queries.
+
+### Option A: Hosted MCP (Recommended — easiest)
+
+Add to OpenClaw MCP config (`~/.openclaw/openclaw.json` under `tools.mcp.servers`):
+
+```json
+{
+  "mcpServers": {
+    "monday-mcp": {
+      "url": "https://mcp.monday.com/mcp"
+    }
+  }
+}
+```
+
+- No local install required
+- OAuth authentication (sign in via monday.com)
+- Auto-updates, enterprise uptime
+- Works immediately
+
+### Option B: Local MCP (npx)
+
+```json
+{
+  "mcpServers": {
+    "monday-api-mcp": {
+      "command": "npx",
+      "args": ["@mondaydotcomorg/monday-api-mcp@latest"],
+      "env": {
+        "MONDAY_API_TOKEN": "your_token_here"
+      }
+    }
+  }
+}
+```
+
+Install manually if needed:
+```bash
+npm install -g @mondaydotcomorg/monday-api-mcp
+```
+
+### Option C: Remote hosted (with API version header)
+
+```json
+{
+  "mcpServers": {
+    "monday-api-mcp-hosted": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "https://mcp.monday.com/mcp",
+        "--header",
+        "Api-Version:${API_VERSION}"
+      ],
+      "env": {
+        "API_VERSION": "2025-07"
+      }
+    }
+  }
+}
+```
+
+### What the MCP Server Can Do
+
+Once connected, the agent can:
+- Read and search boards, items, groups, columns
+- Create items, subitems, updates
+- Change column values and statuses
+- Query workspaces and users
+- Manage work forms
+
+### Testing the MCP Connection
+
+After setup, test with a simple prompt to the agent:
+> "List my monday.com boards"
+
+Or verify via mcporter:
+```bash
+mcporter call monday-mcp boards
+```
+
+### Troubleshooting MCP
+
+**Auth error** → Re-authenticate via OAuth or verify `MONDAY_API_TOKEN` is set correctly
+**Server not found** → Confirm MCP server config is under the correct key in openclaw.json
+**npx timeout** → Try `npm install -g @mondaydotcomorg/monday-api-mcp` first, then use `monday-api-mcp` as command instead of npx
+
+---
+
+## Part 6 — Integration with Ocana
 
 When helping a PA get started with monday.com:
 1. Confirm the PA has a monday.com account (agent email, not owner's)
 2. Confirm the token is saved and exported
 3. Confirm workspace access (invited by owner if needed)
-4. Test with: `monday_query '{"query": "{ me { id name } }"}'`
-5. Only then proceed to board operations
+4. Test GraphQL with: `monday_query '{"query": "{ me { id name } }"}'`
+5. If using MCP: configure the server and test with a natural language query
+6. Only then proceed to board operations
 
 Do NOT create items or update boards on behalf of the owner without explicit instruction.
 Always confirm board ID before making mutations.
