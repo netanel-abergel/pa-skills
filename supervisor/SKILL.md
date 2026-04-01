@@ -209,3 +209,28 @@ Use a larger model only if summarizing very long conversation histories.
 - **On billing error** → update billing-status.json  
 - **On heartbeat** → run quick status check, alert if anything urgent
 - **On "supervisor"** → run full build_status_report and send to owner
+
+---
+
+## Scope Rules
+
+**Always check who is asking and from where before generating the status report:**
+
+| Context | Scope |
+|---|---|
+| DM from owner | Full report — all tasks, all groups, all issues, system health |
+| Group message | Filter to THIS GROUP ONLY — topics, decisions, open items from this group |
+| DM from someone else | Filter to items relevant to this person only |
+
+**Never send the full supervisor report in a group.**
+
+Example — if asked in the PA Team group:
+```
+📊 PA Team Status — [date]
+• PA Operating Standard: sent and acknowledged by most PAs ✅
+• Open: Midgee calendar write access — pending Doron's response
+• Open: Alfred calendar access — awaiting gog error output
+```
+
+Example — if asked in a DM from owner:
+→ Full report (all categories)
