@@ -212,3 +212,24 @@ Replace placeholders with real values. Examples:
 - **Expensive:** Running health checks too frequently wastes money. Every 2 hours is enough.
 - **Batch:** Combine billing check with other heartbeat checks in one script run
 - **Small model OK:** This skill needs no reasoning — any model can send a notification message
+
+---
+
+## Running via Cron (Recommended)
+
+Instead of a plugin, run billing-monitor as a scheduled skill via cron:
+
+```json
+{
+  "id": "billing-health-check",
+  "schedule": { "kind": "cron", "expr": "0 * * * *", "tz": "UTC" },
+  "sessionTarget": "isolated",
+  "payload": {
+    "kind": "agentTurn",
+    "message": "Run the billing-monitor skill: check all configured API keys for billing errors. If any provider returns 402, send an alert to the admin phone and update billing-status.json. Reply HEARTBEAT_OK if all clear."
+  },
+  "delivery": { "mode": "silent" }
+}
+```
+
+This runs every hour and alerts automatically — no plugin required.

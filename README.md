@@ -1,13 +1,11 @@
 # AI-PA Ecosystem
 
-A collection of OpenClaw skills and plugins for AI Personal Assistants.
 
 ## Structure
 
 ```
 pa-skills-repo/
   skills/     ← AgentSkill playbooks (SKILL.md-based)
-  plugins/    ← OpenClaw JS/TS plugins
 ```
 
 ---
@@ -52,26 +50,18 @@ Or reference it directly in your agent's system prompt.
 
 ---
 
-## 🔌 Plugins
 
-Plugins are TypeScript packages that hook into OpenClaw's runtime (heartbeat, messages, etc.).
 
-**Available plugins:**
 
-| Plugin | Description |
 |--------|-------------|
-| [billing-monitor](plugins/billing-monitor/) | Monitors API billing health, alerts on 402/401 errors |
 
-### Install a plugin
 
 ```bash
-openclaw plugin install @ai-pa/billing-monitor
 ```
 
 Or manually:
 
 ```bash
-cp -r plugins/billing-monitor /opt/ocana/openclaw/plugins/
 openclaw gateway restart
 ```
 
@@ -79,7 +69,6 @@ Then configure in `openclaw.json`:
 
 ```json
 {
-  "plugins": {
     "entries": {
       "ai-pa-billing-monitor": {
         "enabled": true,
@@ -98,5 +87,4 @@ Then configure in `openclaw.json`:
 ## Contributing
 
 1. Skills go in `skills/<skill-name>/` with a `SKILL.md`
-2. Plugins go in `plugins/<plugin-name>/` with `package.json`, `openclaw.plugin.json`, and `index.ts`
 3. Update this README with your addition
