@@ -5,94 +5,148 @@ description: Explain how email and Google Calendar work for OpenClaw agents, inc
 
 # OpenClaw Email & Calendar Orientation
 
-Use this skill to explain and troubleshoot how email and Google Calendar work for OpenClaw agents.
+## Minimum Model
+Any model. This is an explanation and troubleshooting guide — no complex reasoning needed.
 
-## Core model
-- Explain that **owner** and **agent** are different concepts in OpenClaw.
-- Explain that each **agent** is created with its own **Google Workspace / G Suite account**.
-- Explain that the agent can act through its own mailbox and related Google Workspace tools.
-- Explain that agents commonly use **gog** plus the **Google Workspace skill** to work with Gmail, Calendar, Drive, Contacts, Sheets, and Docs.
+---
 
-## What to explain first
-When someone is confused, start with this concise model:
-1. The **owner** is the human who owns or manages the agent.
-2. The **agent** is the AI worker running in OpenClaw.
-3. The **agent email** belongs to the agent account, not automatically to the owner.
-4. Google Workspace access is typically done through `gog` after auth is configured.
+## The Core Concept (Read This First)
 
-## Local paths and files
-Share only the paths that are needed for setup/troubleshooting.
+There are two separate accounts:
 
-- gog OAuth client credentials: `~/.openclaw/.gog/credentials.json`
-- OpenClaw auth profiles: `~/.openclaw/agents/main/agent/auth-profiles.json`
-- Workspace skill reference: `~/.openclaw/workspace/skills/gog/SKILL.md`
+| | Account |
+|---|---|
+| **Owner** | The human's Google account (e.g. `owner@company.com`) |
+| **Agent** | The PA's own Google account (e.g. `agent@agentdomain.com`) |
 
-Important:
-- Do **not** reveal secret contents from these files in chat.
-- It is okay to mention the file paths when helping with setup or troubleshooting.
-- `auth-profiles.json` and `.gog/credentials.json` are protected files; do not modify them casually.
+**These are separate.** Having an agent email does NOT automatically give access to the owner's email or calendar.
 
-## How to use gog
-Read `~/.openclaw/workspace/skills/gog/SKILL.md` if you need exact command examples.
+To access the owner's email/calendar:
+1. **Owner must share** access with the agent email (explicit step).
+2. **Agent must authenticate** using `gog` (explicit step).
 
-Typical guidance:
-- Authenticate credentials: `gog auth credentials /path/to/client_secret.json`
-- Add an account: `gog auth add you@company.com --services gmail,calendar,drive,contacts,sheets,docs`
-- List accounts: `gog auth list`
-- Use an account with `GOG_ACCOUNT=you@company.com`
+If someone is confused → start with this distinction. It resolves most questions.
 
-Useful examples:
-- Search Gmail: `gog gmail search 'newer_than:7d' --max 10`
-- Send mail: `gog gmail send --to a@b.com --subject "Hi" --body "Hello"`
-- List calendar events: `gog calendar events <calendarId> --from <iso> --to <iso>`
-- Create calendar event: `gog calendar create <calendarId> --summary "Meeting" --start <iso> --end <iso>`
+---
 
-## Google Calendar — Owner Calendar Access
-Agents often need to read and write the **owner's** Google Calendar (not just their own).
+## Key Paths and Files
 
-Key distinction:
-- The **agent email** (e.g. `midgee@openclaw.ai`) is set up by default.
-- The **owner calendar** (e.g. `doron@monday.com`) requires explicit sharing + auth.
+| File | Purpose |
+|---|---|
+| `~/.openclaw/.gog/credentials.json` | gog OAuth client credentials |
+| `~/.openclaw/agents/main/agent/auth-profiles.json` | OpenClaw auth profiles |
+| `~/.openclaw/workspace/skills/gog/SKILL.md` | gog usage reference |
 
-To give the agent write access to the owner's calendar:
-1. Owner goes to Google Calendar → Settings → Share with specific people
-2. Adds the agent email with **"Make changes to events"** permission
-3. Agent runs: `gog auth add owner@company.com --services calendar` (or re-auths with calendar scope)
-4. Agent uses `GOG_ACCOUNT=owner@company.com` when calling calendar commands
+**Security rule:** Never show the contents of these files in chat. Mentioning the path is fine; printing the content is not.
 
-Common issue — calendar shows "connected" in OpenClaw dashboard but agent can't write:
-- The connection in the dashboard may reflect OAuth at the agent-email level only
-- If the owner's calendar is a separate Google account, it needs to be separately shared and authed
-- Re-auth with `--services calendar` and verify write scope was granted (not just read)
-- Test with: `gog calendar create primary --summary "Test" --start <now+1h> --end <now+2h>`
-- If error mentions "insufficient permissions" → scope issue, redo OAuth with write permissions
+---
+
+## Using gog
+
+```bash
+# One-time setup: load OAuth credentials
+gog auth credentials /path/to/client_secret.json
+
+# Add an account (opens browser for OAuth flow)
+gog auth add owner@company.com --services gmail,calendar,drive,contacts,sheets,docs
+
+# Verify the account was added
+gog auth list
+
+# Use the account in commands (always include GOG_ACCOUNT=...)
+GOG_ACCOUNT=owner@company.com gog gmail search 'is:unread' --max 10
+```
+
+### Common Commands
+
+```bash
+# Search email
+GOG_ACCOUNT=owner@company.com gog gmail search 'newer_than:7d' --max 10
+
+# Send email
+GOG_ACCOUNT=owner@company.com gog gmail send \
+  --to "recipient@example.com" \
+  --subject "Hello" \
+  --body "Message text"
+
+# List calendar events in a time window
+GOG_ACCOUNT=owner@company.com gog calendar events primary \
+  --from "2026-04-01T09:00:00Z" \
+  --to "2026-04-01T18:00:00Z"
+
+# Create a calendar event
+GOG_ACCOUNT=owner@company.com gog calendar create primary \
+  --summary "Meeting" \
+  --start "2026-04-02T10:00:00+00:00" \
+  --end "2026-04-02T11:00:00+00:00"
+```
+
+---
+
+## Calendar Write Access — Step by Step
+
+The most common issue: the agent can read the calendar but not create events.
+
+**Step 1 — Owner does this:**
+1. Open [calendar.google.com](https://calendar.google.com).
+2. Find the primary calendar → three-dot menu → Settings and sharing.
+3. Click "+ Add people" → enter the agent email.
+4. Set permission to **"Make changes to events"** (not "See all event details").
+5. Click Send.
+
+**Step 2 — Agent does this:**
+```bash
+# Authenticate with calendar scope
+gog auth add owner@company.com --services calendar
+
+# Test write access by creating a test event
+GOG_ACCOUNT=owner@company.com gog calendar create primary \
+  --summary "Test Event" \
+  --start "2026-04-02T10:00:00Z" \
+  --end "2026-04-02T11:00:00Z"
+```
+
+If the test event appears in the owner's calendar → success.
+
+---
 
 ## Troubleshooting
-When helping someone debug, walk through these checks:
-1. Confirm whether they mean the **owner email** or the **agent email**.
-2. Confirm `gog` is installed and available in PATH.
-3. Confirm the account was added to `gog`.
-4. Confirm the needed Google services were authorized — especially **write** scope for calendar.
-5. If keyring/password issues appear, explain that local secret storage/keyring configuration may be required.
-6. If access fails, verify they are using the correct account context (`GOG_ACCOUNT`).
-7. For calendar write failures: check if the owner shared their calendar with the agent email, and whether write permission was explicitly granted.
 
-## Response style
-- Be explicit about the owner-vs-agent distinction.
-- Mirror the language used by the person asking.
-- Prefer a short practical explanation first, then commands/examples.
-- If they ask for exact usage, provide step-by-step guidance.
-- If they ask where things are stored, provide the path but never dump secrets.
+Work through these checks in order:
 
-## Model Compatibility
+1. **Clarify accounts:** Is the question about agent email or owner email?
+2. **Check gog is installed:** Run `which gog` — if not found, check PATH.
+3. **Check account was added:** Run `gog auth list` — does owner's account appear?
+4. **Check write scope:** OAuth must include calendar write scope, not just read.
+5. **Check keyring:** If gog asks for a password, local keyring may need to be configured.
+6. **Check GOG_ACCOUNT:** All commands must include `GOG_ACCOUNT=owner@company.com`.
+7. **Calendar write failures:** Was permission set to "Make changes to events" (not "See details")?
 
-This skill is an **orientation guide** — it explains concepts and gives commands. Any LLM model can use it.
+**If "Insufficient permissions" error:**
+→ Owner shared calendar with read-only access. Redo Step 1 with the correct permission level.
 
-| Task | Minimum Model |
-|---|---|
-| Explaining the owner-vs-agent distinction | Any |
-| Providing gog command examples | Any |
-| Troubleshooting calendar auth issues | Small–Medium |
-| Diagnosing multi-account or domain-restriction issues | Medium recommended |
+**If "Token expired" error:**
+```bash
+# Remove the expired account
+gog auth remove owner@company.com
 
-No model-specific APIs or reasoning features are required. All commands use the `gog` CLI, which is model-agnostic.
+# Re-add it (will open browser for re-auth)
+gog auth add owner@company.com --services gmail,calendar,drive,contacts
+```
+
+---
+
+## Response Style
+
+- Lead with the **owner vs. agent** distinction — this resolves most confusion.
+- Give commands first, explanation second.
+- When asked "where is X stored?" → give the path, do not print the file contents.
+- When asked for step-by-step → follow the Calendar Write Access section above.
+
+---
+
+## Cost Tips
+
+- **Very cheap:** This skill is explanation only — minimal LLM tokens needed.
+- **Small model OK:** Any model can explain these concepts and provide commands.
+- **Avoid:** Do not re-explain the full orientation every time. Ask what specifically is confusing, then address only that.

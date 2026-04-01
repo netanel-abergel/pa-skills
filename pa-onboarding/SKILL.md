@@ -5,108 +5,109 @@ description: "Step-by-step onboarding guide for setting up a new AI Personal Ass
 
 # PA Onboarding Skill
 
-Complete setup guide for a new AI Personal Assistant on OpenClaw.
+## Minimum Model
+Any model. This is a procedural guide — follow steps in order.
 
 ---
 
-## Golden Rules
+## Rules
 
-- ✅ Give **one next step at a time** — don't dump the full guide upfront
-- ✅ Confirm each step is complete before moving to the next
-- ❌ Never say something is done unless you've verified it
-- ❌ Don't start integrations (calendar, monday) before the agent is responding
+- **Give one step at a time.** Do not dump the full guide upfront.
+- **Confirm each step before moving on.** Do not assume it worked.
+- **Never say something is done unless you verified it.**
+- **Do not start integrations** (calendar, monday) before the agent is responding to messages.
 
----
-
-## Full Setup Flow
-
-### Phase 1 — Account & Agent
-
-**Step 1: Create agent account**
-- Go to the agent signup page (e.g. monday.com/agents-signup for monday.com orgs)
-- Sign in with your organization's SSO/Okta
-- Create a new agent and give it a name
-
-**Step 2: Get a phone number**
-- The agent needs a dedicated phone number for WhatsApp
-- Recommended: Airalo eSIM (supports activation via SMS)
-- Ensure the plan supports SMS (not data-only)
-- Cost: ~$5–15/month
-
-**Step 3: Install WhatsApp Business**
-- Download WhatsApp Business (not regular WhatsApp) on any device
-- Register the new phone number
-- Complete verification via SMS
-
-**Step 4: Connect WhatsApp to agent**
-- In OpenClaw platform → Agent Settings → Channels → WhatsApp
-- Click Connect → scan QR code with WhatsApp Business
-- Wait for status to show "Connected and listening"
-
-**Step 5: Verify the agent responds**
-- Send a test message to the agent's number
-- Confirm you get a reply
-- If no reply: see whatsapp-diagnostics skill
+If owner says "what's next?" → give only the single next step.
+If owner says "I'm stuck on step X" → troubleshoot step X, do not move on.
+If owner asks "can you do it for me?" → reply: "I can guide you — most steps require your action (QR scan, calendar share, etc.)"
+If owner asks "how long will this take?" → reply: "Phase 1 takes 20–30 min. Integrations another 15–20 min."
 
 ---
 
-### Phase 2 — Integrations
+## Phase 1 — Account & Agent (Do This First)
 
-Only start this phase after Phase 1 is complete and the agent is responding.
+### Step 1: Create Agent Account
+- Go to the agent signup page (for monday.com orgs: [monday.com/agents-signup](https://monday.com/agents-signup)).
+- Sign in with organization SSO.
+- Create the agent and give it a name.
 
-**Step 6: Connect Google Calendar**
-- Owner shares their calendar with the agent email
-- Agent authenticates: `gog auth add owner@company.com --services calendar`
-- Test write access
-- Full guide: see calendar-setup skill
+### Step 2: Get a Phone Number
+- The agent needs a dedicated phone number for WhatsApp.
+- Use Airalo eSIM (or similar) — must support SMS, not data-only.
+- Cost: ~$5–15/month.
 
-**Step 7: Connect monday.com**
-- Agent gets a monday.com account (use org-specific signup URL)
-- Generate API token from Developer settings
-- Save token: `echo TOKEN > ~/.credentials/monday-api-token.txt`
-- Set up monday MCP for natural language board operations
-- Full guide: see monday-workspace skill
+### Step 3: Install WhatsApp Business
+- Download **WhatsApp Business** (not regular WhatsApp).
+- Register the new phone number.
+- Complete SMS verification.
 
-**Step 8: Set up email access (optional)**
-- `gog auth add owner@company.com --services gmail,drive,contacts`
-- Test: `GOG_ACCOUNT=owner@company.com gog gmail search 'is:unread' --max 5`
-- Full guide: see openclaw-email-orientation skill
+### Step 4: Connect WhatsApp to Agent
+1. Open OpenClaw platform → Agent Settings → Channels → WhatsApp.
+2. Click Connect → scan QR code with WhatsApp Business app.
+3. Wait 30 seconds for status to show "Connected and listening."
 
----
+### Step 5: Verify the Agent Responds
+- Send a test message to the agent's number.
+- Confirm you get a reply within 30 seconds.
+- **If no reply:** Stop here. Follow the `whatsapp-diagnostics` skill before continuing.
 
-### Phase 3 — Configuration
-
-**Step 9: Configure SOUL.md**
-Key rules to include:
-- Owner's name and communication preferences
-- Work hours and timezone
-- Topics to proactively monitor
-- What to ask before acting vs. what to do autonomously
-
-**Step 10: Set up morning briefing (optional)**
-- Configure cron job at 07:30 owner's timezone
-- Sends: meetings, urgent emails, open tasks
-- Full guide: see owner-briefing skill
-
-**Step 11: Add to PA network directory**
-- Update `data/pa-directory.json` with the new PA's details
-- Announce in PA coordination group
+✅ **Phase 1 complete when the agent responds to messages.**
 
 ---
 
-## What to Say at Each Stage
+## Phase 2 — Integrations
 
-**"What's next?"**
-→ Give only the single next step
+**Only start Phase 2 after Phase 1 is fully working.**
 
-**"I'm stuck on step X"**
-→ Troubleshoot that step before moving forward
+### Step 6: Connect Google Calendar
+- Owner shares their calendar with the agent email.
+- Agent runs:
+  ```bash
+  gog auth add owner@company.com --services calendar
+  ```
+- Test that the agent can create events.
+- Full guide: see `calendar-setup` skill.
 
-**"Can you set it up for me?"**
-→ "I can guide you through it, but each step requires your action (scanning QR, accepting calendar share, etc.)"
+### Step 7: Connect monday.com
+1. Create a monday.com account for the agent (use org signup URL).
+2. Generate API token: avatar → Developers → My Access Tokens → Copy.
+3. Save the token:
+   ```bash
+   echo "YOUR_TOKEN" > ~/.credentials/monday-api-token.txt
+   ```
+4. (Optional) Set up monday MCP for natural language operations.
+5. Full guide: see `monday-workspace` skill.
 
-**"How long does this take?"**
-→ "Phase 1 takes about 20–30 minutes. Integrations another 15–20 min."
+### Step 8: Set Up Email Access (Optional)
+```bash
+# Authenticate gog with Gmail and other services
+gog auth add owner@company.com --services gmail,drive,contacts
+
+# Test it works
+GOG_ACCOUNT=owner@company.com gog gmail search 'is:unread' --max 5
+```
+Full guide: see `openclaw-email-orientation` skill.
+
+---
+
+## Phase 3 — Configuration
+
+### Step 9: Configure SOUL.md
+
+Key things to include:
+- Owner's name and communication style.
+- Work hours and timezone.
+- What to act on autonomously vs. what requires permission.
+- Topics to proactively monitor.
+
+### Step 10: Schedule Morning Briefing (Optional)
+- Cron job at 07:30 owner's timezone, Monday–Friday.
+- Sends: meetings, urgent emails, open tasks.
+- Full guide: see `owner-briefing` skill.
+
+### Step 11: Add to PA Network Directory
+- Update `data/pa-directory.json` with new PA details.
+- Announce in the PA coordination group.
 
 ---
 
@@ -114,10 +115,10 @@ Key rules to include:
 
 | Issue | Likely Cause | Fix |
 |---|---|---|
-| Agent doesn't respond after setup | WhatsApp not properly linked | Re-scan QR code |
-| Messages=0 in dashboard | Gateway ingest issue | Run `openclaw gateway restart` |
+| Agent doesn't respond | WhatsApp not properly linked | Re-scan QR code |
+| Messages count = 0 | Gateway ingest issue | Run `openclaw gateway restart` |
 | Calendar connected but read-only | Wrong share permission | Owner re-shares with "Make changes" |
-| API billing error | Key out of credits | Top up or switch model |
+| Billing error | API key out of credits | Top up or switch model |
 | eSIM not activating | Data-only plan | Get SMS-capable plan |
 
 ---
@@ -129,10 +130,10 @@ Key rules to include:
 [ ] Phone number acquired
 [ ] WhatsApp Business installed and registered
 [ ] WhatsApp connected to agent
-[ ] Agent responds to test message
-[ ] Google Calendar connected with write access
+[ ] Agent responds to test message       ← must complete before Phase 2
+[ ] Google Calendar connected (write access)
 [ ] monday.com account created and token saved
-[ ] SOUL.md configured with owner preferences
+[ ] SOUL.md configured
 [ ] Morning briefing scheduled (optional)
 [ ] Added to PA network directory
 [ ] Announced in PA coordination group
@@ -140,17 +141,8 @@ Key rules to include:
 
 ---
 
-## Model Compatibility
+## Cost Tips
 
-This skill works with any LLM model capable of following multi-step instructions.
-
-| Task | Minimum Model |
-|---|---|
-| Guiding through onboarding steps | Any |
-| Troubleshooting WhatsApp issues | Small–Medium |
-| Troubleshooting calendar/email access | Small–Medium |
-| Customizing SOUL.md for the owner | Medium recommended (better tone/personalization) |
-
-The onboarding process is primarily procedural — no model-specific features are required. Any model that can follow instructions and respond to user confirmations will work.
-
-> **Note:** OpenClaw supports multiple LLM providers (Anthropic, OpenAI, Google, etc.). During account setup, the owner selects their preferred model provider. The onboarding steps are the same regardless of provider.
+- **Cheap:** Onboarding is procedural — any small model works.
+- **Avoid:** Do not attempt all phases simultaneously — go in order.
+- **Small model OK:** Use a medium model only if SOUL.md customization needs nuanced tone matching.

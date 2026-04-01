@@ -5,7 +5,19 @@ description: "Meta-skill for skill selection and routing. Use this skill FIRST w
 
 # Skill Master
 
-The routing layer. Use this to figure out which skill(s) to use before acting.
+## Minimum Model
+Any model. This is a lookup table — any model can use it.
+
+---
+
+## How to Use This Skill
+
+1. Read the owner's request.
+2. Find a match in the **Quick Lookup** table below.
+3. If not found, use the **Decision Tree**.
+4. Load that skill's SKILL.md and follow it.
+
+Do not improvise. If no skill matches, say so and ask the owner.
 
 ---
 
@@ -26,7 +38,10 @@ The routing layer. Use this to figure out which skill(s) to use before acting.
 | "set up email" / "connect Gmail" | openclaw-email-orientation |
 | "how am I doing" / "review my performance" | pa-eval |
 | "I made a mistake" / "owner corrected me" | self-learning |
-| "this task will take long" / "run this in background" | spawn-subagent |
+| "this task will take long" / "run in background" | spawn-subagent |
+| "save this" / "backup" / "push to git" | git-backup |
+| "what was discussed in [group]" | whatsapp-memory |
+| "find new skill ideas" / "what skills are trending" | skill-scout |
 
 ---
 
@@ -54,58 +69,59 @@ What kind of task is this?
 ├─ DAILY OPERATIONS
 │   ├─ Morning/evening briefing → owner-briefing
 │   ├─ monday.com board task → monday-workspace
+│   ├─ Backup workspace → git-backup
 │   └─ Long-running task → spawn-subagent
 │
 └─ SELF-IMPROVEMENT
     ├─ Owner corrected me → self-learning
     ├─ Weekly performance review → pa-eval
-    └─ Pattern analysis → self-learning + pa-eval
+    ├─ Recall group conversation context → whatsapp-memory
+    └─ Find new skill ideas → skill-scout
 ```
 
 ---
 
 ## Full Skill Library
 
-| Skill | Category | Complexity | Best For |
-|---|---|---|---|
-| **ai-pa** | Coordination | Low | Finding PA contacts, group JIDs, coordination protocols |
-| **billing-monitor** | Health | Low | Detecting and responding to API billing failures |
-| **calendar-setup** | Setup | Medium | Full calendar connection wizard with write access |
-| **meeting-scheduler** | Operations | Medium | End-to-end meeting coordination between owners |
-| **monday-workspace** | Operations | Medium | monday.com account, GraphQL API, MCP server |
-| **openclaw-email-orientation** | Setup | Medium | Gmail + Calendar auth and troubleshooting |
-| **owner-briefing** | Operations | Low | Daily morning/evening summaries |
-| **pa-eval** | Self-improvement | Medium | Performance scoring, feedback analysis |
-| **pa-onboarding** | Setup | High | Full new agent setup from zero |
-| **pa-status** | Health | Low | Network-wide health dashboard |
-| **self-learning** | Self-improvement | Low | Logging and applying lessons from mistakes |
-| **spawn-subagent** | Architecture | Medium | Delegating long/blocking tasks |
-| **whatsapp-diagnostics** | Health | Medium | Debugging WhatsApp connectivity issues |
+| Skill | Category | When to Use |
+|---|---|---|
+| **ai-pa** | Coordination | Find PA contacts, group JIDs, coordination protocols |
+| **billing-monitor** | Health | Detect and respond to API billing failures |
+| **calendar-setup** | Setup | Full calendar connection with write access |
+| **git-backup** | Memory | Backup workspace to GitHub |
+| **meeting-scheduler** | Operations | End-to-end meeting coordination |
+| **monday-workspace** | Operations | monday.com account, API, MCP server |
+| **openclaw-email-orientation** | Setup | Gmail + Calendar auth and troubleshooting |
+| **owner-briefing** | Operations | Daily morning/evening summaries |
+| **pa-eval** | Self-improvement | Performance scoring and feedback analysis |
+| **pa-onboarding** | Setup | Full new agent setup from zero |
+| **pa-status** | Health | Network-wide health dashboard |
+| **self-learning** | Self-improvement | Log and apply lessons from mistakes |
+| **skill-master** | Routing | Pick the right skill (this file) |
+| **skill-scout** | Discovery | Weekly search for new skill ideas |
+| **spawn-subagent** | Architecture | Delegate long or blocking tasks |
+| **whatsapp-diagnostics** | Health | Debug WhatsApp connectivity |
+| **whatsapp-memory** | Memory | Per-conversation context tracking |
 
 ---
 
 ## Multi-Skill Workflows
 
-Some tasks require combining skills in sequence:
+Some tasks need multiple skills in sequence:
 
-### New PA Setup (full)
+### New PA Setup
 ```
 pa-onboarding → calendar-setup → openclaw-email-orientation → monday-workspace → ai-pa (add to directory)
 ```
 
-### Morning Routine
-```
-owner-briefing → spawn-subagent (if it should run non-blocking)
-```
-
 ### PA Network Health Check
 ```
-pa-status → billing-monitor (for any flagged PAs) → whatsapp-diagnostics (for unresponsive ones)
+pa-status → billing-monitor (flagged PAs) → whatsapp-diagnostics (unresponsive ones)
 ```
 
 ### After a Mistake
 ```
-self-learning (log it) → pa-eval (update score) → SOUL.md (update rule if pattern)
+self-learning (log it) → pa-eval (update score) → SOUL.md (add rule if pattern)
 ```
 
 ### Schedule a Meeting
@@ -113,90 +129,54 @@ self-learning (log it) → pa-eval (update score) → SOUL.md (update rule if pa
 ai-pa (find the other PA's contact) → meeting-scheduler (coordinate + book)
 ```
 
+### After Important Group Chat
+```
+whatsapp-memory (log decisions) → git-backup (push to GitHub)
+```
+
+### Weekly Maintenance
+```
+whatsapp-memory (weekly digest) → owner-briefing (include highlights) → git-backup
+```
+
 ---
 
-## Skill Complexity Guide
+## Where to Run (Complexity Guide)
 
-### Low complexity — run inline, no subagent needed
-- ai-pa, billing-monitor, owner-briefing, pa-status, self-learning
+### Run inline (main session)
+- ai-pa, billing-monitor, owner-briefing, pa-status, self-learning, git-backup
 
-### Medium complexity — consider subagent for heavy operations
-- calendar-setup (OAuth flow), meeting-scheduler (multi-step), monday-workspace (bulk ops)
+### Consider subagent for heavy operations
+- calendar-setup, meeting-scheduler, monday-workspace (bulk ops)
 
-### High complexity — spawn subagent recommended
-- pa-onboarding (20+ steps), pa-eval (full analysis), batch operations
+### Spawn subagent (recommended)
+- pa-onboarding (20+ steps), pa-eval (full monthly analysis), batch operations, skill-scout
 
 ---
 
 ## Model Guidance
 
-Some skills work with any model. Others benefit from stronger reasoning:
-
-| Skill | Minimum Model | Notes |
-|---|---|---|
-| ai-pa | Any | Simple lookup |
-| billing-monitor | Any | Pattern matching |
-| owner-briefing | Small–Medium | Summarization |
-| whatsapp-diagnostics | Small–Medium | Decision tree |
-| calendar-setup | Small–Medium | Step-by-step |
-| meeting-scheduler | Medium | Scheduling logic |
-| monday-workspace | Medium | API operations |
-| pa-eval | Medium–Large | Analysis + scoring |
-| self-learning | Medium–Large | Pattern detection |
-| pa-onboarding | Medium | Multi-step workflow |
-| pa-status | Any | Data aggregation |
-| spawn-subagent | Any | Task delegation |
+| Skill | Minimum Model |
+|---|---|
+| ai-pa, billing-monitor, pa-status, git-backup, owner-briefing | Any |
+| whatsapp-diagnostics, calendar-setup, pa-onboarding, whatsapp-memory | Small–Medium |
+| meeting-scheduler, monday-workspace, skill-scout | Medium |
+| pa-eval (trend analysis), self-learning (writing rules) | Medium–Large |
 
 ---
 
 ## Adding New Skills
 
-When a new skill is added to the library:
-1. Add a row to the **Full Skill Library** table
-2. Add trigger phrases to **Quick Lookup**
-3. Update the **Decision Tree** if needed
-4. Add to any relevant **Multi-Skill Workflows**
-
-Keep this file as the single source of truth for skill routing.
+When a new skill is added:
+1. Add a row to the **Full Skill Library** table.
+2. Add trigger phrases to **Quick Lookup**.
+3. Update the **Decision Tree** if it fits a new category.
+4. Add to any relevant **Multi-Skill Workflows**.
 
 ---
 
-## Auto-Updated
+## Cost Tips
 
-This skill is updated automatically when new skills are added. See skill-scout for how new skills are discovered.
-
----
-
-## Skills Added After Initial Release
-
-| Skill | Category | Complexity | Best For |
-|---|---|---|---|
-| **git-backup** | Memory | Low | Backup workspace to GitHub — token discovery, auto-push |
-| **whatsapp-memory** | Memory | Low | Per-WhatsApp-group context: decisions, people, topics per group |
-| **skill-scout** | Discovery | Medium | Weekly web search for new skill ideas |
-
-### New Trigger Phrases
-
-| If the owner says... | Use skill |
-|---|---|
-| "save this" / "backup" / "push to git" | git-backup |
-| "what was discussed in [group]" | whatsapp-memory |
-| "what do you know about [group]" | whatsapp-memory |
-| "find new skill ideas" / "what skills are trending" | skill-scout |
-
-### New Multi-Skill Workflows
-
-**After any group conversation:**
-```
-whatsapp-memory (log decisions/people) → git-backup (persist to GitHub)
-```
-
-**Weekly maintenance:**
-```
-whatsapp-memory (weekly digest per group) → owner-briefing (include group highlights) → git-backup
-```
-
-**Memory before context compaction:**
-```
-whatsapp-memory (flush group contexts) → git-backup (push everything)
-```
+- **This skill itself:** Very cheap — it's a lookup table, any model works.
+- **Routing decision:** If unsure, lean toward a smaller, cheaper skill first.
+- **Don't over-spawn:** Use subagents only when the task would actually block the main session.

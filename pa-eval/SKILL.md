@@ -5,42 +5,50 @@ description: "Evaluate PA performance through structured scoring, owner feedback
 
 # PA Eval Skill
 
-Structured performance evaluation for AI Personal Assistants.
+## Minimum Model
+Any model for filling in templates. Use a medium model for trend analysis and recommendations.
 
 ---
 
-## Evaluation Dimensions
+## When to Run
 
-Score each dimension 1–5:
+- **Weekly self-eval:** Every 7 days. Run automatically.
+- **On owner correction:** Log the correction immediately, then re-score the affected dimension.
+- **Monthly report:** At the end of each month, aggregate all weekly evals.
+- **On demand:** If owner asks "how am I doing?" → generate current eval on the spot.
+
+---
+
+## Scoring Dimensions
+
+Score each 1–5:
 
 | Dimension | What to Measure |
 |---|---|
-| **Execution** | Does the PA complete tasks without being reminded? |
-| **Accuracy** | Are results correct, complete, and verified? |
-| **Speed** | How quickly does the PA respond and execute? |
-| **Proactivity** | Does the PA anticipate needs and act without being asked? |
-| **Communication** | Is output concise, clear, and appropriate to context? |
-| **Memory** | Does the PA remember context across sessions? |
-| **Tool Use** | Does the PA use available tools correctly and efficiently? |
-| **Judgment** | Does the PA know when to act vs. when to ask? |
+| **Execution** | Tasks completed without reminders |
+| **Accuracy** | Results are correct and complete |
+| **Speed** | Response time is fast |
+| **Proactivity** | Acts without being asked |
+| **Communication** | Concise and context-appropriate |
+| **Memory** | Remembers context across sessions |
+| **Tool Use** | Tools used correctly and efficiently |
+| **Judgment** | Knows when to act vs. when to ask |
 
----
+**Score meanings:**
+- 5 = Consistently exceeds expectations
+- 4 = Meets expectations with minor gaps
+- 3 = Acceptable but basic
+- 2 = Frequent gaps or errors
+- 1 = Fails basic expectations
 
-## Scoring Rubric
-
-| Score | Meaning |
-|---|---|
-| 5 | Excellent — consistently exceeds expectations |
-| 4 | Good — meets expectations with minor gaps |
-| 3 | Acceptable — meets basic expectations |
-| 2 | Needs improvement — frequent gaps or errors |
-| 1 | Poor — fails to meet basic expectations |
+**Total:** Max 40 points.
+Grade: A (36–40), B (28–35), C (20–27), D (<20)
 
 ---
 
 ## Weekly Self-Evaluation
 
-Run this weekly. Save output to `.learnings/eval/YYYY-MM-DD.md`.
+Save to `.learnings/eval/YYYY-MM-DD.md`.
 
 ```markdown
 # PA Weekly Eval — YYYY-MM-DD
@@ -61,144 +69,133 @@ Run this weekly. Save output to `.learnings/eval/YYYY-MM-DD.md`.
 
 ## Owner Feedback This Week
 
-- Positive: 
-- Corrections: 
-- Complaints: 
+- Positive:
+- Corrections:
+- Complaints:
 
 ## Tasks Completed
 
-- 
+-
 
 ## Tasks Failed or Incomplete
 
-- 
+-
 
 ## What Went Well
 
-- 
+-
 
 ## What to Improve
 
-- 
+-
 
 ## Actions for Next Week
 
-- [ ] 
+- [ ]
+```
+
+### Create the File
+
+```bash
+#!/bin/bash
+set -e
+
+# Set the output directory
+EVAL_DIR="$HOME/.openclaw/workspace/.learnings/eval"
+mkdir -p "$EVAL_DIR"
+
+DATE=$(date +%Y-%m-%d)
+EVAL_FILE="$EVAL_DIR/$DATE.md"
+
+# Write the template with today's date
+cat > "$EVAL_FILE" << 'EOF'
+# PA Weekly Eval — DATE_PLACEHOLDER
+[Fill in the template above]
+EOF
+
+# Replace the placeholder with the real date (works on Linux and macOS)
+sed -i "s/DATE_PLACEHOLDER/$DATE/" "$EVAL_FILE" 2>/dev/null \
+  || sed -i '' "s/DATE_PLACEHOLDER/$DATE/" "$EVAL_FILE"
+
+echo "Created eval file: $EVAL_FILE"
 ```
 
 ---
 
 ## Owner Feedback Signals
 
-Log and score these automatically:
+Log these automatically when detected:
 
-| Signal | Impact |
+| Signal | Action |
 |---|---|
-| 👍 reaction | +1 positive signal |
-| 👎 reaction | -1 negative signal, log correction |
-| "תודה" / "great" / "perfect" | +1 positive |
-| "לא טוב" / "wrong" / "fix this" | -1 negative, log correction |
-| Repeated question (owner re-asks same thing) | -1 memory gap |
-| Owner does task themselves instead of delegating | -1 initiative gap |
-| Owner expresses surprise at proactive action | +2 proactivity |
+| 👍 reaction | Log +1 positive |
+| 👎 reaction | Log -1 negative, record the correction |
+| "תודה" / "great" / "perfect" | Log +1 positive |
+| "wrong" / "fix this" / "לא טוב" | Log -1, record the correction |
+| Owner re-asks the same question | Log -1 memory gap |
+| Owner does the task themselves | Log -1 initiative gap |
+| Owner surprised by proactive action | Log +2 proactivity |
+
+**Rule:** If a signal appears → log it immediately. Don't batch feedback signals.
 
 ---
 
-## Benchmark Tests
-
-Run monthly to measure capability:
-
-### Task Completion Rate
-- Count tasks assigned in last 30 days
-- Count tasks completed without follow-up
-- Rate = completed / assigned × 100%
-- Target: >90%
-
-### Response Time
-- Measure time from message received to first action
-- Target: <30 seconds for simple tasks, <2 min for complex
-
-### Accuracy Rate
-- Count tasks where output required correction
-- Rate = (tasks - corrections) / tasks × 100%
-- Target: >95%
-
-### Memory Retention
-- Ask about something discussed 7+ days ago
-- Score: recalled correctly (pass) / missed (fail)
-- Target: >80% retention of important facts
-
----
-
-## Evaluation Report Format
+## Monthly Report Format
 
 ```markdown
-# PA Performance Report — [Month] [Year]
+# PA Performance Report — [Month Year]
 
 **PA Name:** [Name]
 **Owner:** [Owner Name]
-**Evaluation Period:** [Start] – [End]
+**Period:** [Start] – [End]
 
-## Summary Score: X/40 ([Grade])
-
-A (36–40) | B (28–35) | C (20–27) | D (<20)
+## Summary Score: X/40 ([Grade A/B/C/D])
 
 ## Dimension Breakdown
-[Scores table]
+[Copy scores table here]
 
 ## Key Wins
-- 
+-
 
 ## Key Issues
-- 
+-
 
 ## Trend vs Last Period
-- Score: +X / -X points
+- Score change: +X / -X points
 - Best improvement: [dimension]
 - Biggest regression: [dimension]
 
 ## Recommended Actions
-1. 
-2. 
-3. 
+1.
+2.
+3.
 ```
 
 ---
 
-## Storing Eval Data
+## Benchmark Tests (Run Monthly)
 
-```bash
-#!/bin/bash
-set -e
+### Task Completion Rate
+- Count tasks assigned in last 30 days.
+- Count completed without follow-up.
+- Formula: `completed / assigned × 100%`
+- Target: >90%
 
-EVAL_DIR="$HOME/.openclaw/workspace/.learnings/eval"
-mkdir -p "$EVAL_DIR"
-DATE=$(date +%Y-%m-%d)
-EVAL_FILE="$EVAL_DIR/$DATE.md"
+### Accuracy Rate
+- Count tasks that required correction.
+- Formula: `(tasks - corrections) / tasks × 100%`
+- Target: >95%
 
-# Save eval (replace [eval content] with actual content)
-cat > "$EVAL_FILE" << 'EOF'
-[eval content]
-EOF
-
-echo "Saved to $EVAL_FILE"
-
-# View history
-echo "Eval history:"
-ls "$EVAL_DIR/"
-```
+### Memory Retention
+- Ask about something discussed 7+ days ago.
+- Pass if recalled correctly, Fail if missed.
+- Target: >80%
 
 ---
 
-## Model Compatibility
+## Cost Tips
 
-This skill works with any LLM model that can follow structured templates.
-
-| Task | Minimum Model |
-|---|---|
-| Filling in the weekly eval template | Any |
-| Scoring dimensions from memory | Small–Medium |
-| Pattern analysis across multiple evals | Medium model recommended |
-| Generating trend analysis and recommendations | Medium–Large |
-
-No provider-specific APIs are used. Eval data is stored as plain markdown files — readable and editable by any LLM or human.
+- **Cheap:** Filling in the weekly template — any small model works.
+- **Expensive:** Trend analysis and pattern detection across multiple evals — use a medium model.
+- **Batch:** Review all weekly evals at once during the monthly report, not one by one.
+- **Avoid:** Don't re-score historical weeks — score in real time and save to file.

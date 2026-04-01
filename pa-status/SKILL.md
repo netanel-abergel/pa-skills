@@ -5,7 +5,16 @@ description: "PA network health dashboard. Use when: checking if all PAs in the 
 
 # PA Status Skill
 
-Monitor the health of all PAs in your network.
+## Minimum Model
+Any model. Status checks are data-driven and rule-based.
+
+---
+
+## When to Run
+
+- **Daily at 09:00:** Full network report to admin.
+- **Immediately on billing error:** Send a partial report for the affected PA.
+- **On demand:** If admin asks "what's the status?" → generate the report now.
 
 ---
 
@@ -13,113 +22,129 @@ Monitor the health of all PAs in your network.
 
 For each PA in `data/pa-directory.json`, check:
 
-| Check | How | Healthy |
+| Check | Field | Healthy State |
 |---|---|---|
-| Reachability | Send a ping message | Response within 5 min |
-| Last active | Check last message timestamp | Within 24h |
-| Billing | Check for billing error logs | No errors in last 24h |
-| Model | Confirm current model | Matches expected |
-| Calendar | Confirm calendar is connected | Connected + write access |
+| Last active | `last_seen` | Within 24 hours |
+| Billing | `billing_error` | `false` |
+| Calendar | `calendar_connected` | `true` |
+| Status | `status` | `"active"` |
 
 ---
 
-## Running a Status Check
+## Automated Report Script
 
-### Quick Ping (WhatsApp)
+```python
+#!/usr/bin/env python3
+import json
+import datetime
 
-```
-For each PA in directory:
-  Send: "ping 🏓"
-  Wait up to 5 minutes for response
-  Log: ONLINE / NO_RESPONSE
-```
+# Load PA directory
+try:
+    with open('data/pa-directory.json') as f:
+        d = json.load(f)
+except FileNotFoundError:
+    print("ERROR: data/pa-directory.json not found")
+    exit(1)
 
-### Status Report Format
+today = datetime.date.today().isoformat()
+online = []
+issues = []
+offline = []
 
-```
-📊 PA Network Status — [DATE]
-
-✅ ONLINE (X/Y)
-• Aria (Jane's PA) — last seen 2h ago, [Model Name], calendar ✅
-• Rex (John's PA) — last seen 30m ago, [Model Name], calendar ✅
-
-⚠️ ISSUES
-• Nova (Sarah's PA) — billing error since 14:00
-• Bolt (Mike's PA) — no response in 6h
-
-❌ OFFLINE
-• (none)
-
-Action needed: Nova billing, Bolt unresponsive
-```
-
----
-
-## Automated Report
-
-Generate and send to admin:
-
-```bash
-python3 << 'EOF'
-import json, datetime
-
-with open('data/pa-directory.json') as f:
-    d = json.load(f)
-
-report = f"📊 PA Network Status — {datetime.date.today()}\n\n"
-
-for pa in d['pas']:
-    status = pa.get('status', 'unknown')
+for pa in d.get('pas', []):
     name = pa['name']
     owner = pa['owner']
+    status = pa.get('status', 'unknown')
     model = pa.get('model', 'unknown')
-    calendar = "✅" if pa.get('calendar_connected') else "❌"
-    billing = "✅" if not pa.get('billing_error') else "⚠️ billing"
-    report += f"• {name} ({owner}) — {model}, calendar {calendar}, billing {billing}\n"
 
-print(report)
-EOF
+    # Format calendar and billing indicators
+    calendar = "✅" if pa.get('calendar_connected') else "❌"
+    billing_ok = not pa.get('billing_error', False)
+    billing = "✅" if billing_ok else "⚠️ billing error"
+
+    # Classify each PA into online / issues / offline
+    if status == 'active' and billing_ok:
+        online.append(f"• {name} ({owner}) — {model}, cal {calendar}")
+    elif status == 'inactive':
+        offline.append(f"• {name} ({owner})")
+    else:
+        issues.append(f"• {name} ({owner}) — {billing}")
+
+# Print the report
+total = len(d.get('pas', []))
+print(f"📊 PA Network Status — {today}\n")
+print(f"✅ ONLINE ({len(online)}/{total})")
+for line in online:
+    print(line)
+
+if issues:
+    print("\n⚠️ ISSUES")
+    for line in issues:
+        print(line)
+
+if offline:
+    print("\n❌ OFFLINE")
+    for line in offline:
+        print(line)
+
+if not issues and not offline:
+    print("\nAll PAs are healthy 🎉")
 ```
 
 ---
 
-## Directory Schema Extension
+## Directory Schema (With Status Fields)
 
-Add these fields to each PA entry in `pa-directory.json` to track status:
+Add these fields to each PA entry in `pa-directory.json`:
 
 ```json
 {
   "name": "Aria",
+  "phone": "+1XXXXXXXXXX",
+  "owner": "Owner Name",
+  "owner_email": "owner@company.com",
+  "status": "active",
   "model": "your-llm-model",
   "last_seen": "2026-04-01T10:00:00Z",
   "calendar_connected": true,
   "billing_error": false,
-  "billing_error_since": null,
-  "status": "active"
+  "billing_error_since": null
 }
 ```
 
-> Replace `"your-llm-model"` with the actual model identifier used by this PA (e.g. `"gpt-4o"`, `"gemini-1.5-pro"`, `"claude-haiku-20240307"`, etc.).
+Replace `"your-llm-model"` with the actual model ID (e.g. `"claude-haiku-20240307"`, `"gpt-4o-mini"`, `"gemini-1.5-flash"`).
+
+---
+
+## Quick Ping (WhatsApp Reachability)
+
+Use this for real-time check (after the script above):
+
+```
+For each PA in the issues list:
+  Send: "ping 🏓"
+  Wait up to 5 minutes
+  If response received: mark ONLINE
+  If no response: mark NO_RESPONSE → check whatsapp-diagnostics and billing-monitor skills
+```
+
+**Rule:** Only ping PAs that are flagged. Do not ping healthy PAs — it creates noise.
 
 ---
 
 ## Scheduling
 
-Run status checks:
-- **Daily at 09:00** — full network report to admin
-- **On billing error detection** — immediate partial report
-- **On demand** — when admin asks "what's the status?"
+| Frequency | Action |
+|---|---|
+| Daily at 09:00 | Full network report to admin |
+| On billing error | Immediate partial report |
+| On demand | When admin asks "what's the status?" |
 
 ---
 
-## Model Compatibility
+## Cost Tips
 
-This skill works with any LLM model — status checks are rule-based and data-driven, not reasoning-heavy.
-
-| Task | Minimum Model |
-|---|---|
-| Reading directory and generating report | Any |
-| Interpreting billing logs | Any |
-| Composing alert messages | Any (small/lightweight models sufficient) |
-
-No model-specific features are used. The `model` field in `pa-directory.json` is purely informational metadata about each PA — it does not affect how this skill runs.
+- **Very cheap:** Reading a JSON file and formatting a report uses minimal tokens.
+- **Small model OK:** Any model can generate this report.
+- **Avoid:** Do not ping all PAs at once — send one at a time to avoid rate limits.
+- **Batch:** Run the full report once daily instead of checking each PA separately.

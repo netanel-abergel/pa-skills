@@ -5,108 +5,112 @@ description: "Spawn isolated subagents to handle long-running, complex, or block
 
 # Spawn Subagent Skill
 
-Delegate long or complex tasks to isolated subagents so the main session stays responsive.
+## Minimum Model
+Any model. Task delegation doesn't require complex reasoning.
 
 ---
 
-## When to Spawn a Subagent
+## When to Spawn vs. Stay in Main Session
 
-**Spawn when:**
-- Task will take >30 seconds (file processing, API batch calls, code generation)
-- Task involves many sequential steps (research → draft → send → log)
-- Task could fail/loop and block the main session
-- Multiple independent tasks can run in parallel
-- Owner wants results "when ready" rather than waiting now
+**Spawn a subagent when:**
+- Task takes >30 seconds.
+- Task has many sequential steps (research → draft → send → log).
+- Task could fail and block the main session.
+- Multiple independent tasks can run in parallel.
+- Owner wants results "when ready," not now.
 
 **Stay in main session when:**
-- Task is a simple lookup or quick action (<10 seconds)
-- Task requires back-and-forth with the owner
-- Task needs access to the current conversation context
+- Task takes <10 seconds.
+- Task needs back-and-forth with the owner.
+- Task needs the current conversation context.
 
 ---
 
-## How to Spawn (OpenClaw)
+## How to Spawn
 
 ### Basic Spawn
 
 ```python
-# Via sessions_spawn tool
 sessions_spawn(
     task="[Detailed task description here]",
-    mode="run",           # "run" = one-shot, "session" = persistent
+    mode="run",             # "run" = one-shot task
     runtime="subagent",
-    runTimeoutSeconds=300  # 5 min max; adjust as needed
+    runTimeoutSeconds=300   # Kill after 5 min if still running
 )
 ```
 
-### With Streaming Output
+### With Custom Model (for expensive reasoning tasks)
 
 ```python
-# Stream output back to parent session (ACP only)
 sessions_spawn(
-    task="[Task]",
+    task="[Complex analysis task]",
     mode="run",
-    runtime="acp",
-    agentId="your-agent-id",
-    streamTo="parent"
+    runtime="subagent",
+    runTimeoutSeconds=300,
+    # Use a capable model only when the task needs it
+    model="your-provider/your-capable-model"
+    # Examples: "anthropic/claude-opus-4-6", "openai/gpt-4o", "google/gemini-1.5-pro"
 )
 ```
 
 ---
 
-## Task Description Best Practices
+## Writing Good Task Descriptions
 
-A good task description for a subagent includes:
+A good task description has 4 parts:
 
-1. **What to do** — specific, unambiguous instructions
-2. **Where to find inputs** — file paths, API endpoints, environment variables
-3. **What to output** — exact format, where to save results
-4. **How to finish** — what "done" looks like
+1. **What to do** — specific actions
+2. **Where inputs are** — file paths, env vars, API endpoints
+3. **What to output** — exact format and save location
+4. **What "done" looks like** — clear completion signal
 
-### Example: Good Task Description
-
-```
-Read all .md files in /tmp/reports/, 
-summarize each one in 2–3 sentences,
-save the combined summary to /tmp/reports/summary.md,
-then print "DONE" to stdout.
-
-Use the file paths exactly as given. Do not modify the original files.
-```
-
-### Example: Bad Task Description
+### Good Example
 
 ```
-Summarize the reports.
+Read all .md files in /tmp/reports/
+Summarize each in 2–3 sentences
+Save all summaries to /tmp/reports/summary.md — one section per file
+Print "DONE: X files summarized" when finished
+Do not modify the original files
 ```
-*(Too vague — subagent won't know where to find files or where to save output)*
+
+### Bad Example
+
+```
+Summarize the reports
+```
+*Too vague — subagent won't know where files are or what to do with results.*
 
 ---
 
-## Common Subagent Patterns
+## Common Patterns
 
-### Pattern 1: Batch Processing
+### Batch Processing
 
 ```python
-# Spawn one subagent per batch item
-for item in items:
-    sessions_spawn(
-        task=f"Process item: {item}. Save result to /tmp/results/{item}.json",
-        mode="run",
-        runtime="subagent",
-        runTimeoutSeconds=120
-    )
-# Then wait for completion events
+# Spawn one subagent to process all items — not one per item
+sessions_spawn(
+    task="""
+    Process each item in /tmp/items.json:
+    1. Read the file
+    2. For each item: [describe action]
+    3. Save results to /tmp/results/ as one file per item (item_ID.json)
+    4. Print "DONE: X items processed"
+    """,
+    mode="run",
+    runtime="subagent",
+    runTimeoutSeconds=300
+)
 ```
 
-### Pattern 2: Research + Draft
+### Research + Draft
 
 ```python
 sessions_spawn(
     task="""
     1. Search the web for: [topic]
     2. Summarize the top 5 results in bullet points
-    3. Draft a 3-paragraph briefing for a non-technical executive
+    3. Draft a 3-paragraph briefing in plain language
     4. Save the draft to /tmp/briefing.md
     5. Print "DONE" when finished
     """,
@@ -116,112 +120,30 @@ sessions_spawn(
 )
 ```
 
-### Pattern 3: Long-Running Cron Task
+### Parallel Independent Tasks
+
+```python
+# Both spawn at the same time — runs faster than sequential
+sessions_spawn(
+    task="Fetch latest emails. Save to /tmp/emails.json. Print DONE.",
+    mode="run", runtime="subagent", runTimeoutSeconds=60
+)
+sessions_spawn(
+    task="Get today's calendar events. Save to /tmp/calendar.json. Print DONE.",
+    mode="run", runtime="subagent", runTimeoutSeconds=60
+)
+# Wait for both completion events, then read both files
+```
+
+### PA Daily Briefing (Non-Blocking)
 
 ```python
 sessions_spawn(
     task="""
-    This is a scheduled task.
-    1. Check all PAs in data/pa-directory.json for billing errors
-    2. For each PA with billing_error=true, send a WhatsApp alert to their owner
-    3. Save a status report to /tmp/billing-status.json
-    """,
-    mode="run",
-    runtime="subagent",
-    runTimeoutSeconds=300
-)
-```
-
-### Pattern 4: Parallel Independent Tasks
-
-```python
-# Spawn both at once — they run in parallel
-sessions_spawn(task="Fetch latest emails and save to /tmp/emails.json", mode="run", runtime="subagent")
-sessions_spawn(task="Get today's calendar events and save to /tmp/calendar.json", mode="run", runtime="subagent")
-# Then wait for both to complete before combining results
-```
-
----
-
-## Handling Completion
-
-After spawning, **do not poll**. Wait for the completion event to arrive as a message.
-
-When the completion event arrives:
-1. Read the output file(s) the subagent was asked to create
-2. Use the results in the main session
-3. Reply with NO_REPLY if no user response is needed
-
-```
-# Completion event looks like:
-# "Subagent completed: [childSessionKey]"
-# Then read the output:
-result = read("/tmp/output.json")
-```
-
----
-
-## Timeout and Failure Handling
-
-```python
-sessions_spawn(
-    task="[Task]",
-    mode="run",
-    runtime="subagent",
-    runTimeoutSeconds=120  # Kill after 2 min if still running
-)
-```
-
-If subagent times out or fails:
-1. Log the failure: append to `.learnings/ERRORS.md`
-2. Notify owner if task was time-sensitive
-3. Retry with a simpler, more explicit task description
-4. Fall back to running in main session if critical
-
----
-
-## Anti-Patterns to Avoid
-
-| ❌ Don't | ✅ Do Instead |
-|---|---|
-| Poll with sessions_list in a loop | Wait for push-based completion events |
-| Spawn for a 5-second task | Run quick tasks in main session |
-| Give vague task descriptions | Be explicit about inputs, outputs, and file paths |
-| Spawn without a timeout | Always set runTimeoutSeconds |
-| Ignore subagent failures | Check for error events and handle them |
-
----
-
-## Model Notes
-
-- Subagents inherit the same model as the parent unless overridden
-- For heavy reasoning tasks (code generation, analysis), use a larger model
-- For simple batch operations, a smaller/faster model saves cost
-
-```python
-sessions_spawn(
-    task="[Complex analysis task]",
-    mode="run",
-    runtime="subagent",
-    model="your-provider/your-model"  # Override model for this task
-    # Examples: "anthropic/claude-opus-4-6", "openai/gpt-4o", "google/gemini-1.5-pro"
-)
-```
-
----
-
-## Practical Example: PA Daily Briefing via Subagent
-
-Instead of blocking the main session for 2 minutes:
-
-```python
-# In main session — fire and forget
-sessions_spawn(
-    task="""
-    Generate the daily morning briefing for the owner:
-    1. Get today's calendar events using: GOG_ACCOUNT=owner@company.com gog calendar events primary --from TODAY --to TOMORROW
-    2. Get urgent emails: GOG_ACCOUNT=owner@company.com gog gmail search 'is:unread newer_than:1d' --max 5
-    3. Format as a WhatsApp message (no markdown headers, use bold for sections)
+    Generate the daily morning briefing:
+    1. Get calendar: GOG_ACCOUNT=owner@company.com gog calendar events primary --from TODAY --to TOMORROW
+    2. Get emails: GOG_ACCOUNT=owner@company.com gog gmail search 'is:unread newer_than:1d' --max 5
+    3. Format as plain text (use CAPS for section titles, no markdown headers)
     4. Save to /tmp/morning-briefing.txt
     5. Print DONE
     """,
@@ -229,5 +151,48 @@ sessions_spawn(
     runtime="subagent",
     runTimeoutSeconds=120
 )
-# Main session stays free. When done, read /tmp/morning-briefing.txt and send it.
+# Main session stays free. Read /tmp/morning-briefing.txt when done, then send it.
 ```
+
+---
+
+## Handling Completion
+
+**Do not poll.** Wait for the push-based completion event.
+
+When the completion event arrives:
+1. Read the output file the subagent created.
+2. Use the results in the main session.
+3. Reply with `NO_REPLY` if the owner doesn't need a response.
+
+---
+
+## Failure Handling
+
+If a subagent times out or fails:
+1. Log the failure: append to `.learnings/ERRORS.md`.
+2. Notify owner if the task was time-sensitive.
+3. Retry with a simpler, more explicit task description.
+4. If still failing → run in the main session as a fallback.
+
+---
+
+## Anti-Patterns
+
+| ❌ Don't | ✅ Do Instead |
+|---|---|
+| Poll with sessions_list in a loop | Wait for push-based completion events |
+| Spawn for a 5-second task | Run quick tasks in main session |
+| Use vague task descriptions | Be explicit about inputs, outputs, file paths |
+| Spawn without a timeout | Always set `runTimeoutSeconds` |
+| Ignore subagent failures | Check for error events and handle them |
+| Spawn a subagent from inside a subagent | Keep delegation to one level |
+
+---
+
+## Cost Tips
+
+- **Cheaper:** Use small models for batch/shell operations — spawn with `model="provider/small-model"`.
+- **Larger models only for:** Complex reasoning, code generation, analysis.
+- **Avoid:** Do not spawn many subagents simultaneously — they compete for resources.
+- **Batch:** One subagent processing 100 items is cheaper than 100 subagents with 1 item each.
