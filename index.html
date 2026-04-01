@@ -679,7 +679,7 @@ const SKILLS = [
 document.getElementById('total-count').textContent = SKILLS.length;
 
 function cardHTML(skill) {
-  const cmd = `npx @netanel-abergel/ai-pa install ${skill.slug}`;
+  const cmd = `npx ai-pa-skills install ${skill.slug}`;
   const ghUrl = `https://github.com/netanel-abergel/pa-skills/tree/main/skills/${skill.slug}`;
   return `
     <div class="card" data-slug="${skill.slug}" data-name="${skill.name.toLowerCase()}" data-desc="${skill.description.toLowerCase()}">
