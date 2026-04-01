@@ -1,25 +1,27 @@
 ---
 name: whatsapp-group-memory
-description: "Maintain separate memory contexts per WhatsApp group. Use when: the agent participates in multiple WhatsApp groups and needs to track topics, decisions, people, and context per group separately. Prevents context bleed between groups and enables targeted recall per group."
+description: "Maintain separate memory contexts per WhatsApp conversation — both groups and direct messages (DMs). Use when: tracking what was discussed with a specific person or in a specific group, recalling past context before responding, logging decisions or key facts from a conversation, or preventing context bleed between different chats."
 ---
 
-# WhatsApp Group Memory Skill
+# WhatsApp Memory Skill
 
-Separate, searchable memory per WhatsApp group — prevents mixing context between family, work, and PA groups.
+Separate, searchable memory per WhatsApp conversation — groups AND direct messages.
 
 ---
 
-## The Problem
+## Why This Matters
 
-Without group memory:
-- Context from one group bleeds into another
-- Agent doesn't know what was discussed in group X vs group Y
-- Hard to recall "what did we decide in the leadership group last week?"
+Without conversation memory:
+- Context from one chat bleeds into another
+- Hard to recall "what did Guy say last week?"
+- Can't track decisions made in a specific group
+- Owner repeats themselves across sessions
 
-With group memory:
-- Each group has its own context file
-- Separate people, topics, decisions per group
-- Targeted recall: "what was discussed in PA Onboarding this week?"
+With WhatsApp memory:
+- Every group and DM has its own context file
+- Recall: "what was discussed in the PA Team group this month?"
+- Track: "what did Doron ask me to follow up on?"
+- Separate memory for family, work, PA network
 
 ---
 
@@ -27,151 +29,133 @@ With group memory:
 
 ```
 memory/
-  groups/
-    120363408613668489/        ← JID (sanitized)
-      meta.json                ← Group name, JID, participants
-      context.md               ← Running context for this group
-      decisions.md             ← Key decisions made in this group
-      people.md                ← Who participates and their role/tone
-    120363422865795623/
-      meta.json
-      context.md
-      ...
-    direct-+1XXXXXXXXXX/       ← DM with specific person
-      context.md
-      ...
+  whatsapp/
+    groups/
+      120363408613668489-g-us/    ← sanitized JID
+        meta.json                 ← group name, JID, participants
+        context.md                ← running conversation context
+        decisions.md              ← key decisions
+        people.md                 ← who participates and their style/role
+    dms/
+      972548834688/               ← sanitized phone number
+        meta.json                 ← name, phone, relationship
+        context.md                ← running DM context
+        notes.md                  ← tasks, preferences, important facts
 ```
 
 ---
 
 ## Setup
 
-### Initialize group memory directory
-
 ```bash
-mkdir -p ~/.openclaw/workspace/memory/groups
-
-# Create a group entry
-init_group() {
-  JID="$1"
-  NAME="$2"
-  SAFE_JID=$(echo "$JID" | tr '@.' '-')
-  DIR="$HOME/.openclaw/workspace/memory/groups/$SAFE_JID"
+init_whatsapp_memory() {
+  TYPE="$1"       # "group" or "dm"
+  ID="$2"         # JID or phone number
+  NAME="$3"       # Human-readable name
   
-  mkdir -p "$DIR"
+  SAFE_ID=$(echo "$ID" | tr '@.+' '---')
   
-  cat > "$DIR/meta.json" << EOF
-{
-  "jid": "$JID",
-  "name": "$NAME",
-  "created": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-  "type": "group"
-}
+  if [ "$TYPE" = "group" ]; then
+    DIR="$HOME/.openclaw/workspace/memory/whatsapp/groups/$SAFE_ID"
+    mkdir -p "$DIR"
+    cat > "$DIR/meta.json" << EOF
+{"type": "group", "jid": "$ID", "name": "$NAME", "created": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"}
 EOF
-
-  touch "$DIR/context.md"
-  touch "$DIR/decisions.md"
-  touch "$DIR/people.md"
+    touch "$DIR/context.md" "$DIR/decisions.md" "$DIR/people.md"
+  else
+    DIR="$HOME/.openclaw/workspace/memory/whatsapp/dms/$SAFE_ID"
+    mkdir -p "$DIR"
+    cat > "$DIR/meta.json" << EOF
+{"type": "dm", "phone": "$ID", "name": "$NAME", "created": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"}
+EOF
+    touch "$DIR/context.md" "$DIR/notes.md"
+  fi
   
-  echo "Initialized group memory: $NAME ($JID)"
+  echo "Initialized WhatsApp memory: $NAME"
 }
 
-# Example:
-# init_group "120363408613668489@g.us" "PA Onboarding"
+# Examples:
+# init_whatsapp_memory "group" "120363422865795623@g.us" "Monday PA Team"
+# init_whatsapp_memory "dm" "+972542010180" "Guy Atzmon"
 ```
 
 ---
 
-## Writing to Group Memory
+## Writing Memory
 
-### Log a message or event
+### Log to a conversation
 
 ```bash
-log_to_group() {
-  JID="$1"
-  CONTENT="$2"
-  SAFE_JID=$(echo "$JID" | tr '@.' '-')
-  FILE="$HOME/.openclaw/workspace/memory/groups/$SAFE_JID/context.md"
+wa_log() {
+  TYPE="$1"    # group or dm
+  ID="$2"      # JID or phone
+  CONTENT="$3"
+  FILE_NAME="${4:-context.md}"  # context.md / decisions.md / notes.md
   
-  TIMESTAMP=$(date -u +%Y-%m-%d\ %H:%M)
-  echo "[$TIMESTAMP] $CONTENT" >> "$FILE"
+  SAFE_ID=$(echo "$ID" | tr '@.+' '---')
+  BASE="$HOME/.openclaw/workspace/memory/whatsapp"
+  
+  if [ "$TYPE" = "group" ]; then
+    FILE="$BASE/groups/$SAFE_ID/$FILE_NAME"
+  else
+    FILE="$BASE/dms/$SAFE_ID/$FILE_NAME"
+  fi
+  
+  [ ! -f "$FILE" ] && mkdir -p "$(dirname "$FILE")" && touch "$FILE"
+  echo "[$(date -u +%Y-%m-%d\ %H:%M)] $CONTENT" >> "$FILE"
 }
 
 # Usage:
-# log_to_group "120363408613668489@g.us" "Kira reported calendar connected successfully"
-```
-
-### Log a decision
-
-```bash
-log_decision() {
-  JID="$1"
-  DECISION="$2"
-  SAFE_JID=$(echo "$JID" | tr '@.' '-')
-  FILE="$HOME/.openclaw/workspace/memory/groups/$SAFE_JID/decisions.md"
-  
-  DATE=$(date -u +%Y-%m-%d)
-  echo "## [$DATE] $DECISION" >> "$FILE"
-}
-```
-
-### Log a person (when you learn something about a participant)
-
-```bash
-log_person() {
-  JID="$1"
-  PERSON_NAME="$2"
-  NOTE="$3"
-  SAFE_JID=$(echo "$JID" | tr '@.' '-')
-  FILE="$HOME/.openclaw/workspace/memory/groups/$SAFE_JID/people.md"
-  
-  echo "- **$PERSON_NAME**: $NOTE" >> "$FILE"
-}
+# wa_log "group" "120363422865795623@g.us" "Kira reported calendar connected ✅"
+# wa_log "dm" "+972542010180" "Guy asked to fix Alfred's calendar access" "notes.md"
+# wa_log "dm" "+972547691235" "Decided: Midgee will re-auth calendar tomorrow" "notes.md"
 ```
 
 ---
 
-## Reading Group Memory
+## Reading Memory
 
-### Get full context for a group
+### Get context for a conversation
 
 ```bash
-get_group_context() {
-  JID="$1"
-  SAFE_JID=$(echo "$JID" | tr '@.' '-')
-  DIR="$HOME/.openclaw/workspace/memory/groups/$SAFE_JID"
+wa_context() {
+  TYPE="$1"
+  ID="$2"
+  LINES="${3:-20}"
   
-  if [ ! -d "$DIR" ]; then
-    echo "No memory for this group yet."
-    return
+  SAFE_ID=$(echo "$ID" | tr '@.+' '---')
+  BASE="$HOME/.openclaw/workspace/memory/whatsapp"
+  
+  if [ "$TYPE" = "group" ]; then
+    DIR="$BASE/groups/$SAFE_ID"
+  else
+    DIR="$BASE/dms/$SAFE_ID"
   fi
   
-  echo "=== $(cat $DIR/meta.json | python3 -c "import sys,json; print(json.load(sys.stdin).get('name','Unknown'))") ==="
-  echo ""
-  echo "--- Recent Context ---"
-  tail -20 "$DIR/context.md" 2>/dev/null || echo "(empty)"
-  echo ""
-  echo "--- Decisions ---"
-  cat "$DIR/decisions.md" 2>/dev/null || echo "(none)"
-  echo ""
-  echo "--- People ---"
-  cat "$DIR/people.md" 2>/dev/null || echo "(none)"
+  [ ! -d "$DIR" ] && echo "No memory for this conversation yet." && return
+  
+  NAME=$(cat "$DIR/meta.json" 2>/dev/null | python3 -c "import sys,json; print(json.load(sys.stdin).get('name','?'))" 2>/dev/null)
+  echo "=== $NAME ==="
+  echo "--- Recent ---"
+  tail -$LINES "$DIR/context.md" 2>/dev/null || echo "(empty)"
+  echo "--- Notes/Decisions ---"
+  cat "$DIR/notes.md" "$DIR/decisions.md" 2>/dev/null | tail -10 || echo "(none)"
 }
 ```
 
-### Search across all groups
+### Search across all WhatsApp memory
 
 ```bash
-search_groups() {
+wa_search() {
   QUERY="$1"
-  GROUPS_DIR="$HOME/.openclaw/workspace/memory/groups"
+  BASE="$HOME/.openclaw/workspace/memory/whatsapp"
   
-  echo "Searching for: '$QUERY'"
-  grep -r "$QUERY" "$GROUPS_DIR" --include="*.md" -l 2>/dev/null | while read file; do
-    GROUP_DIR=$(dirname "$file")
-    NAME=$(cat "$GROUP_DIR/meta.json" 2>/dev/null | python3 -c "import sys,json; print(json.load(sys.stdin).get('name','?'))" 2>/dev/null)
+  echo "Searching WhatsApp memory for: '$QUERY'"
+  grep -r "$QUERY" "$BASE" --include="*.md" -l 2>/dev/null | while read file; do
+    DIR=$(dirname "$file")
+    NAME=$(cat "$DIR/meta.json" 2>/dev/null | python3 -c "import sys,json; print(json.load(sys.stdin).get('name','?'))" 2>/dev/null)
     echo "Found in: $NAME"
-    grep -n "$QUERY" "$file"
+    grep -n "$QUERY" "$file" | head -3
     echo ""
   done
 }
@@ -179,105 +163,77 @@ search_groups() {
 
 ---
 
-## Usage in Conversations
+## What to Log
 
-When a message arrives from a group, inject relevant context:
-
-```
-On every group message:
-1. Extract JID from inbound metadata
-2. Load last 10 lines of memory/groups/{JID}/context.md
-3. Inject into context before responding:
-   "Context for this group: [content]"
-4. After responding: log relevant new info to group memory
-```
-
-### What to log automatically
-
-| Event | Log to |
+### In groups:
+| Event | File |
 |---|---|
-| Decision made | decisions.md |
-| Task assigned | context.md |
-| New participant introduced | people.md |
+| Decision reached | decisions.md |
+| Task assigned to someone | context.md |
+| New person introduced | people.md |
 | Problem reported | context.md |
-| Resolution reached | decisions.md |
-| Important question asked | context.md |
+| Outcome / resolution | decisions.md |
 
-### What NOT to log
-- Casual chitchat
-- Repeated/duplicate information
-- Greetings and reactions
+### In DMs:
+| Event | File |
+|---|---|
+| Task owner gave you | notes.md |
+| Preference or rule they stated | notes.md |
+| Follow-up promised | notes.md |
+| Important fact about this person | notes.md |
+| Regular conversation context | context.md |
+
+### Never log:
+- Casual greetings, reactions
+- Duplicate information already in notes
+- Sensitive credentials or secrets
 
 ---
 
-## Group Registry
+## Before Responding (Inject Context)
 
-Maintain a central registry for quick lookup:
+On every incoming message, load context for that chat:
 
-```bash
-# ~/.openclaw/workspace/data/groups.json
-{
-  "groups": [
-    {
-      "name": "PA Onboarding",
-      "jid": "XXXXXXXXXXX@g.us",
-      "purpose": "Onboarding new PA agents",
-      "memory_path": "memory/groups/XXXXXXXXXXX-g-us/"
-    },
-    {
-      "name": "PA Team",
-      "jid": "XXXXXXXXXXX@g.us",
-      "purpose": "PA coordination and updates",
-      "memory_path": "memory/groups/XXXXXXXXXXX-g-us/"
-    }
-  ]
-}
+```
+1. Extract JID or phone from inbound metadata
+2. Run: wa_context "group"|"dm" "$ID" 10
+3. Use context to inform response
+4. After responding: log anything worth remembering
 ```
 
 ---
 
-## Weekly Digest Per Group
-
-Generate a summary of what happened in each group this week:
+## Weekly Digest
 
 ```bash
-weekly_group_digest() {
-  GROUPS_DIR="$HOME/.openclaw/workspace/memory/groups"
+wa_weekly_digest() {
+  BASE="$HOME/.openclaw/workspace/memory/whatsapp"
   WEEK_AGO=$(date -u -d '7 days ago' +%Y-%m-%d 2>/dev/null || date -u -v-7d +%Y-%m-%d)
   
-  for group_dir in "$GROUPS_DIR"/*/; do
-    NAME=$(cat "$group_dir/meta.json" 2>/dev/null | python3 -c "import sys,json; print(json.load(sys.stdin).get('name','?'))" 2>/dev/null)
-    RECENT=$(grep "^\\[$WEEK_AGO\\|^\\[202" "$group_dir/context.md" 2>/dev/null | tail -10)
-    
-    if [ -n "$RECENT" ]; then
-      echo "### $NAME"
-      echo "$RECENT"
-      echo ""
-    fi
+  echo "# WhatsApp Memory Digest — Week of $WEEK_AGO"
+  
+  for dir in "$BASE"/groups/*/ "$BASE"/dms/*/; do
+    [ -d "$dir" ] || continue
+    NAME=$(cat "$dir/meta.json" 2>/dev/null | python3 -c "import sys,json; print(json.load(sys.stdin).get('name','?'))" 2>/dev/null)
+    RECENT=$(grep "$WEEK_AGO\|$(date -u +%Y-%m-%d)" "$dir/context.md" "$dir/notes.md" 2>/dev/null | tail -5)
+    [ -n "$RECENT" ] && echo "### $NAME" && echo "$RECENT" && echo ""
   done
 }
 ```
 
 ---
 
-## Integration with ai-pa Skill
+## Integration
 
-When using ai-pa to coordinate across groups:
-1. Load group memory for the relevant group before acting
-2. After coordination: log the outcome to both groups' memory
-
-```bash
-# Before sending a coordination message to a group:
-get_group_context "$TARGET_GROUP_JID"
-
-# After successful coordination:
-log_to_group "$TARGET_GROUP_JID" "Coordination with [other group]: [outcome]"
-```
+- **Before each response** → load context for that conversation
+- **After important exchanges** → log to context.md or notes.md
+- **With git-backup** → push after every memory update
+- **With owner-briefing** → include DM follow-ups in morning briefing
 
 ---
 
 ## Model Notes
 
-- Any model can manage group memory files
-- For summarization of long context files: medium+ model recommended
-- For search and retrieval: any model works
+- Any model can manage memory files
+- Medium+ model recommended for deciding what's worth logging
+- No external dependencies — pure file system
