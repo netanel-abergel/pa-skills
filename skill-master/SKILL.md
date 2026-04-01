@@ -34,7 +34,7 @@ Do not improvise. If no skill matches, say so and ask the owner.
 | "set up a new PA" / "onboard a new agent" | pa-onboarding |
 | "how are all the PAs doing" / "PA network status" | pa-status |
 | "contact [person]'s PA" / "find PA phone number" | ai-pa |
-| "set up monday.com" / "create a board item" | monday-workspace |
+| "set up monday.com" / "create a board item" | monday-for-agents |
 | "set up email" / "connect Gmail" | openclaw-email-orientation |
 | "how am I doing" / "review my performance" | pa-eval |
 | "I made a mistake" / "owner corrected me" | self-learning |
@@ -59,7 +59,7 @@ What kind of task is this?
 │   ├─ New PA from scratch → pa-onboarding
 │   ├─ Connect Google Calendar → calendar-setup
 │   ├─ Connect Gmail / email → openclaw-email-orientation
-│   └─ Connect monday.com → monday-workspace
+│   └─ Connect monday.com → monday-for-agents
 │
 ├─ MONITORING / HEALTH
 │   ├─ One PA not responding → whatsapp-diagnostics
@@ -68,7 +68,7 @@ What kind of task is this?
 │
 ├─ DAILY OPERATIONS
 │   ├─ Morning/evening briefing → owner-briefing
-│   ├─ monday.com board task → monday-workspace
+│   ├─ monday.com board task → monday-for-agents
 │   ├─ Backup workspace → git-backup
 │   └─ Long-running task → spawn-subagent
 │
@@ -90,7 +90,7 @@ What kind of task is this?
 | **calendar-setup** | Setup | Full calendar connection with write access |
 | **git-backup** | Memory | Backup workspace to GitHub |
 | **meeting-scheduler** | Operations | End-to-end meeting coordination |
-| **monday-workspace** | Operations | monday.com account, API, MCP server |
+| **monday-for-agents** | Operations | monday.com account, API, MCP server |
 | **openclaw-email-orientation** | Setup | Gmail + Calendar auth and troubleshooting |
 | **owner-briefing** | Operations | Daily morning/evening summaries |
 | **pa-eval** | Self-improvement | Performance scoring and feedback analysis |
@@ -111,7 +111,7 @@ Some tasks need multiple skills in sequence:
 
 ### New PA Setup
 ```
-pa-onboarding → calendar-setup → openclaw-email-orientation → monday-workspace → ai-pa (add to directory)
+pa-onboarding → calendar-setup → openclaw-email-orientation → monday-for-agents → ai-pa (add to directory)
 ```
 
 ### PA Network Health Check
@@ -147,7 +147,7 @@ whatsapp-memory (weekly digest) → owner-briefing (include highlights) → git-
 - ai-pa, billing-monitor, owner-briefing, pa-status, self-learning, git-backup
 
 ### Consider subagent for heavy operations
-- calendar-setup, meeting-scheduler, monday-workspace (bulk ops)
+- calendar-setup, meeting-scheduler, monday-for-agents (bulk ops)
 
 ### Spawn subagent (recommended)
 - pa-onboarding (20+ steps), pa-eval (full monthly analysis), batch operations, skill-scout
@@ -160,7 +160,7 @@ whatsapp-memory (weekly digest) → owner-briefing (include highlights) → git-
 |---|---|
 | ai-pa, billing-monitor, pa-status, git-backup, owner-briefing | Any |
 | whatsapp-diagnostics, calendar-setup, pa-onboarding, whatsapp-memory | Small–Medium |
-| meeting-scheduler, monday-workspace, skill-scout | Medium |
+| meeting-scheduler, monday-for-agents, skill-scout | Medium |
 | pa-eval (trend analysis), self-learning (writing rules) | Medium–Large |
 
 ---

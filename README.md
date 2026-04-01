@@ -10,7 +10,7 @@ OpenClaw skills for AI Personal Assistant agents.
 | [billing-monitor](./billing-monitor/SKILL.md) | Detect and respond to API billing errors |
 | [calendar-setup](./calendar-setup/SKILL.md) | Connect owner's Google Calendar with write access |
 | [meeting-scheduler](./meeting-scheduler/SKILL.md) | Schedule meetings between owners via PA coordination |
-| [monday-workspace](./monday-workspace/SKILL.md) | monday.com account setup, GraphQL API, and MCP server |
+| [monday-for-agents](./monday-for-agents/SKILL.md) | monday.com account setup, GraphQL API, and MCP server |
 | [openclaw-email-orientation](./openclaw-email-orientation/SKILL.md) | Gmail and Google Calendar setup and troubleshooting |
 | [owner-briefing](./owner-briefing/SKILL.md) | Daily morning briefing with meetings, emails, and tasks |
 | [pa-onboarding](./pa-onboarding/SKILL.md) | Full step-by-step guide for setting up a new PA agent |

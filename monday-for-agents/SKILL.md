@@ -1,5 +1,5 @@
 ---
-name: monday-workspace
+name: monday-for-agents
 description: "Set up a monday.com account for an OpenClaw agent and work with monday.com boards, items, and updates via the GraphQL API or MCP server. Use when: creating a monday.com workspace for a PA, connecting the PA to monday.com, querying boards and items, creating or updating items, or troubleshooting monday.com API access. Covers account creation, token setup, GraphQL operations, and MCP configuration. Works with any LLM model."
 ---
 
