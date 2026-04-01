@@ -15,8 +15,11 @@ Use this skill to set up and operate monday.com from an Ocana agent.
 
 Each PA should have its **own monday.com account** (not the owner's).
 
+⚠️ **Use the dedicated agents signup URL:**
+👉 [monday.com/agents-signup](https://monday.com/agents-signup)
+
 Recommended flow:
-1. Go to [monday.com](https://monday.com) → Sign up
+1. Go to [monday.com/agents-signup](https://monday.com/agents-signup)
 2. Use the agent email (e.g. `midgee@ocana.ai` or a dedicated PA email)
 3. Create or join a workspace — the owner can invite the PA to their workspace
 4. Once logged in, generate an API token (see below)
