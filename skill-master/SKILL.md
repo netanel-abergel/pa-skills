@@ -192,3 +192,15 @@ When a new skill is added:
 | "מה קורה" / "give me a summary" | supervisor |
 
 The supervisor skill aggregates: active tasks, billing issues, group activity, pending follow-ups, and system health into one structured report.
+
+---
+
+## Eval
+
+| Trigger | Action |
+|---|---|
+| "תעשי eval" / "run eval" | eval |
+| "מה עובד ומה לא" | eval |
+| "בדקי הכל" | eval |
+
+The eval skill scores performance, audits tasks, checks PA network health, verifies integrations, and reviews memory quality — all in one report.

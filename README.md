@@ -42,3 +42,4 @@ Skills should be:
 | [git-backup](./git-backup/SKILL.md) | Backup workspace to GitHub — token discovery, repo setup, auto-push |
 | [whatsapp-memory](./whatsapp-memory/SKILL.md) | Separate memory context per WhatsApp group — prevents context bleed |
 | [supervisor](./supervisor/SKILL.md) | Central status dashboard — full report per group, task, issue, and system health |
+| [eval](./eval/SKILL.md) | Full evaluation: self performance, tasks, PA network, skills, integrations, memory health |
