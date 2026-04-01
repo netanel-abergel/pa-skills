@@ -5,99 +5,110 @@ description: "Backup the agent workspace to a GitHub repository. Use when: asked
 
 # Git Backup Skill
 
-Backup your OpenClaw workspace to GitHub automatically.
+## Minimum Model
+Any model. This is pure shell — no reasoning needed.
 
 ---
 
-## Token Discovery
+## Step 1 — Find the GitHub Token
 
-Before any git operation, find the token using this priority order:
+Run this to find the token. It checks sources in priority order:
 
 ```bash
 find_github_token() {
-  # 1. Check git remote (most common)
-  TOKEN=$(git -C ~/.openclaw/workspace remote get-url origin 2>/dev/null \
+  # 1. Check git remote URL (most common)
+  TOKEN=$(git -C "$HOME/.openclaw/workspace" remote get-url origin 2>/dev/null \
     | grep -oP 'ghp_[A-Za-z0-9]+' | head -1)
   [ -n "$TOKEN" ] && echo "$TOKEN" && return
 
-  # 2. Check environment
-  [ -n "$GITHUB_TOKEN" ] && echo "$GITHUB_TOKEN" && return
-  [ -n "$GH_TOKEN" ] && echo "$GH_TOKEN" && return
+  # 2. Check standard environment variables
+  [ -n "${GITHUB_TOKEN:-}" ] && echo "$GITHUB_TOKEN" && return
+  [ -n "${GH_TOKEN:-}" ] && echo "$GH_TOKEN" && return
 
-  # 3. Check credentials files
+  # 3. Check credential files
   for f in ~/.credentials/github*.txt ~/.credentials/gh*.txt; do
-    [ -f "$f" ] && TOKEN=$(cat "$f") && echo "$TOKEN" && return
+    [ -f "$f" ] && cat "$f" | head -1 | tr -d '[:space:]' && return
   done
 
-  # 4. Check .bashrc
+  # 4. Check ~/.bashrc for embedded token
   TOKEN=$(grep -oP 'ghp_[A-Za-z0-9]+' ~/.bashrc 2>/dev/null | head -1)
   [ -n "$TOKEN" ] && echo "$TOKEN" && return
 
-  # Not found
+  # Not found — return empty
   echo ""
 }
 
 TOKEN=$(find_github_token)
 ```
 
-**If token is empty → ask the owner:**
+**If TOKEN is empty → stop and ask the owner:**
 ```
-"I need a GitHub Personal Access Token to back up your workspace.
-Please go to github.com → Settings → Developer Settings → Personal access tokens → Generate new token
-Permissions needed: repo (full)
-Then send me the token (starts with ghp_)"
+I need a GitHub Personal Access Token to back up your workspace.
+Go to: github.com → Settings → Developer Settings → Personal access tokens → Generate new token
+Required permission: repo (full)
+Send me the token (starts with ghp_)
 ```
 
-Save token when received:
+After receiving the token, save it:
 ```bash
-echo "$PAT" > ~/.credentials/github-token.txt
-# Also embed in remote URL for future use:
-git -C ~/.openclaw/workspace remote set-url origin \
-  "https://${PAT}@github.com/OWNER/REPO.git"
+# Save token to credentials file
+echo "$TOKEN" > ~/.credentials/github-token.txt
+chmod 600 ~/.credentials/github-token.txt
+
+# Update the git remote URL to include the token
+git -C "$HOME/.openclaw/workspace" remote set-url origin \
+  "https://${TOKEN}@github.com/GITHUB_USERNAME/REPO_NAME.git"
 ```
 
 ---
 
-## Setup (First Time)
+## Step 2 — First-Time Setup (Run Once)
 
-### Check if repo exists
+### Check if the repo already exists
 
 ```bash
 TOKEN=$(find_github_token)
-REPO_NAME="my-pa-memory"  # or agent-specific name
-OWNER="github-username"
+REPO_NAME="pa-workspace-backup"    # change to your repo name
+GITHUB_USER="github-username"       # change to your GitHub username
 
+# HTTP 200 = repo exists, 404 = need to create it
 STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
   -H "Authorization: token $TOKEN" \
-  "https://api.github.com/repos/$OWNER/$REPO_NAME")
+  "https://api.github.com/repos/$GITHUB_USER/$REPO_NAME")
 
-if [ "$STATUS" = "200" ]; then
-  echo "Repo exists"
-elif [ "$STATUS" = "404" ]; then
-  echo "Need to create repo"
-fi
+echo "Repo check: HTTP $STATUS"
 ```
 
-### Create repo if needed
+### Create the repo (if HTTP 404)
 
 ```bash
 curl -s -X POST "https://api.github.com/user/repos" \
   -H "Authorization: token $TOKEN" \
   -H "Content-Type: application/json" \
   -d "{\"name\": \"$REPO_NAME\", \"private\": true, \"description\": \"PA workspace backup\"}" \
-  | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('html_url','error: '+str(d)))"
+  | python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+if 'html_url' in d:
+    print('Created:', d['html_url'])
+else:
+    print('ERROR:', d)
+    sys.exit(1)
+"
 ```
 
-### Initialize git in workspace
+### Initialize git (if no .git folder)
 
 ```bash
 cd ~/.openclaw/workspace
+
+# Initialize the repo
 git init
 git config user.email "agent@openclaw.ai"
 git config user.name "PA Agent"
-git remote add origin "https://$TOKEN@github.com/$OWNER/$REPO_NAME.git"
+git remote add origin "https://$TOKEN@github.com/$GITHUB_USER/$REPO_NAME.git"
 
-# Create .gitignore
+# Create .gitignore to exclude secrets and temp files
 cat > .gitignore << 'EOF'
 *.log
 .env
@@ -109,6 +120,7 @@ __pycache__/
 .DS_Store
 EOF
 
+# Initial commit and push
 git add -A
 git commit -m "Initial workspace backup"
 git push -u origin main
@@ -116,16 +128,16 @@ git push -u origin main
 
 ---
 
-## Backup (Regular Use)
+## Step 3 — Regular Backup
 
-### Quick backup
+Run this whenever you need to back up:
 
 ```bash
 backup_workspace() {
   WORKSPACE="${1:-$HOME/.openclaw/workspace}"
-  cd "$WORKSPACE" || return 1
+  cd "$WORKSPACE" || { echo "ERROR: cannot cd to $WORKSPACE"; return 1; }
 
-  # Check token
+  # Check for token
   TOKEN=$(find_github_token)
   if [ -z "$TOKEN" ]; then
     echo "BLOCKED: No GitHub token found. Ask owner for PAT."
@@ -134,41 +146,57 @@ backup_workspace() {
 
   # Check git is initialized
   if [ ! -d ".git" ]; then
-    echo "BLOCKED: Git not initialized. Run setup first."
+    echo "BLOCKED: Git not initialized. Run first-time setup first."
     return 1
   fi
 
-  # Commit and push
+  # Stage all changes
   git add -A
+
+  # Count how many files changed
   CHANGES=$(git diff --cached --name-only | wc -l)
-  
+
+  # Nothing to do?
   if [ "$CHANGES" -eq 0 ]; then
     echo "Nothing to backup — workspace unchanged."
     return 0
   fi
 
-  DATE=$(date -u +%Y-%m-%d\ %H:%M\ UTC)
+  # Commit with timestamp and push
+  DATE=$(date -u "+%Y-%m-%d %H:%M UTC")
   git commit -m "Auto backup $DATE"
   git push origin main 2>&1
 
-  echo "✅ Backup complete — $CHANGES files updated."
+  echo "Backup complete — $CHANGES files updated."
 }
 
 backup_workspace
 ```
 
+**If push fails with "non-fast-forward":**
+```bash
+# Pull remote changes first, then push
+git pull --rebase origin main
+git push origin main
+```
+
+**If push fails with 401 (token expired):**
+```bash
+# Ask owner for a new PAT, then update the remote URL
+git remote set-url origin "https://NEW_TOKEN@github.com/GITHUB_USERNAME/REPO_NAME.git"
+```
+
 ---
 
-## Trigger Conditions
+## When to Back Up
 
 Run a backup when:
-- Owner says "remember this" / "save this" / "שמרי"
-- Daily at a scheduled time (cron)
-- After updating MEMORY.md, SOUL.md, or daily notes
-- After a significant task is completed
-- Before context compaction
+- Owner says "remember this" / "save this"
+- You update `MEMORY.md`, `SOUL.md`, or daily notes
+- After completing a significant task
+- On a schedule (see cron config below)
 
-### Cron config
+### Cron Config
 
 ```json
 {
@@ -190,56 +218,27 @@ Runs every 6 hours silently. Change to `"0 23 * * *"` for nightly only.
 
 ---
 
-## What to Back Up
+## What to Include / Exclude
 
-Always include:
-- `MEMORY.md` — long-term memory
-- `SOUL.md` — behavior config
-- `AGENTS.md` — workspace rules
-- `TOOLS.md` — environment notes
+**Always include:**
+- `MEMORY.md`, `SOUL.md`, `AGENTS.md`, `TOOLS.md`
 - `memory/` — daily notes
 - `skills/` — installed skills
 - `.learnings/` — corrections and learnings
 - `data/` — PA directory and other data
 - `config/` — MCP and other configs
 
-Always exclude (add to .gitignore):
-- API keys / tokens / secrets
+**Always exclude (add to .gitignore):**
+- API keys, tokens, secrets
 - `credentials/` directory
-- Log files
-- Node modules
+- Log files (`*.log`)
+- Node modules, Python cache
 
 ---
 
-## Troubleshooting
+## Cost Tips
 
-**Push rejected (non-fast-forward):**
-```bash
-git pull --rebase origin main && git push origin main
-```
-
-**Token expired / 401:**
-```bash
-# Ask owner for new PAT, then update remote:
-git remote set-url origin "https://NEW_TOKEN@github.com/OWNER/REPO.git"
-```
-
-**Repo doesn't exist (404):**
-Run setup section above to create it.
-
-**Large files rejected:**
-```bash
-# Find and exclude large files
-find . -size +5M -not -path './.git/*' >> .gitignore
-git rm -r --cached .
-git add -A
-git commit -m "Remove large files"
-```
-
----
-
-## Model Notes
-
-- Any model can run this skill — pure shell operations
-- No reasoning required; just follow the steps in order
-- If blocked on token: escalate to owner immediately, do not retry without token
+- **Very cheap:** Pure git/bash — no LLM tokens used during backup
+- **Small model OK:** Any model can trigger this skill
+- **Batch:** Commit all changes in one `git add -A` and one push — not file by file
+- **Schedule wisely:** Every 6 hours is enough. More frequent = noise in git history

@@ -5,106 +5,117 @@ description: "Diagnose and fix WhatsApp connectivity issues for OpenClaw agents.
 
 # WhatsApp Diagnostics Skill
 
-Systematic diagnosis for WhatsApp connectivity issues in OpenClaw agents.
+## Minimum Model
+Any model. All diagnostics are CLI-based — follow the decision tree.
 
 ---
 
-## Diagnostic Tree
+## Diagnostic Tree (Start Here)
 
 ```
 PA not responding?
 │
 ├─ Dashboard shows "Connected and listening"?
 │   ├─ YES → Check Messages count
-│   │   ├─ Messages = 0 → INGEST ISSUE (messages not reaching agent)
-│   │   └─ Messages > 0 → RUNTIME ISSUE (agent receives but doesn't reply)
-│   └─ NO → CONNECTION ISSUE (WhatsApp itself not linked)
+│   │   ├─ Messages = 0 → INGEST ISSUE → go to Case 2
+│   │   └─ Messages > 0 → RUNTIME ISSUE → go to Case 3
+│   └─ NO → CONNECTION ISSUE → go to Case 1
 │
 └─ Agent exists in platform?
-    ├─ YES → Check channel configuration
-    └─ NO → Full setup needed
+    ├─ YES → Follow Case 1
+    └─ NO → Full setup needed (see pa-onboarding skill)
 ```
 
 ---
 
-## Case 1: Connection Issue (WhatsApp not linked)
+## Case 1 — Connection Issue (WhatsApp not linked)
 
-**Symptoms:** Dashboard shows disconnected, no QR code, channel error
+**Symptom:** Dashboard shows disconnected or no channel configured.
 
-**Steps:**
+**Fix:**
 1. Open agent settings in OpenClaw platform
-2. Go to Channels → WhatsApp
-3. Click "Connect" or "Re-link"
-4. Scan QR code with WhatsApp Business app
-5. Verify phone number matches
-6. Wait 30 seconds for status to update
+2. Go to Channels → WhatsApp → click **Connect** or **Re-link**
+3. Scan the QR code with WhatsApp Business app
+4. Confirm the phone number matches
+5. Wait 30 seconds for status to update
 
-**Common cause:** WhatsApp session expired (happens after ~14 days of inactivity or phone restart)
-
----
-
-## Case 2: Ingest Issue (Connected + Messages = 0)
-
-**Symptoms:** Dashboard shows "Connected and listening", messages count stays 0 after sending
-
-**This means:** WhatsApp is connected at the protocol level, but messages are not reaching the agent runtime.
-
-**Steps:**
-1. Check OpenClaw gateway status:
-   ```bash
-   openclaw gateway status
-   ```
-2. Restart the gateway:
-   ```bash
-   openclaw gateway restart
-   ```
-3. Send a test message and wait 30 seconds
-4. If still 0 → check gateway logs:
-   ```bash
-   openclaw gateway logs --last 50
-   ```
-5. Look for errors: `binding failed`, `session dropped`, `ingest error`
-6. If unresolved → escalate to platform admin (this is an infrastructure issue)
+**Most common cause:** WhatsApp session expired (happens after ~14 days of inactivity or after a phone restart).
 
 ---
 
-## Case 3: Runtime Issue (Messages arriving, no reply)
+## Case 2 — Ingest Issue (Connected but Messages = 0)
 
-**Symptoms:** Messages count increments, but agent doesn't respond
+**Symptom:** Dashboard shows "Connected and listening" but message count stays at 0.
 
-**This means:** Messages reach the agent, but something is wrong with the agent runtime.
+**Meaning:** WhatsApp is connected at protocol level, but messages are not reaching the agent runtime.
 
-**Steps:**
-1. Check for billing error:
-   ```bash
-   grep -i "billing\|402\|credits" ~/.openclaw/logs/agent.log | tail -20
-   ```
-2. Check model configuration:
-   ```bash
-   openclaw status
-   ```
-3. Check if API key is valid (use the command matching your LLM provider):
-   ```bash
-   # For Anthropic
-   curl -s -o /dev/null -w "%{http_code}" \
-     -H "x-api-key: $ANTHROPIC_API_KEY" \
-     -H "anthropic-version: 2023-06-01" \
-     https://api.anthropic.com/v1/models
-   # Expected: 200. If 401 → invalid key. If 402 → billing.
+**Fix:**
 
-   # For OpenAI
-   curl -s -o /dev/null -w "%{http_code}" \
-     -H "Authorization: Bearer $OPENAI_API_KEY" \
-     https://api.openai.com/v1/models
+```bash
+# Step 1: Check gateway status
+openclaw gateway status
 
-   # For Google
-   curl -s -o /dev/null -w "%{http_code}" \
-     "https://generativelanguage.googleapis.com/v1beta/models?key=$GOOGLE_API_KEY"
-   ```
-4. Check recent errors:
-   ```bash
-   openclaw logs --last 100 | grep -i error
-   ```
+# Step 2: Restart the gateway
+openclaw gateway restart
+
+# Step 3: Send a test message, wait 30 seconds
+
+# Step 4: If count is still 0, check gateway logs
+openclaw gateway logs --last 50
+```
+
+**What to look for in logs:**
+- `binding failed`
+- `session dropped`
+- `ingest error`
+
+If any of these appear → escalate to platform admin. This is an infrastructure issue.
+
+---
+
+## Case 3 — Runtime Issue (Messages arriving, no reply)
+
+**Symptom:** Message count increments, but agent doesn't respond.
+
+**Meaning:** Messages reach the agent, but the agent runtime is failing.
+
+**Fix:**
+
+```bash
+# Step 1: Check for billing errors in agent log
+grep -i "billing\|402\|credits" ~/.openclaw/logs/agent.log | tail -20
+# If billing error found → see billing-monitor skill
+
+# Step 2: Check agent status
+openclaw status
+
+# Step 3: Verify API key (pick your provider below)
+
+# For Anthropic:
+curl -s -o /dev/null -w "%{http_code}" \
+  -H "x-api-key: $ANTHROPIC_API_KEY" \
+  -H "anthropic-version: 2023-06-01" \
+  https://api.anthropic.com/v1/models
+
+# For OpenAI:
+curl -s -o /dev/null -w "%{http_code}" \
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  https://api.openai.com/v1/models
+
+# For Google:
+curl -s -o /dev/null -w "%{http_code}" \
+  "https://generativelanguage.googleapis.com/v1beta/models?key=$GOOGLE_API_KEY"
+
+# Expected: 200. If 401 → invalid key. If 402 → billing error.
+
+# Step 4: Check recent runtime errors
+openclaw logs --last 100 | grep -i error
+```
+
+**Interpret results:**
+- `200` → API key is valid. Problem is elsewhere (check Step 4).
+- `401` → Invalid API key. Update the key in agent settings.
+- `402` → Billing error. Follow the billing-monitor skill.
 
 ---
 
@@ -113,44 +124,53 @@ PA not responding?
 ```bash
 #!/bin/bash
 # whatsapp-health-check.sh
-# Model-agnostic: checks whichever LLM provider API key is configured
-set -e
+# Run this when the agent is unresponsive to get a quick status overview.
 
 echo "=== WhatsApp Diagnostics ==="
 
-echo -n "Gateway status: "
+# Check gateway status
+echo -n "Gateway: "
 openclaw gateway status 2>&1 | grep -o "running\|stopped\|error" | head -1 || echo "unknown"
 
-echo -n "API key valid: "
-check_api_key() {
-  if [ -n "${ANTHROPIC_API_KEY:-}" ]; then
-    STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
-      -H "x-api-key: ${ANTHROPIC_API_KEY}" \
-      -H "anthropic-version: 2023-06-01" \
-      https://api.anthropic.com/v1/models 2>/dev/null)
-    PROVIDER="Anthropic"
-  elif [ -n "${OPENAI_API_KEY:-}" ]; then
-    STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
-      -H "Authorization: Bearer ${OPENAI_API_KEY}" \
-      https://api.openai.com/v1/models 2>/dev/null)
-    PROVIDER="OpenAI"
-  elif [ -n "${GOOGLE_API_KEY:-}" ]; then
-    STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
-      "https://generativelanguage.googleapis.com/v1beta/models?key=${GOOGLE_API_KEY}" 2>/dev/null)
-    PROVIDER="Google"
-  else
-    echo "⚠️ no API key env var found (checked ANTHROPIC_API_KEY, OPENAI_API_KEY, GOOGLE_API_KEY)"
-    return
-  fi
+# Check API key — detect provider from env vars
+echo -n "API key: "
+
+if [ -n "${ANTHROPIC_API_KEY:-}" ]; then
+  PROVIDER="Anthropic"
+  # Test with a minimal request to the models endpoint
+  STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+    -H "x-api-key: ${ANTHROPIC_API_KEY}" \
+    -H "anthropic-version: 2023-06-01" \
+    https://api.anthropic.com/v1/models 2>/dev/null)
+
+elif [ -n "${OPENAI_API_KEY:-}" ]; then
+  PROVIDER="OpenAI"
+  STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+    -H "Authorization: Bearer ${OPENAI_API_KEY}" \
+    https://api.openai.com/v1/models 2>/dev/null)
+
+elif [ -n "${GOOGLE_API_KEY:-}" ]; then
+  PROVIDER="Google"
+  STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+    "https://generativelanguage.googleapis.com/v1beta/models?key=${GOOGLE_API_KEY}" 2>/dev/null)
+
+else
+  echo "⚠️ no API key env var found"
+  PROVIDER=""
+  STATUS=""
+fi
+
+# Interpret the HTTP status code
+if [ -n "$STATUS" ]; then
   case $STATUS in
     200) echo "✅ valid ($PROVIDER)" ;;
     401) echo "❌ invalid key ($PROVIDER)" ;;
-    402) echo "⚠️ billing error ($PROVIDER)" ;;
+    402) echo "⚠️ billing error ($PROVIDER) — see billing-monitor skill" ;;
     *)   echo "? HTTP $STATUS ($PROVIDER)" ;;
   esac
-}
-check_api_key
+fi
 
+# Count recent errors in agent logs
 echo -n "Recent errors: "
 ERROR_COUNT=$(openclaw logs --last 100 2>/dev/null | grep -ic error || echo 0)
 echo "$ERROR_COUNT found"
@@ -160,35 +180,35 @@ echo "=== Done ==="
 
 ---
 
-## Escalation
+## When to Escalate to Platform Admin
 
-Escalate to platform admin if:
-- Gateway restarts don't fix Messages=0
-- Errors mention `socket`, `binding`, or `session` issues
-- Multiple agents on the same server affected simultaneously
+Escalate if:
+- Gateway restart does NOT fix Messages = 0
+- Logs show `socket`, `binding`, or `session` errors
+- Multiple agents on the same server are affected at the same time
 
-Include in escalation report:
-- Agent name
-- Phone number
-- Time issue started
-- Dashboard screenshot (Connected state + Messages count)
+Include in your escalation message:
+- Agent name and phone number
+- Time the issue started
 - Output of `openclaw gateway status`
+- Messages count shown in dashboard
 
 ---
 
 ## Prevention
 
-- **Keep WhatsApp active:** Send at least one message every 7 days to prevent session expiry
-- **Monitor with heartbeat:** Check Messages count during heartbeat routine
-- **Backup phone number:** Note the phone number used — needed for re-linking
-- **Don't use same number on two devices:** WhatsApp only allows one active session
+| Action | Why |
+|---|---|
+| Send at least one message every 7 days | Prevents WhatsApp session expiry |
+| Check Messages count during heartbeat | Catches ingest issues early |
+| Keep the phone number on record | Needed for QR re-linking |
+| Don't use the same number on two devices | WhatsApp only allows one active session |
 
 ---
 
-## Model Compatibility
+## Cost Tips
 
-This skill is entirely model-agnostic. All diagnostics are CLI-based (bash commands, curl, openclaw CLI) — the LLM is only used to interpret outputs and decide which step to take next.
-
-- Any LLM model is sufficient for following this decision tree
-- The API key check commands in Case 3 cover Anthropic, OpenAI, and Google — adapt to your provider
-- No provider-specific reasoning is required
+- **Very cheap:** All diagnostics use CLI + curl — no LLM tokens needed
+- **Small model OK:** Any model can follow this decision tree and interpret curl output
+- **Avoid:** Don't run diagnostics on every heartbeat — only run when the agent is not responding
+- **Batch:** Run the Quick Health Check script once to get all info, rather than running each check separately

@@ -5,23 +5,15 @@ description: "Maintain separate memory contexts per WhatsApp conversation — bo
 
 # WhatsApp Memory Skill
 
-Separate, searchable memory per WhatsApp conversation — groups AND direct messages.
+## Minimum Model
+Any model. Memory management is file-based. No reasoning required.
+Use a medium+ model only when deciding *what* is worth logging.
 
 ---
 
 ## Why This Matters
 
-Without conversation memory:
-- Context from one chat bleeds into another
-- Hard to recall "what did Guy say last week?"
-- Can't track decisions made in a specific group
-- Owner repeats themselves across sessions
-
-With WhatsApp memory:
-- Every group and DM has its own context file
-- Recall: "what was discussed in the PA Team group this month?"
-- Track: "what did Doron ask me to follow up on?"
-- Separate memory for family, work, PA network
+Without conversation memory, context from one chat bleeds into another and you can't recall past decisions per group or person. This skill gives every group and DM its own context file.
 
 ---
 
@@ -35,9 +27,9 @@ memory/
         meta.json                 ← group name, JID, participants
         context.md                ← running conversation context
         decisions.md              ← key decisions
-        people.md                 ← who participates and their style/role
+        people.md                 ← who participates and their role
     dms/
-      972548834688/               ← sanitized phone number
+      972XXXXXXXXX/               ← sanitized phone number
         meta.json                 ← name, phone, relationship
         context.md                ← running DM context
         notes.md                  ← tasks, preferences, important facts
@@ -52,63 +44,73 @@ init_whatsapp_memory() {
   TYPE="$1"       # "group" or "dm"
   ID="$2"         # JID or phone number
   NAME="$3"       # Human-readable name
-  
+
+  # Sanitize the ID for use as a directory name
   SAFE_ID=$(echo "$ID" | tr '@.+' '---')
-  
+
   if [ "$TYPE" = "group" ]; then
     DIR="$HOME/.openclaw/workspace/memory/whatsapp/groups/$SAFE_ID"
     mkdir -p "$DIR"
+    # Write metadata file
     cat > "$DIR/meta.json" << EOF
 {"type": "group", "jid": "$ID", "name": "$NAME", "created": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"}
 EOF
+    # Create empty log files
     touch "$DIR/context.md" "$DIR/decisions.md" "$DIR/people.md"
   else
     DIR="$HOME/.openclaw/workspace/memory/whatsapp/dms/$SAFE_ID"
     mkdir -p "$DIR"
+    # Write metadata file
     cat > "$DIR/meta.json" << EOF
 {"type": "dm", "phone": "$ID", "name": "$NAME", "created": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"}
 EOF
+    # Create empty log files
     touch "$DIR/context.md" "$DIR/notes.md"
   fi
-  
+
   echo "Initialized WhatsApp memory: $NAME"
 }
 
 # Examples:
-# init_whatsapp_memory "group" "120363422865795623@g.us" "Monday PA Team"
-# init_whatsapp_memory "dm" "+972542010180" "Guy Atzmon"
+# init_whatsapp_memory "group" "120363422865795623@g.us" "PA Team"
+# init_whatsapp_memory "dm" "+PHONE_NUMBER" "Contact Name"
 ```
 
 ---
 
 ## Writing Memory
 
-### Log to a conversation
-
 ```bash
 wa_log() {
-  TYPE="$1"    # group or dm
-  ID="$2"      # JID or phone
-  CONTENT="$3"
-  FILE_NAME="${4:-context.md}"  # context.md / decisions.md / notes.md
-  
+  TYPE="$1"                        # "group" or "dm"
+  ID="$2"                          # JID or phone
+  CONTENT="$3"                     # what to log
+  FILE_NAME="${4:-context.md}"     # context.md / decisions.md / notes.md
+
+  # Sanitize ID
   SAFE_ID=$(echo "$ID" | tr '@.+' '---')
   BASE="$HOME/.openclaw/workspace/memory/whatsapp"
-  
+
+  # Pick the right directory
   if [ "$TYPE" = "group" ]; then
     FILE="$BASE/groups/$SAFE_ID/$FILE_NAME"
   else
     FILE="$BASE/dms/$SAFE_ID/$FILE_NAME"
   fi
-  
-  [ ! -f "$FILE" ] && mkdir -p "$(dirname "$FILE")" && touch "$FILE"
+
+  # Create file if missing
+  if [ ! -f "$FILE" ]; then
+    mkdir -p "$(dirname "$FILE")"
+    touch "$FILE"
+  fi
+
+  # Append timestamped entry
   echo "[$(date -u +%Y-%m-%d\ %H:%M)] $CONTENT" >> "$FILE"
 }
 
 # Usage:
-# wa_log "group" "120363422865795623@g.us" "Kira reported calendar connected ✅"
-# wa_log "dm" "+972542010180" "Guy asked to fix Alfred's calendar access" "notes.md"
-# wa_log "dm" "+972547691235" "Decided: Midgee will re-auth calendar tomorrow" "notes.md"
+# wa_log "group" "120363422865795623@g.us" "Kira: calendar connected ✅"
+# wa_log "dm" "+PHONE_NUMBER" "Agreed to reschedule to Thursday" "notes.md"
 ```
 
 ---
@@ -122,22 +124,34 @@ wa_context() {
   TYPE="$1"
   ID="$2"
   LINES="${3:-20}"
-  
+
+  # Sanitize ID
   SAFE_ID=$(echo "$ID" | tr '@.+' '---')
   BASE="$HOME/.openclaw/workspace/memory/whatsapp"
-  
+
+  # Pick directory
   if [ "$TYPE" = "group" ]; then
     DIR="$BASE/groups/$SAFE_ID"
   else
     DIR="$BASE/dms/$SAFE_ID"
   fi
-  
-  [ ! -d "$DIR" ] && echo "No memory for this conversation yet." && return
-  
-  NAME=$(cat "$DIR/meta.json" 2>/dev/null | python3 -c "import sys,json; print(json.load(sys.stdin).get('name','?'))" 2>/dev/null)
+
+  # Check if memory exists
+  if [ ! -d "$DIR" ]; then
+    echo "No memory for this conversation yet."
+    return
+  fi
+
+  # Read the conversation name from meta.json
+  NAME=$(python3 -c "
+import json
+with open('$DIR/meta.json') as f:
+    print(json.load(f).get('name', '?'))
+" 2>/dev/null || echo "?")
+
   echo "=== $NAME ==="
   echo "--- Recent ---"
-  tail -$LINES "$DIR/context.md" 2>/dev/null || echo "(empty)"
+  tail -"$LINES" "$DIR/context.md" 2>/dev/null || echo "(empty)"
   echo "--- Notes/Decisions ---"
   cat "$DIR/notes.md" "$DIR/decisions.md" 2>/dev/null | tail -10 || echo "(none)"
 }
@@ -149,12 +163,22 @@ wa_context() {
 wa_search() {
   QUERY="$1"
   BASE="$HOME/.openclaw/workspace/memory/whatsapp"
-  
+
   echo "Searching WhatsApp memory for: '$QUERY'"
+
+  # Find all markdown files containing the query
   grep -r "$QUERY" "$BASE" --include="*.md" -l 2>/dev/null | while read file; do
     DIR=$(dirname "$file")
-    NAME=$(cat "$DIR/meta.json" 2>/dev/null | python3 -c "import sys,json; print(json.load(sys.stdin).get('name','?'))" 2>/dev/null)
+
+    # Get conversation name from meta.json
+    NAME=$(python3 -c "
+import json
+with open('$DIR/meta.json') as f:
+    print(json.load(f).get('name', '?'))
+" 2>/dev/null || echo "?")
+
     echo "Found in: $NAME"
+    # Show matching lines with line numbers
     grep -n "$QUERY" "$file" | head -3
     echo ""
   done
@@ -165,39 +189,38 @@ wa_search() {
 
 ## What to Log
 
-### In groups:
-| Event | File |
-|---|---|
-| Decision reached | decisions.md |
-| Task assigned to someone | context.md |
-| New person introduced | people.md |
-| Problem reported | context.md |
-| Outcome / resolution | decisions.md |
-
-### In DMs:
-| Event | File |
-|---|---|
-| Task owner gave you | notes.md |
-| Preference or rule they stated | notes.md |
-| Follow-up promised | notes.md |
-| Important fact about this person | notes.md |
-| Regular conversation context | context.md |
+### Decision rules — log if ANY of these apply:
+- A decision was made → `decisions.md`
+- A task was assigned to someone → `context.md`
+- A new person was introduced → `people.md`
+- Owner gave you a task or preference → `notes.md`
+- A problem or resolution was reported → `context.md`
 
 ### Never log:
-- Casual greetings, reactions
-- Duplicate information already in notes
-- Sensitive credentials or secrets
+- Casual greetings or reactions
+- Duplicate information already recorded
+- Secrets or credentials
+
+### Quick reference by file:
+
+| File | Use for |
+|---|---|
+| context.md | Ongoing conversation events |
+| decisions.md | Agreed outcomes, group decisions |
+| people.md | Who's in the group, their role/style |
+| notes.md | DM tasks, owner preferences, follow-ups |
 
 ---
 
-## Before Responding (Inject Context)
+## Before Responding — Inject Context
 
-On every incoming message, load context for that chat:
+On every incoming message:
 
 ```
 1. Extract JID or phone from inbound metadata
-2. Run: wa_context "group"|"dm" "$ID" 10
-3. Use context to inform response
+2. If group: run wa_context "group" "$JID" 10
+   If DM:    run wa_context "dm" "$PHONE" 10
+3. Use context to inform your response
 4. After responding: log anything worth remembering
 ```
 
@@ -208,15 +231,33 @@ On every incoming message, load context for that chat:
 ```bash
 wa_weekly_digest() {
   BASE="$HOME/.openclaw/workspace/memory/whatsapp"
-  WEEK_AGO=$(date -u -d '7 days ago' +%Y-%m-%d 2>/dev/null || date -u -v-7d +%Y-%m-%d)
-  
+
+  # Get date from 7 days ago (works on Linux and macOS)
+  WEEK_AGO=$(date -u -d '7 days ago' +%Y-%m-%d 2>/dev/null \
+    || date -u -v-7d +%Y-%m-%d)
+
   echo "# WhatsApp Memory Digest — Week of $WEEK_AGO"
-  
+
+  # Loop over all group and DM directories
   for dir in "$BASE"/groups/*/ "$BASE"/dms/*/; do
     [ -d "$dir" ] || continue
-    NAME=$(cat "$dir/meta.json" 2>/dev/null | python3 -c "import sys,json; print(json.load(sys.stdin).get('name','?'))" 2>/dev/null)
-    RECENT=$(grep "$WEEK_AGO\|$(date -u +%Y-%m-%d)" "$dir/context.md" "$dir/notes.md" 2>/dev/null | tail -5)
-    [ -n "$RECENT" ] && echo "### $NAME" && echo "$RECENT" && echo ""
+
+    # Get the name
+    NAME=$(python3 -c "
+import json
+with open('${dir}meta.json') as f:
+    print(json.load(f).get('name', '?'))
+" 2>/dev/null || echo "?")
+
+    # Show recent entries from this week
+    RECENT=$(grep "$WEEK_AGO\|$(date -u +%Y-%m-%d)" \
+      "${dir}context.md" "${dir}notes.md" 2>/dev/null | tail -5)
+
+    if [ -n "$RECENT" ]; then
+      echo "### $NAME"
+      echo "$RECENT"
+      echo ""
+    fi
   done
 }
 ```
@@ -232,8 +273,10 @@ wa_weekly_digest() {
 
 ---
 
-## Model Notes
+## Cost Tips
 
-- Any model can manage memory files
-- Medium+ model recommended for deciding what's worth logging
-- No external dependencies — pure file system
+- **Very cheap:** All memory operations are file reads/writes — no LLM tokens used
+- **Small model OK:** Reading, writing, and searching memory requires no reasoning
+- **Use medium+ model only for:** deciding *what* is worth logging vs. skipping
+- **Batch:** Log multiple events in one session before pushing backup, not one write per message
+- **Avoid:** Don't re-read full context files on every message — use `tail -10` to limit tokens
