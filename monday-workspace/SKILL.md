@@ -1,11 +1,11 @@
 ---
 name: monday-workspace
-description: Set up a monday.com account for an Ocana agent and work with monday.com boards, items, and updates via the GraphQL API. Use when someone needs to create a monday.com workspace for their PA, connect the PA to monday.com, query boards/items, create or update items, or troubleshoot monday API access. Covers account creation, token setup, and common GraphQL operations.
+description: Set up a monday.com account for an OpenClaw agent and work with monday.com boards, items, and updates via the GraphQL API. Use when someone needs to create a monday.com workspace for their PA, connect the PA to monday.com, query boards/items, create or update items, or troubleshoot monday API access. Covers account creation, token setup, and common GraphQL operations.
 ---
 
 # monday.com Workspace Skill
 
-Use this skill to set up and operate monday.com from an Ocana agent.
+Use this skill to set up and operate monday.com from an OpenClaw agent.
 
 ---
 
@@ -20,7 +20,7 @@ Each PA should have its **own monday.com account** (not the owner's).
 
 Recommended flow:
 1. Go to [monday.com/agents-signup](https://monday.com/agents-signup)
-2. Use the agent email (e.g. `midgee@ocana.ai` or a dedicated PA email)
+2. Use the agent email (e.g. `midgee@openclaw.ai` or a dedicated PA email)
 3. Create or join a workspace — the owner can invite the PA to their workspace
 4. Once logged in, generate an API token (see below)
 
@@ -117,8 +117,8 @@ Standard locations:
 - Workspace ID: stored in `MEMORY.md` or `TOOLS.md` under monday.com section
 
 For Heleni specifically:
-- Workspace: `ocana-force` (ID: 14797061)
-- Account: `heleni@ocana.ai`
+- Workspace: your OpenClaw workspace ID (configure in MEMORY.md or TOOLS.md)
+- Account: `heleni@openclaw.ai`
 - PA Rollout Board ID: `18405314499`
 
 ---
@@ -232,7 +232,7 @@ mcporter call monday-mcp boards
 
 ---
 
-## Part 6 — Integration with Ocana
+## Part 6 — Integration with OpenClaw
 
 When helping a PA get started with monday.com:
 1. Confirm the PA has a monday.com account (agent email, not owner's)

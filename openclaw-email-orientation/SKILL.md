@@ -1,14 +1,14 @@
 ---
-name: ocana-email-orientation
-description: Explain how email and Google Calendar work for Ocana agents, including the distinction between agent email and owner email, how gog and the Google Workspace skill are used, where related credentials/config live, and how to troubleshoot common setup or access issues. Use when someone asks how an Ocana agent accesses Gmail/Google Workspace/Calendar, where credentials are stored, how to use the agent inbox, how to give the agent write access to the owner's calendar, or how to guide another agent/user through the email or calendar setup model.
+name: openclaw-email-orientation
+description: Explain how email and Google Calendar work for OpenClaw agents, including the distinction between agent email and owner email, how gog and the Google Workspace skill are used, where related credentials/config live, and how to troubleshoot common setup or access issues. Use when someone asks how an OpenClaw agent accesses Gmail/Google Workspace/Calendar, where credentials are stored, how to use the agent inbox, how to give the agent write access to the owner's calendar, or how to guide another agent/user through the email or calendar setup model.
 ---
 
-# Ocana Email & Calendar Orientation
+# OpenClaw Email & Calendar Orientation
 
-Use this skill to explain and troubleshoot how email and Google Calendar work for Ocana agents.
+Use this skill to explain and troubleshoot how email and Google Calendar work for OpenClaw agents.
 
 ## Core model
-- Explain that **owner** and **agent** are different concepts in Ocana.
+- Explain that **owner** and **agent** are different concepts in OpenClaw.
 - Explain that each **agent** is created with its own **Google Workspace / G Suite account**.
 - Explain that the agent can act through its own mailbox and related Google Workspace tools.
 - Explain that agents commonly use **gog** plus the **Google Workspace skill** to work with Gmail, Calendar, Drive, Contacts, Sheets, and Docs.
@@ -16,16 +16,16 @@ Use this skill to explain and troubleshoot how email and Google Calendar work fo
 ## What to explain first
 When someone is confused, start with this concise model:
 1. The **owner** is the human who owns or manages the agent.
-2. The **agent** is the AI worker running in Ocana.
+2. The **agent** is the AI worker running in OpenClaw.
 3. The **agent email** belongs to the agent account, not automatically to the owner.
 4. Google Workspace access is typically done through `gog` after auth is configured.
 
 ## Local paths and files
 Share only the paths that are needed for setup/troubleshooting.
 
-- gog OAuth client credentials: `/opt/ocana/openclaw/.gog/credentials.json`
-- OpenClaw auth profiles: `/opt/ocana/openclaw/agents/main/agent/auth-profiles.json`
-- Workspace skill reference: `/opt/ocana/openclaw/workspace/skills/gog/SKILL.md`
+- gog OAuth client credentials: `~/.openclaw/.gog/credentials.json`
+- OpenClaw auth profiles: `~/.openclaw/agents/main/agent/auth-profiles.json`
+- Workspace skill reference: `~/.openclaw/workspace/skills/gog/SKILL.md`
 
 Important:
 - Do **not** reveal secret contents from these files in chat.
@@ -33,7 +33,7 @@ Important:
 - `auth-profiles.json` and `.gog/credentials.json` are protected files; do not modify them casually.
 
 ## How to use gog
-Read `/opt/ocana/openclaw/workspace/skills/gog/SKILL.md` if you need exact command examples.
+Read `~/.openclaw/workspace/skills/gog/SKILL.md` if you need exact command examples.
 
 Typical guidance:
 - Authenticate credentials: `gog auth credentials /path/to/client_secret.json`
@@ -51,7 +51,7 @@ Useful examples:
 Agents often need to read and write the **owner's** Google Calendar (not just their own).
 
 Key distinction:
-- The **agent email** (e.g. `midgee@ocana.ai`) is set up by default.
+- The **agent email** (e.g. `midgee@openclaw.ai`) is set up by default.
 - The **owner calendar** (e.g. `doron@monday.com`) requires explicit sharing + auth.
 
 To give the agent write access to the owner's calendar:
@@ -60,7 +60,7 @@ To give the agent write access to the owner's calendar:
 3. Agent runs: `gog auth add owner@company.com --services calendar` (or re-auths with calendar scope)
 4. Agent uses `GOG_ACCOUNT=owner@company.com` when calling calendar commands
 
-Common issue — calendar shows "connected" in Ocana dashboard but agent can't write:
+Common issue — calendar shows "connected" in OpenClaw dashboard but agent can't write:
 - The connection in the dashboard may reflect OAuth at the agent-email level only
 - If the owner's calendar is a separate Google account, it needs to be separately shared and authed
 - Re-auth with `--services calendar` and verify write scope was granted (not just read)
