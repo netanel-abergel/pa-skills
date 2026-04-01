@@ -164,3 +164,39 @@ Keep this file as the single source of truth for skill routing.
 ## Auto-Updated
 
 This skill is updated automatically when new skills are added. See skill-scout for how new skills are discovered.
+
+---
+
+## Skills Added After Initial Release
+
+| Skill | Category | Complexity | Best For |
+|---|---|---|---|
+| **git-backup** | Memory | Low | Backup workspace to GitHub — token discovery, auto-push |
+| **group-memory** | Memory | Low | Per-WhatsApp-group context: decisions, people, topics per group |
+| **skill-scout** | Discovery | Medium | Weekly web search for new skill ideas |
+
+### New Trigger Phrases
+
+| If the owner says... | Use skill |
+|---|---|
+| "save this" / "backup" / "push to git" | git-backup |
+| "what was discussed in [group]" | group-memory |
+| "what do you know about [group]" | group-memory |
+| "find new skill ideas" / "what skills are trending" | skill-scout |
+
+### New Multi-Skill Workflows
+
+**After any group conversation:**
+```
+group-memory (log decisions/people) → git-backup (persist to GitHub)
+```
+
+**Weekly maintenance:**
+```
+group-memory (weekly digest per group) → owner-briefing (include group highlights) → git-backup
+```
+
+**Memory before context compaction:**
+```
+group-memory (flush group contexts) → git-backup (push everything)
+```
