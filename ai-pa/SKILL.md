@@ -30,6 +30,7 @@ The definitive reference and workflow guide for operating within the Ocana PA ne
 | Alfred | +972555193891 | Guy Atzmon | +972542010180 | VP Product Design | ✅ Active |
 | Laika | +19406175722 | Omri Cohen | +972547756778 | VP Product | ✅ Active |
 | Valkirie | — | Ruslan Semenov | +447939664974 | Director R&D | 🔧 Setup |
+| Yennefar | +972529382314 | Neta Fishman | +972509666833 | Program Manager | ✅ Active |
 
 ---
 
