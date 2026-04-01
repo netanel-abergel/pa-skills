@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI-PA Skills — OpenClaw</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d1117;
+      --bg2: #161b22;
+      --bg3: #1c2128;
+      --border: #30363d;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --accent: #7c3aed;
+      --accent-light: #a78bfa;
+      --accent-hover: #6d28d9;
+      --green: #3fb950;
+      --radius: 10px;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+
+    /* ── SWITCHER ── */
+    .mode-switcher {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 4px;
+    }
+    .mode-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      padding: 6px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    .mode-btn.active {
+      background: var(--accent);
+      color: white;
+    }
+    .mode-btn:hover:not(.active) {
+      color: var(--text);
+    }
+
+    /* Human mode - friendlier */
+    body.mode-human .install-cmd code::before {
+      content: "Install: ";
+      color: var(--text-muted);
+      font-style: normal;
+    }
+    /* Agent mode - shows raw commands */
+    body.mode-agent .card-github-link::before {
+      content: "# ";
+    }
+    body.mode-agent .skill-card {
+      border-color: #238636;
+    }
+    body.mode-agent .skill-card:hover {
+      border-color: #3fb950;
+    }
+    body.mode-agent .accent { color: #3fb950; }
+    body.mode-agent .badge { background: rgba(63,185,80,0.15); color: #3fb950; border-color: rgba(63,185,80,0.3); }
+
+    /* Agent mode install shows full machine-readable format */
+    .agent-install { display: none; }
+    body.mode-agent .agent-install { display: block; }
+    body.mode-agent .human-install { display: none; }
+    .human-install { display: block; }
+
+    /* Hero tagline changes by mode */
+    .hero-tagline-human { display: block; }
+    .hero-tagline-agent { display: none; }
+    body.mode-agent .hero-tagline-human { display: none; }
+    body.mode-agent .hero-tagline-agent { display: block; }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+    }
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .logo-icon {
+      width: 28px;
+      height: 28px;
+      background: linear-gradient(135deg, var(--accent), #a855f7);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+    .header-links {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    .header-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+    .header-links a:hover { color: var(--text); }
+    .btn-github {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      color: var(--text) !important;
+      padding: 0.4rem 0.85rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-github:hover {
+      border-color: var(--accent) !important;
+      background: var(--bg2);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center;
+      padding: 5rem 2rem 3.5rem;
+      background: radial-gradient(ellipse at 50% -20%, rgba(124,58,237,0.18) 0%, transparent 65%);
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(124,58,237,0.15);
+      border: 1px solid rgba(124,58,237,0.35);
+      color: var(--accent-light);
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.03em;
+    }
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #e6edf3 0%, var(--accent-light) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+    }
+    .hero p {
+      color: var(--text-muted);
+      font-size: 1.15rem;
+      max-width: 520px;
+      margin: 0 auto 2.5rem;
+    }
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+      flex-wrap: wrap;
+    }
+    .stat {
+      text-align: center;
+    }
+    .stat-num {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent-light);
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── SEARCH ── */
+    .search-wrap {
+      max-width: 600px;
+      margin: 0 auto 3rem;
+      padding: 0 2rem;
+    }
+    .search-inner {
+      position: relative;
+    }
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    #search {
+      width: 100%;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.85rem 1rem 0.85rem 2.8rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-family: var(--font);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    #search::placeholder { color: var(--text-muted); }
+    #search:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(124,58,237,0.2);
+    }
+    #search-count {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 0.6rem;
+    }
+
+    /* ── GRID ── */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem 4rem;
+    }
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+    @media (max-width: 900px) { #grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 580px) { #grid { grid-template-columns: 1fr; } }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+    .card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.35), 0 0 0 1px rgba(124,58,237,0.15);
+    }
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+    .card-icon {
+      width: 38px;
+      height: 38px;
+      min-width: 38px;
+      background: linear-gradient(135deg, rgba(124,58,237,0.25), rgba(168,85,247,0.15));
+      border: 1px solid rgba(124,58,237,0.3);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+    }
+    .card-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text);
+      line-height: 1.3;
+    }
+    .card-slug {
+      font-size: 0.75rem;
+      color: var(--accent-light);
+      font-family: "SFMono-Regular", Consolas, monospace;
+      margin-top: 0.15rem;
+    }
+    .card-desc {
+      color: var(--text-muted);
+      font-size: 0.855rem;
+      line-height: 1.55;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      flex: 1;
+    }
+    .card-install {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      padding: 0.5rem 0.6rem 0.5rem 0.75rem;
+    }
+    .install-cmd {
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 0.73rem;
+      color: var(--green);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+    }
+    .copy-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      padding: 0.2rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      transition: color 0.2s, background 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .copy-btn:hover {
+      color: var(--text);
+      background: rgba(255,255,255,0.07);
+    }
+    .copy-btn.copied {
+      color: var(--green);
+    }
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    .gh-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.8rem;
+      transition: color 0.2s;
+    }
+    .gh-link:hover { color: var(--accent-light); }
+
+    /* ── NO RESULTS ── */
+    #no-results {
+      display: none;
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-muted);
+    }
+    #no-results svg { opacity: 0.3; margin-bottom: 1rem; }
+    #no-results p { font-size: 1rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .footer-logo {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text);
+    }
+    .footer-desc {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--accent-light); }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #484f58; }
+  </style>
+</head>
+<body class="mode-human">
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <div class="logo-icon">🤖</div>
+      AI-PA Skills
+    </a>
+    <div class="header-links">
+      <a href="#skills">Skills</a>
+      <a href="https://github.com/netanel-abergel/pa-skills" target="_blank" class="btn-github">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+    OpenClaw Skill Library
+  </div>
+  <h1>AI-PA Skills</h1>
+  <p>OpenClaw skills for AI Personal Assistants — plug-and-play capabilities to supercharge your PA agent.</p>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num" id="total-count">20</div>
+      <div class="stat-label">Skills</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">Free</div>
+      <div class="stat-label">Open Source</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">Any</div>
+      <div class="stat-label">LLM Model</div>
+    </div>
+  </div>
+</section>
+
+<!-- SEARCH -->
+<div class="search-wrap">
+  <div class="search-inner">
+    <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+    </svg>
+    <input type="text" id="search" placeholder="Search skills by name or description…" autocomplete="off" />
+  </div>
+  <div id="search-count"></div>
+</div>
+
+<!-- GRID -->
+<div class="container" id="skills">
+  <div id="grid"></div>
+  <div id="no-results">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+    </svg>
+    <p>No skills match your search.</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">🤖 AI-PA Skills</div>
+    <div class="footer-desc">OpenClaw skills for AI Personal Assistants</div>
+    <div class="footer-links">
+      <a href="https://github.com/netanel-abergel/pa-skills" target="_blank">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        netanel-abergel/pa-skills
+      </a>
+      <a href="https://clawhub.ai" target="_blank">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+        clawhub.ai
+      </a>
+    </div>
+    <div style="color: var(--text-muted); font-size: 0.78rem;">
+      Built with ❤️ for the OpenClaw PA community
+    </div>
+  </div>
+</footer>
+
+<script>
+const SKILLS = [
+  {
+    slug: "ai-pa",
+    name: "AI-PA Network",
+    icon: "🤝",
+    description: "AI Personal Assistant network skill for multi-agent PA coordination. Use when: contacting another PA, coordinating with peer agents, scheduling meetings between owners, broadcasting messages to PA groups, or looking up contacts from the local PA directory."
+  },
+  {
+    slug: "billing-monitor",
+    name: "Billing Monitor",
+    icon: "💳",
+    description: "Monitor for API billing errors and alert the owner and admin immediately. Use when: an API billing error is detected, a peer PA reports a billing error, or during routine health checks. Handles detection, notification, and fallback model switching. Model-agnostic: works with any LLM provider (Anthropic, OpenAI, Google, etc.)."
+  },
+  {
+    slug: "calendar-setup",
+    name: "Calendar Setup",
+    icon: "📅",
+    description: "Step-by-step wizard for connecting an owner's Google Calendar to their OpenClaw PA agent, including granting write permissions. Use when: setting up calendar access for the first time, troubleshooting calendar connection issues, fixing read-only calendar access, re-authenticating after permission errors, or handling multiple calendar accounts."
+  },
+  {
+    slug: "dynamic-temperature",
+    name: "Dynamic Temperature",
+    icon: "🌡️",
+    description: "Dynamic LLM temperature selection based on task type. Use when deciding what temperature to apply for a given task — scheduling, communication, creative writing, or irreversible actions. Ensures precision where needed and warmth where appropriate."
+  },
+  {
+    slug: "eval",
+    name: "Eval",
+    icon: "📊",
+    description: "Evaluate everything the PA agent manages — tasks, skills, PA network health, billing, calendar connections, and memory quality. Use when: owner asks for an evaluation, wants to know what's working and what isn't, or requests a performance report. Combines supervisor status with quality scoring."
+  },
+  {
+    slug: "git-backup",
+    name: "Git Backup",
+    icon: "💾",
+    description: "Backup the agent workspace to a GitHub repository. Use when: asked to save/remember something important, after significant changes to memory files, on a schedule, or when asked to push workspace to git. Handles token discovery, repo initialization, and push."
+  },
+  {
+    slug: "meeting-scheduler",
+    name: "Meeting Scheduler",
+    icon: "🗓️",
+    description: "Schedule meetings between your owner and another person by coordinating with their PA, finding available slots in both calendars, and sending a calendar invite. Handles both PA-to-PA coordination and direct scheduling. Works with any LLM model."
+  },
+  {
+    slug: "monday-for-agents",
+    name: "monday.com for Agents",
+    icon: "📋",
+    description: "Set up a monday.com account for an OpenClaw agent and work with monday.com boards, items, and updates via the GraphQL API or MCP server. Covers account creation, token setup, GraphQL operations, and MCP configuration. Works with any LLM model."
+  },
+  {
+    slug: "openclaw-email-orientation",
+    name: "Email Orientation",
+    icon: "📧",
+    description: "Explain how email and Google Calendar work for OpenClaw agents, including the distinction between agent email and owner email, how gog and the Google Workspace skill are used, where related credentials/config live, and how to troubleshoot common setup or access issues."
+  },
+  {
+    slug: "owner-briefing",
+    name: "Owner Briefing",
+    icon: "☀️",
+    description: "Generate and send a daily briefing to your owner covering today's meetings, urgent emails, open tasks, and anything that needs attention. Use when: it's the start of the owner's day, when asked for a summary, or on a scheduled cron job."
+  },
+  {
+    slug: "pa-eval",
+    name: "PA Eval",
+    icon: "⭐",
+    description: "Evaluate PA performance through structured scoring, owner feedback analysis, and behavioral benchmarking. Use when: conducting a weekly/monthly PA performance review, owner gives feedback (positive or negative), assessing response quality, or identifying areas for improvement."
+  },
+  {
+    slug: "pa-onboarding",
+    name: "PA Onboarding",
+    icon: "🚀",
+    description: "Step-by-step onboarding guide for setting up a new AI Personal Assistant on OpenClaw. Use when: a new PA is being created, someone asks how to set up an agent, or guiding a user through the full setup process from account creation to first response."
+  },
+  {
+    slug: "pa-status",
+    name: "PA Status",
+    icon: "🩺",
+    description: "PA network health dashboard. Use when: checking if all PAs in the network are active, checking billing status, verifying calendar connections, or generating a network status report. Reads from data/pa-directory.json."
+  },
+  {
+    slug: "self-learning",
+    name: "Self Learning",
+    icon: "🧠",
+    description: "Continuous self-improvement through systematic logging, pattern detection, and behavioral updates. Use when: the owner corrects you, a task fails, you discover a better approach, you notice a recurring pattern, or during weekly reflection sessions. Builds on .learnings/ files to drive durable behavioral change."
+  },
+  {
+    slug: "skill-master",
+    name: "Skill Master",
+    icon: "🗺️",
+    description: "Meta-skill for skill selection and routing. Use this skill FIRST when you are unsure which skill to use for a task. Provides a decision tree, keyword triggers, and guidance on combining multiple skills for complex workflows. Also use when onboarding to understand the full skill library."
+  },
+  {
+    slug: "skill-scout",
+    name: "Skill Scout",
+    icon: "🔭",
+    description: "Daily automated skill discovery — searches the web for new OpenClaw skills, PA automation ideas, and AI agent capabilities, then delivers a curated list of recommendations to the admin. Use when: running the daily discovery cron job, asked for new skill ideas, or when looking for inspiration to expand the skill library."
+  },
+  {
+    slug: "spawn-subagent",
+    name: "Spawn Subagent",
+    icon: "⚡",
+    description: "Spawn isolated subagents to handle long-running, complex, or blocking tasks without stalling the main session. Use when: a task will take more than 30 seconds, involves multiple sequential steps, requires heavy file processing, could block the main session, or when parallelism would speed things up."
+  },
+  {
+    slug: "supervisor",
+    name: "Supervisor",
+    icon: "📡",
+    description: "Central status dashboard for the PA agent. Use when: owner asks 'what's the status', 'what are you working on', 'what's happening', or any status/overview question. Aggregates active tasks, open issues, monitored groups, pending follow-ups, and system health into one structured report."
+  },
+  {
+    slug: "whatsapp-diagnostics",
+    name: "WhatsApp Diagnostics",
+    icon: "🔧",
+    description: "Diagnose and fix WhatsApp connectivity issues for OpenClaw agents. Use when: a PA is not responding, WhatsApp shows connected but messages don't arrive, the agent is online but not replying, or troubleshooting a new agent setup."
+  },
+  {
+    slug: "whatsapp-memory",
+    name: "WhatsApp Memory",
+    icon: "💬",
+    description: "Maintain separate memory contexts per WhatsApp conversation — both groups and direct messages (DMs). Use when: tracking what was discussed with a specific person or in a specific group, recalling past context before responding, logging decisions or key facts from a conversation, or preventing context bleed between different chats."
+  }
+];
+
+// Update counts
+document.getElementById('total-count').textContent = SKILLS.length;
+
+function cardHTML(skill) {
+  const cmd = `npx @netanel-abergel/ai-pa install ${skill.slug}`;
+  const ghUrl = `https://github.com/netanel-abergel/pa-skills/tree/main/skills/${skill.slug}`;
+  return `
+    <div class="card" data-slug="${skill.slug}" data-name="${skill.name.toLowerCase()}" data-desc="${skill.description.toLowerCase()}">
+      <div class="card-header">
+        <div class="card-icon">${skill.icon}</div>
+        <div>
+          <div class="card-title">${skill.name}</div>
+          <div class="card-slug">${skill.slug}</div>
+        </div>
+      </div>
+      <div class="card-desc">${skill.description}</div>
+      <div class="card-install">
+        <span class="install-cmd">${cmd}</span>
+        <button class="copy-btn" data-cmd="${cmd}" title="Copy install command">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+            <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+          </svg>
+          Copy
+        </button>
+      </div>
+      <div class="card-footer">
+        <a href="${ghUrl}" target="_blank" class="gh-link">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          View on GitHub
+        </a>
+      </div>
+    </div>
+  `;
+}
+
+const grid = document.getElementById('grid');
+const noResults = document.getElementById('no-results');
+const searchInput = document.getElementById('search');
+const searchCount = document.getElementById('search-count');
+
+// Render all cards
+grid.innerHTML = SKILLS.map(cardHTML).join('');
+
+// Copy button functionality
+grid.addEventListener('click', e => {
+  const btn = e.target.closest('.copy-btn');
+  if (!btn) return;
+  const cmd = btn.dataset.cmd;
+  navigator.clipboard.writeText(cmd).then(() => {
+    btn.classList.add('copied');
+    btn.innerHTML = `
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="20 6 9 17 4 12"/>
+      </svg>
+      Copied!
+    `;
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.innerHTML = `
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+          <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+        </svg>
+        Copy
+      `;
+    }, 2000);
+  });
+});
+
+// Search
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.trim().toLowerCase();
+  const cards = grid.querySelectorAll('.card');
+  let visible = 0;
+
+  cards.forEach(card => {
+    const match = !q || card.dataset.name.includes(q) || card.dataset.desc.includes(q) || card.dataset.slug.includes(q);
+    card.style.display = match ? '' : 'none';
+    if (match) visible++;
+  });
+
+  if (q) {
+    searchCount.textContent = `${visible} skill${visible !== 1 ? 's' : ''} found`;
+  } else {
+    searchCount.textContent = '';
+  }
+
+  noResults.style.display = visible === 0 ? 'block' : 'none';
+});
+
+  function setMode(mode) {
+    document.body.className = document.body.className.replace(/mode-\S+/g, '') + ' mode-' + mode;
+    document.getElementById('btnHuman').classList.toggle('active', mode === 'human');
+    document.getElementById('btnAgent').classList.toggle('active', mode === 'agent');
+    localStorage.setItem('ai-pa-mode', mode);
+  }
+  // Restore mode
+  const savedMode = localStorage.getItem('ai-pa-mode') || 'human';
+  setMode(savedMode);
+
+</script>
+</body>
+</html>
