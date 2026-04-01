@@ -1,0 +1,8 @@
+{
+  "name": "@ai-pa/billing-monitor",
+  "version": "1.0.0",
+  "description": "OpenClaw plugin that monitors API billing health and alerts on failures",
+  "main": "index.ts",
+  "scripts": { "build": "tsc" },
+  "keywords": ["openclaw", "billing", "monitoring", "ai-pa"]
+}

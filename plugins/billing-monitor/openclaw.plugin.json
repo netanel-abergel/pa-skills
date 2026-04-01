@@ -1,0 +1,13 @@
+{
+  "id": "ai-pa-billing-monitor",
+  "name": "AI-PA Billing Monitor",
+  "description": "Monitors API billing health. Checks provider API key status on heartbeat and alerts owner on billing errors.",
+  "version": "1.0.0",
+  "configSchema": {
+    "type": "object",
+    "properties": {
+      "adminPhone": { "type": "string", "description": "WhatsApp phone to alert on billing errors" },
+      "checkInterval": { "type": "number", "description": "Check interval in minutes", "default": 60 }
+    }
+  }
+}
