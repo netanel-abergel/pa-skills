@@ -1,6 +1,6 @@
 ---
 name: ai-pa
-description: AI Personal Assistant network skill. Use when: contacting another PA, coordinating with peer agents, scheduling meetings between owners, broadcasting messages, looking up contacts from the local PA directory, or performing any cross-PA task. Reads contact data from data/pa-directory.json in the workspace. Does NOT contain hardcoded contact data — each PA maintains their own directory file.
+description: "AI Personal Assistant network skill. Use when: contacting another PA, coordinating with peer agents, scheduling meetings between owners, broadcasting messages, looking up contacts from the local PA directory, or performing any cross-PA task. Reads contact data from data/pa-directory.json in the workspace. Does NOT contain hardcoded contact data — each PA maintains their own directory file."
 ---
 
 # AI-PA Network Skill
