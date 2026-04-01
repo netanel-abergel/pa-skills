@@ -224,7 +224,7 @@ If last backup > 6 hours ago:
   → "Run git backup"
 
 If API billing = 402:
-  → "My own API key is out of credits — alert Netanel immediately"
+  → "My own API key is out of credits — alert the admin immediately"
 ```
 
 ---

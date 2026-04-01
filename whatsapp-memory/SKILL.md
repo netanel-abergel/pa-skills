@@ -109,7 +109,7 @@ wa_log() {
 }
 
 # Usage:
-# wa_log "group" "120363422865795623@g.us" "Kira: calendar connected ✅"
+# wa_log "group" "XXXXXXXXXXX@g.us" "PA name: calendar connected ✅"
 # wa_log "dm" "+PHONE_NUMBER" "Agreed to reschedule to Thursday" "notes.md"
 ```
 

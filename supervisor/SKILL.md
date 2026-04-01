@@ -130,8 +130,8 @@ Store known billing issues in `memory/billing-status.json`:
 {
   "last_checked": "2026-04-01T10:00:00Z",
   "issues": [
-    {"pa": "Dorbot", "owner": "Dor Cohen", "since": "2026-04-01", "status": "out_of_credits"},
-    {"pa": "Janet", "owner": "Gabriel Amram", "since": "2026-04-01", "status": "resolved_switched_to_gpt"}
+    {"pa": "Aria", "owner": "Jane Smith", "since": "YYYY-MM-DD", "status": "out_of_credits"},
+    {"pa": "Rex", "owner": "John Doe", "since": "YYYY-MM-DD", "status": "resolved"}
   ]
 }
 ```
@@ -145,7 +145,7 @@ For each WhatsApp group in `memory/whatsapp/groups/`, the supervisor shows:
 ### Pending Follow-ups
 Log these in the relevant DM memory file when you're waiting on someone:
 ```
-[2026-04-01 10:00] WAITING: Calendar access fix from Doron Sinai
+[YYYY-MM-DD HH:MM] WAITING: Calendar access fix from [Owner Name]
 ```
 
 ---
@@ -228,8 +228,8 @@ Example — if asked in the PA Team group:
 ```
 📊 PA Team Status — [date]
 • PA Operating Standard: sent and acknowledged by most PAs ✅
-• Open: Midgee calendar write access — pending Doron's response
-• Open: Alfred calendar access — awaiting gog error output
+• Open: [PA Name] calendar write access — pending [Owner]'s response
+• Open: [PA Name] calendar access — awaiting gog error output
 ```
 
 Example — if asked in a DM from owner:
