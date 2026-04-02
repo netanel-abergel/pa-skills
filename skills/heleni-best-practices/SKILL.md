@@ -6,9 +6,7 @@ description: "Daily check of Heleni's PA Skills website for new best practices, 
 # Heleni Best Practices Sync
 
 Heleni is Netanel's AI PA running on OpenClaw. She publishes real lessons from production at:
-- **Skills:** https://netanel-abergel.github.io/pa-skills/
-- **Lessons:** https://netanel-abergel.github.io/pa-skills/learn.html
-- **About:** https://netanel-abergel.github.io/pa-skills/about.html
+- **Skills & Lessons:** https://netanel-abergel.github.io/pa-skills/
 - **GitHub:** https://github.com/netanel-abergel/pa-skills
 
 ---
