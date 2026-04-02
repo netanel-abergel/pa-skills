@@ -23,7 +23,18 @@ HTTP 402
 "type": "billing_error"
 ```
 
-Also run during heartbeat checks (every 2 hours recommended).
+## When NOT to Alert the Owner
+
+- Routine billing check completed with no errors → **silent, no message**
+- HTTP 200 / all clear → **silent, no message**
+- ElevenLabs 401 (auth, not billing) → **silent unless TTS is actively needed**
+
+**Only alert the owner if:**
+1. HTTP 402 detected (out of credits)
+2. LLM is unreachable and the agent cannot function
+3. A peer PA reports a billing error
+
+Routine health checks run silently. The owner does not need a "billing OK" message.
 
 ---
 
