@@ -10,6 +10,12 @@ Any model. This is a lookup table — any model can use it.
 
 ---
 
+## ⚠️ Skill Count Rule
+**Sweet spot: 28–32 active skills. Above 40 = routing breaks down.**
+Start lean. Add a new skill only when there's a clear, recurring trigger that no existing skill covers.
+
+---
+
 ## How to Use This Skill
 
 1. Read the owner's request.
@@ -25,23 +31,31 @@ Do not improvise. If no skill matches, say so and ask the owner.
 
 | If the owner says... | Use skill |
 |---|---|
-| "schedule a meeting with X" | meeting-scheduler |
+| "schedule a meeting with X" | meetings |
+| "summarize meeting notes" / "action items from meeting" | meetings |
 | "what's on my calendar today" | owner-briefing |
 | "send me a morning briefing" | owner-briefing |
-| "my PA isn't responding" | whatsapp-diagnostics |
 | "billing error" / "API out of credits" | billing-monitor |
 | "connect my calendar" / "can't write to calendar" | calendar-setup |
+| "connect Gmail" / "set up email" | calendar-setup |
 | "set up a new PA" / "onboard a new agent" | pa-onboarding |
-| "how are all the PAs doing" / "PA network status" | pa-status |
 | "contact [person]'s PA" / "find PA phone number" | ai-pa |
-| "set up monday.com" / "create a board item" | monday-for-agents |
-| "set up email" / "connect Gmail" | openclaw-email-orientation |
-| "how am I doing" / "review my performance" | pa-eval |
+| "set up monday.com" / "create a board item" / "monday question" | monday-for-agents |
 | "I made a mistake" / "owner corrected me" | self-learning |
-| "this task will take long" / "run in background" | spawn-subagent |
-| "save this" / "backup" / "push to git" | git-backup |
-| "what was discussed in [group]" | whatsapp-memory |
+| "this task will take long" / "run in background" | self-learning |
+| "backup workspace" / "push to git" | maintenance |
+| "update openclaw" / "update skills" / "run maintenance" | maintenance |
+| "what was discussed in [group]" | whatsapp |
 | "find new skill ideas" / "what skills are trending" | skill-scout |
+| "security check" / "check for vulnerabilities" | self-monitor |
+| "health check" / "check infrastructure" | self-monitor |
+| "how are all the PAs doing" / "PA network status" | supervisor |
+| "מה הסטטוס" / "what's the status" | supervisor |
+| "how am I doing" / "review my performance" | eval |
+| "run eval" / "מה עובד ומה לא" | eval |
+| "summarize this YouTube video" | youtube-watcher |
+| "add nikud to this" / "Hebrew vowel points" | hebrew-nikud |
+| "compact memory" / "organize memory" | memory-tiering |
 
 ---
 
@@ -52,31 +66,31 @@ What kind of task is this?
 │
 ├─ COMMUNICATION / COORDINATION
 │   ├─ Find a PA's contact → ai-pa
-│   ├─ Schedule a meeting → meeting-scheduler
+│   ├─ Schedule a meeting → meetings
+│   ├─ Summarize meeting notes → meetings
 │   └─ Broadcast to all PAs → ai-pa
 │
 ├─ SETUP / ONBOARDING
 │   ├─ New PA from scratch → pa-onboarding
-│   ├─ Connect Google Calendar → calendar-setup
-│   ├─ Connect Gmail / email → openclaw-email-orientation
+│   ├─ Connect Google Calendar or Gmail → calendar-setup
 │   └─ Connect monday.com → monday-for-agents
 │
 ├─ MONITORING / HEALTH
-│   ├─ One PA not responding → whatsapp-diagnostics
 │   ├─ Billing error detected → billing-monitor
-│   └─ Check all PAs at once → pa-status
+│   ├─ Infrastructure / security check → self-monitor
+│   └─ Check all PAs at once → supervisor
 │
 ├─ DAILY OPERATIONS
 │   ├─ Morning/evening briefing → owner-briefing
 │   ├─ monday.com board task → monday-for-agents
-│   ├─ Backup workspace → git-backup
-│   └─ Long-running task → spawn-subagent
+│   ├─ Backup workspace or update OpenClaw → maintenance
+│   └─ WhatsApp conversation context → whatsapp
 │
 └─ SELF-IMPROVEMENT
     ├─ Owner corrected me → self-learning
-    ├─ Weekly performance review → pa-eval
-    ├─ Recall group conversation context → whatsapp-memory
-    └─ Find new skill ideas → skill-scout
+    ├─ Performance review / audit → eval
+    ├─ Find new skill ideas → skill-scout
+    └─ Memory compaction → memory-tiering
 ```
 
 ---
@@ -87,21 +101,33 @@ What kind of task is this?
 |---|---|---|
 | **ai-pa** | Coordination | Find PA contacts, group JIDs, coordination protocols |
 | **billing-monitor** | Health | Detect and respond to API billing failures |
-| **calendar-setup** | Setup | Full calendar connection with write access |
-| **git-backup** | Memory | Backup workspace to GitHub |
-| **meeting-scheduler** | Operations | End-to-end meeting coordination |
-| **monday-for-agents** | Operations | monday.com account, API, MCP server |
-| **openclaw-email-orientation** | Setup | Gmail + Calendar auth and troubleshooting |
+| **calendar-setup** | Setup | Calendar connection with write access + Gmail/email setup |
+| **eval** | Self-improvement | Full performance audit — scores tasks, checks PA health, reviews memory |
+| **hebrew-nikud** | Utility | Add nikud (vowel points) to Hebrew text, especially for TTS |
+| **maintenance** | Infrastructure | Workspace git backup (every 6h) + OpenClaw updates (weekly) |
+| **meetings** | Operations | Schedule meetings AND summarize meeting notes/transcripts |
+| **memory-tiering** | Memory | HOT/WARM/COLD memory compaction and archiving |
+| **monday-for-agents** | Operations | All monday.com operations: API, MCP, boards, items |
 | **owner-briefing** | Operations | Daily morning/evening summaries |
-| **pa-eval** | Self-improvement | Performance scoring and feedback analysis |
 | **pa-onboarding** | Setup | Full new agent setup from zero |
-| **pa-status** | Health | Network-wide health dashboard |
-| **self-learning** | Self-improvement | Log and apply lessons from mistakes |
+| **self-learning** | Self-improvement | Log corrections and apply lessons; maintain HOT.md |
+| **self-monitor** | Health | Infrastructure + security checks, disk/memory/service health |
 | **skill-master** | Routing | Pick the right skill (this file) |
 | **skill-scout** | Discovery | Weekly search for new skill ideas |
-| **spawn-subagent** | Architecture | Delegate long or blocking tasks |
-| **whatsapp-diagnostics** | Health | Debug WhatsApp connectivity |
-| **whatsapp-memory** | Memory | Per-conversation context tracking |
+| **supervisor** | Operations | Network-wide status dashboard — all PAs, tasks, system health |
+| **whatsapp** | Memory | Per-conversation context, unanswered tracking, loop prevention |
+| **youtube-watcher** | Utility | Fetch and summarize YouTube video transcripts |
+| **ai-meeting-notes** | ⚠️ DEPRECATED | → Use **meetings** |
+| **git-backup** | ⚠️ DEPRECATED | → Use **maintenance** |
+| **meeting-scheduler** | ⚠️ DEPRECATED | → Use **meetings** |
+| **openclaw-auto-updater** | ⚠️ DEPRECATED | → Use **maintenance** |
+| **openclaw-email-orientation** | ⚠️ DEPRECATED | → Use **calendar-setup** |
+| **pa-eval** | ⚠️ DEPRECATED | → Use **eval** |
+| **pa-status** | ⚠️ DEPRECATED | → Use **supervisor** |
+| **security-guardian** | ⚠️ DEPRECATED | → Use **self-monitor** |
+| **spawn-subagent** | ⚠️ DEPRECATED | → See AGENTS.md subagent section |
+| **whatsapp-diagnostics** | ⚠️ DEPRECATED | → See **whatsapp** skill troubleshooting appendix |
+| **whatsapp-memory** | ⚠️ DEPRECATED | → Use **whatsapp** |
 
 ---
 
@@ -111,32 +137,32 @@ Some tasks need multiple skills in sequence:
 
 ### New PA Setup
 ```
-pa-onboarding → calendar-setup → openclaw-email-orientation → monday-for-agents → ai-pa (add to directory)
+pa-onboarding → calendar-setup → monday-for-agents → ai-pa (add to directory)
 ```
 
 ### PA Network Health Check
 ```
-pa-status → billing-monitor (flagged PAs) → whatsapp-diagnostics (unresponsive ones)
+supervisor → billing-monitor (flagged PAs) → self-monitor (infrastructure issues)
 ```
 
 ### After a Mistake
 ```
-self-learning (log it) → pa-eval (update score) → SOUL.md (add rule if pattern)
+self-learning (log it) → eval (update score) → SOUL.md (add rule if pattern)
 ```
 
 ### Schedule a Meeting
 ```
-ai-pa (find the other PA's contact) → meeting-scheduler (coordinate + book)
-```
-
-### After Important Group Chat
-```
-whatsapp-memory (log decisions) → git-backup (push to GitHub)
+ai-pa (find the other PA's contact) → meetings (coordinate + book)
 ```
 
 ### Weekly Maintenance
 ```
-whatsapp-memory (weekly digest) → owner-briefing (include highlights) → git-backup
+whatsapp (weekly digest) → owner-briefing (include highlights) → maintenance (push to git)
+```
+
+### After Important Group Chat
+```
+whatsapp (log decisions) → maintenance (push to GitHub)
 ```
 
 ---
@@ -144,13 +170,13 @@ whatsapp-memory (weekly digest) → owner-briefing (include highlights) → git-
 ## Where to Run (Complexity Guide)
 
 ### Run inline (main session)
-- ai-pa, billing-monitor, owner-briefing, pa-status, self-learning, git-backup
+- ai-pa, billing-monitor, owner-briefing, supervisor, self-learning, maintenance
 
 ### Consider subagent for heavy operations
-- calendar-setup, meeting-scheduler, monday-for-agents (bulk ops)
+- calendar-setup, meetings (scheduling flow), monday-for-agents (bulk ops)
 
 ### Spawn subagent (recommended)
-- pa-onboarding (20+ steps), pa-eval (full monthly analysis), batch operations, skill-scout
+- pa-onboarding (20+ steps), eval (full monthly analysis), batch operations, skill-scout
 
 ---
 
@@ -158,10 +184,10 @@ whatsapp-memory (weekly digest) → owner-briefing (include highlights) → git-
 
 | Skill | Minimum Model |
 |---|---|
-| ai-pa, billing-monitor, pa-status, git-backup, owner-briefing | Any |
-| whatsapp-diagnostics, calendar-setup, pa-onboarding, whatsapp-memory | Small–Medium |
-| meeting-scheduler, monday-for-agents, skill-scout | Medium |
-| pa-eval (trend analysis), self-learning (writing rules) | Medium–Large |
+| ai-pa, billing-monitor, supervisor, maintenance, owner-briefing | Any |
+| calendar-setup, pa-onboarding, whatsapp, memory-tiering | Small–Medium |
+| meetings, monday-for-agents, skill-scout | Medium |
+| eval (trend analysis), self-learning (writing rules) | Medium–Large |
 
 ---
 
@@ -172,14 +198,7 @@ When a new skill is added:
 2. Add trigger phrases to **Quick Lookup**.
 3. Update the **Decision Tree** if it fits a new category.
 4. Add to any relevant **Multi-Skill Workflows**.
-
----
-
-## Cost Tips
-
-- **This skill itself:** Very cheap — it's a lookup table, any model works.
-- **Routing decision:** If unsure, lean toward a smaller, cheaper skill first.
-- **Don't over-spawn:** Use subagents only when the task would actually block the main session.
+5. Check skill count — stay under 32 active skills.
 
 ---
 
@@ -204,3 +223,11 @@ The supervisor skill aggregates: active tasks, billing issues, group activity, p
 | "בדקי הכל" | eval |
 
 The eval skill scores performance, audits tasks, checks PA network health, verifies integrations, and reviews memory quality — all in one report.
+
+---
+
+## Cost Tips
+
+- **This skill itself:** Very cheap — it's a lookup table, any model works.
+- **Routing decision:** If unsure, lean toward a smaller, cheaper skill first.
+- **Don't over-spawn:** Use subagents only when the task would actually block the main session.

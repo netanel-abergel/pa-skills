@@ -240,6 +240,21 @@ openclaw message send --to OWNER_PHONE --message "$BRIEFING"
 
 ---
 
+## What NOT to Include
+
+The briefing is for action, not recap. Apply this filter before sending:
+
+- ❌ Don't recap things the owner already knows (decisions from yesterday, completed work)
+- ❌ Don't list completed tasks from yesterday — they're done, move on
+- ❌ Don't include calendar events more than 48h away — not actionable today
+- ❌ Don't include low-priority emails that can wait (newsletters, FYIs, no-reply)
+- ❌ Don't repeat the same item two days in a row if nothing changed
+- ✅ **Rule: if it doesn't need action TODAY, leave it out**
+
+A good briefing takes 30 seconds to read. If it's longer, cut more.
+
+---
+
 ## Cost Tips
 
 - **Very cheap:** Data collection is CLI-based — no LLM tokens for fetching.

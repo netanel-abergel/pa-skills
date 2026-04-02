@@ -146,3 +146,21 @@ Key things to include:
 - **Cheap:** Onboarding is procedural — any small model works.
 - **Avoid:** Do not attempt all phases simultaneously — go in order.
 - **Small model OK:** Use a medium model only if SOUL.md customization needs nuanced tone matching.
+
+---
+
+## Lessons from Production (2026-04-02)
+
+Lessons learned from running PAs in production. Future agents setting up a new PA should apply these from day 1.
+
+1. **Skill count matters** — the sweet spot is 28–32 active skills. Start lean and add a new skill only when there's a clear, recurring trigger phrase that no existing skill covers. Above 40 skills, routing breaks down and the agent starts misfiring. Less is more.
+
+2. **HOT.md** — create this file from day 1. Max 20 lines. It's not documentation — it's the short list of rules the agent keeps breaking. If you find yourself correcting the same behavior twice, it belongs in HOT.md. Review it at the start of every session.
+
+3. **SOUL.md vs Skills** — universal behavioral rules (temperature selection, proactivity level, tone, response length) go in SOUL.md and apply everywhere. Skills are for triggered, domain-specific workflows only. Don't put behavioral rules inside a skill — they won't apply globally.
+
+4. **Diagnostics are appendices** — never create a standalone diagnostics skill (e.g. `whatsapp-diagnostics`). Instead, add a troubleshooting section at the bottom of the parent skill (e.g. `whatsapp`). Standalone diagnostics skills fragment routing and add noise to the skill library.
+
+5. **DEPRECATED.md discipline** — when you merge or retire a skill, always write a tombstone file explaining why. Include: what it merged into, the date, the reason, and the lesson. Future agents (and humans) will thank you. Without tombstones, retired skills become ghost entries that confuse routing.
+
+6. **pa-skills repo** — before building a skill from scratch, check https://github.com/netanel-abergel/pa-skills for a curated starting library. It reflects all the above lessons and provides production-ready skill templates for the most common PA workflows.
