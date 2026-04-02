@@ -310,3 +310,42 @@ Present findings:
 - Scan everything, change only what's needed
 - No fake fixes — if no technical change is possible, say so
 - Compound improvements — each reflection makes the system permanently better
+
+---
+
+## Part 4 — HOT.md (Rules You Keep Breaking)
+
+Inspired by [Jarvis](https://jarvis.ripper234.com/learn.html).
+
+### What It Is
+
+`HOT.md` is a short file (≤20 lines) read **before every reply**. It contains only rules you've broken 2+ times. Not documentation — active behavioral correction.
+
+### When to Create / Update
+
+- A rule appears in Part 1 logs **twice or more** → promote to HOT.md
+- HOT.md grows beyond 20 lines → you have a discipline problem, not a documentation problem. Fix the behavior, don't add more lines.
+- A rule stays unbroken for 30+ days → move it to SOUL.md permanently, remove from HOT.md
+
+### Format
+
+```markdown
+# HOT.md — Rules I Keep Breaking
+_Read before every reply. Max 20 lines. If it's not here, it doesn't count._
+
+- [Rule 1 — short, imperative] (broken N times)
+- [Rule 2] (broken N times)
+```
+
+### Promotion Flow
+
+```
+Log (Part 1) → Pattern 2x (Part 3 weekly) → HOT.md → 30 days clean → SOUL.md permanent
+```
+
+### Key Rule
+
+**If it should apply to EVERY interaction → SOUL.md.**  
+**If you keep forgetting it → HOT.md first, SOUL.md after 30 clean days.**
+
+This is also why `dynamic-temperature` and `proactive-pa` were merged into SOUL.md — rules for every interaction don't belong in skills.
