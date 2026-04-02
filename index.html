@@ -3,982 +3,258 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>PA Skills — Agent Skill Marketplace for OpenClaw</title>
+<title>Heleni — AI Personal Assistant</title>
 <meta name="description" content="Discover and install open-source SKILL.md playbooks for AI Personal Assistants. 19 battle-tested skills for OpenClaw agents.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #07080d;
-  --surface: #0d0f16;
-  --surface-2: #12151f;
-  --border: rgba(255,255,255,.06);
-  --border-hover: rgba(56,189,148,.25);
-  --text: #c8ccd8;
-  --text-dim: #5a5f73;
-  --text-bright: #eaecf3;
-  --accent: #38bd94;
-  --accent-dim: rgba(56,189,148,.12);
-  --accent-glow: rgba(56,189,148,.06);
-  --amber: #e8a838;
-  --amber-dim: rgba(232,168,56,.12);
-  --red: #e85858;
-  --blue: #5898e8;
-  --mono: 'JetBrains Mono', 'IBM Plex Mono', monospace;
-  --sans: 'Space Grotesk', sans-serif;
-  --radius: 10px;
+:root{--bg:#07080d;--surface:#0d0f16;--surface-2:#12151f;--border:rgba(255,255,255,.06);--border-hover:rgba(56,189,148,.25);--text:#c8ccd8;--text-dim:#5a5f73;--text-bright:#eaecf3;--accent:#38bd94;--accent-dim:rgba(56,189,148,.12);--amber:#e8a838;--red:#e85858;--blue:#5898e8;--mono:'JetBrains Mono','IBM Plex Mono',monospace;--sans:'Space Grotesk',sans-serif;--radius:10px}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--mono);background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::selection{background:var(--accent);color:var(--bg)}
+a{color:inherit;text-decoration:none}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;opacity:.028;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");z-index:9999}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:56px;background:rgba(7,8,13,.92);backdrop-filter:blur(20px) saturate(1.4);border-bottom:1px solid var(--border)}
+.nav-logo{font-weight:700;font-size:15px;color:var(--text-bright);display:flex;align-items:center;gap:6px}
+.nav-logo .prompt{color:var(--accent)}
+.nav-right{display:flex;align-items:center;gap:8px}
+.nav-cmd{font-size:12px;font-weight:500;color:var(--text-dim);padding:5px 12px;border:1px solid var(--border);border-radius:6px;transition:all .2s;cursor:pointer}
+.nav-cmd:hover{color:var(--text);border-color:var(--border-hover)}
+.nav-cmd .dollar{color:var(--accent);margin-right:4px}
+
+/* HERO (compact) */
+.hero{position:relative;padding:48px 40px 0;text-align:center;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-120px;left:50%;transform:translateX(-50%);width:800px;height:400px;background:radial-gradient(ellipse,rgba(56,189,148,.07) 0%,transparent 65%);pointer-events:none}
+.hero h1{font-family:var(--sans);font-size:clamp(30px,4.5vw,52px);font-weight:700;color:var(--text-bright);line-height:1.1;letter-spacing:-.03em;margin-bottom:12px;animation:fadeSlideUp .6s ease both}
+.hero h1 .accent{color:var(--accent)}
+.hero-sub{font-size:14px;color:var(--text-dim);max-width:480px;margin:0 auto 24px;line-height:1.6;animation:fadeSlideUp .6s ease .1s both}
+.hero-sub code{color:var(--accent);background:var(--accent-dim);padding:1px 6px;border-radius:4px;font-size:12px}
+.hero-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:32px;animation:fadeSlideUp .6s ease .2s both}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:8px;font-family:var(--mono);font-size:12px;font-weight:600;transition:all .2s;cursor:pointer;border:none}
+.btn-primary{background:var(--accent);color:var(--bg)}
+.btn-primary:hover{opacity:.85;transform:translateY(-1px)}
+.btn-outline{background:transparent;color:var(--text);border:1px solid var(--border)}
+.btn-outline:hover{border-color:var(--border-hover);color:var(--text-bright)}
+
+/* TABS */
+.tab-bar{display:flex;justify-content:center;gap:0;border-bottom:1px solid var(--border);background:rgba(7,8,13,.6);backdrop-filter:blur(10px);position:sticky;top:56px;z-index:90}
+.tab-btn{font-family:var(--mono);font-size:13px;font-weight:600;color:var(--text-dim);padding:14px 28px;border:none;background:none;cursor:pointer;position:relative;transition:color .2s}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.active{color:var(--accent)}
+.tab-btn.active::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--accent)}
+.tab-panel{display:none;padding:48px 40px;max-width:1200px;margin:0 auto;animation:fadeIn .3s ease}
+.tab-panel.active{display:block}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+/* SECTION HEADERS */
+.section-prompt{font-size:12px;color:var(--accent);font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.section-prompt::before{content:'$';color:var(--text-dim)}
+.section-title{font-family:var(--sans);font-size:clamp(22px,3vw,32px);font-weight:700;color:var(--text-bright);margin-bottom:8px}
+.section-sub{font-size:13px;color:var(--text-dim);line-height:1.6;margin-bottom:32px}
+
+/* HELENI */
+.heleni-showcase{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;margin-bottom:40px}
+.heleni-profile{display:flex;gap:20px;align-items:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px}
+.heleni-avatar{width:88px;height:88px;border-radius:50%;border:2px solid var(--accent);object-fit:cover;flex-shrink:0}
+.heleni-name{font-family:var(--sans);font-size:22px;font-weight:700;color:var(--text-bright);margin-bottom:2px}
+.heleni-role{font-size:12px;color:var(--accent);font-weight:600;margin-bottom:6px}
+.heleni-tagline{font-size:13px;color:var(--text-dim);margin-bottom:12px;font-style:italic}
+.heleni-badges{display:flex;gap:6px;flex-wrap:wrap}
+.heleni-badge{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;padding:3px 8px;border-radius:4px;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(56,189,148,.15)}
+.heleni-terminal{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.terminal-bar{display:flex;align-items:center;gap:7px;padding:12px 16px;background:rgba(255,255,255,.02);border-bottom:1px solid var(--border)}
+.terminal-dot{width:11px;height:11px;border-radius:50%}
+.terminal-dot.r{background:#ff5f57}.terminal-dot.y{background:#febc2e}.terminal-dot.g{background:#28c840}
+.terminal-title{font-size:12px;color:var(--text-dim);margin-left:8px}
+.terminal-body{padding:24px;font-size:14px;line-height:1.8}
+.terminal-body .comment{color:var(--text-dim)}
+.terminal-body .keyword{color:var(--accent)}
+.terminal-body .string{color:var(--amber)}
+
+/* STORY BLOCKS */
+.story-section{display:flex;flex-direction:column;gap:24px}
+.story-block{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;border-left:3px solid var(--accent)}
+.story-label{font-size:11px;color:var(--accent);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.story-title{font-family:var(--sans);font-size:18px;font-weight:700;color:var(--text-bright);margin-bottom:12px;line-height:1.3}
+.story-text{font-size:13px;color:var(--text-dim);line-height:1.8}
+.story-text em{color:var(--text);font-style:italic}
+.story-text strong{color:var(--text-bright);font-weight:600}
+.story-text code{color:var(--accent);background:var(--accent-dim);padding:1px 6px;border-radius:3px;font-size:12px}
+
+/* SKILLS */
+.controls{display:flex;align-items:center;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+.search-box{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:9px 14px;flex:1;min-width:200px;max-width:360px;transition:border-color .2s}
+.search-box:focus-within{border-color:var(--border-hover)}
+.search-box .dollar{color:var(--text-dim);font-size:13px}
+.search-input{background:none;border:none;outline:none;color:var(--text-bright);font-family:var(--mono);font-size:13px;width:100%}
+.search-input::placeholder{color:var(--text-dim)}
+.filter-pills{display:flex;gap:6px;flex-wrap:wrap}
+.pill{font-size:11px;font-weight:600;padding:6px 13px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text-dim);cursor:pointer;transition:all .2s;font-family:var(--mono);text-transform:lowercase}
+.pill:hover{border-color:var(--border-hover);color:var(--text)}
+.pill.active{background:var(--accent-dim);border-color:var(--accent);color:var(--accent)}
+.skill-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.skill-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;cursor:pointer;transition:all .25s;position:relative;overflow:hidden;animation:fadeSlideUp .5s ease both}
+.skill-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),transparent);opacity:0;transition:opacity .25s}
+.skill-card:hover{border-color:var(--border-hover);background:var(--surface-2);transform:translateY(-2px)}
+.skill-card:hover::before{opacity:1}
+.skill-card-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px}
+.skill-name{font-size:14px;font-weight:700;color:var(--text-bright);display:flex;align-items:center;gap:8px}
+.skill-name .icon{font-size:18px}
+.skill-tag{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;padding:3px 8px;border-radius:4px;white-space:nowrap}
+.tag-monitoring{color:var(--red);background:rgba(232,88,88,.1)}
+.tag-communication{color:var(--blue);background:rgba(88,152,232,.1)}
+.tag-setup{color:var(--amber);background:rgba(232,168,56,.1)}
+.tag-memory{color:#c77dff;background:rgba(199,125,255,.1)}
+.tag-productivity{color:var(--accent);background:var(--accent-dim)}
+.tag-integration{color:#ff8c42;background:rgba(255,140,66,.1)}
+.tag-language{color:#e8587a;background:rgba(232,88,122,.1)}
+.skill-desc{font-size:12px;color:var(--text-dim);line-height:1.65;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.skill-meta{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--text-dim)}
+.skill-arrow{opacity:0;transition:opacity .2s;color:var(--accent)}
+.skill-card:hover .skill-arrow{opacity:1}
+
+/* LEARNINGS */
+.learnings-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.learning-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;transition:all .25s}
+.learning-card:hover{border-color:var(--border-hover);transform:translateY(-1px)}
+.learning-icon{font-size:20px;margin-bottom:10px}
+.learning-title{font-size:13px;font-weight:700;color:var(--text-bright);margin-bottom:8px}
+.learning-desc{font-size:12px;color:var(--text-dim);line-height:1.65}
+.learning-why{margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:11px;color:var(--text-dim);line-height:1.6}
+.learning-why strong{color:var(--amber)}
+
+/* INSTALL */
+.install-terminal{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;max-width:640px}
+.install-body{padding:24px;font-size:13px;line-height:2}
+.install-body .comment{color:var(--text-dim)}
+.install-body .cmd{color:var(--text-bright)}
+.install-body .cmd .arg{color:var(--accent)}
+
+/* FAQ */
+.faq-list{max-width:720px}
+.faq-item{border-bottom:1px solid var(--border)}
+.faq-q{display:flex;align-items:center;justify-content:space-between;padding:18px 0;cursor:pointer;font-size:14px;font-weight:600;color:var(--text-bright);transition:color .2s;width:100%;background:none;border:none;font-family:var(--mono);text-align:left}
+.faq-q:hover{color:var(--accent)}
+.faq-q .num{font-size:12px;color:var(--text-dim);margin-right:14px;font-weight:400}
+.faq-toggle{font-size:18px;color:var(--text-dim);transition:transform .3s}
+.faq-item.open .faq-toggle{transform:rotate(45deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.faq-item.open .faq-a{max-height:300px}
+.faq-a-inner{padding:0 0 18px 34px;font-size:13px;color:var(--text-dim);line-height:1.7}
+.faq-a-inner code{color:var(--accent);background:var(--accent-dim);padding:1px 6px;border-radius:3px;font-size:12px}
+
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(6px);z-index:200;align-items:center;justify-content:center;padding:24px}
+.overlay.active{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;max-width:800px;width:100%;max-height:90vh;position:relative;overflow:hidden;animation:modalIn .25s ease;display:flex;flex-direction:column}
+.modal-glow{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--blue))}
+.modal-body{padding:32px;overflow-y:auto}
+.modal-close{position:absolute;top:14px;right:18px;font-size:20px;color:var(--text-dim);cursor:pointer;background:none;border:none;font-family:var(--mono);transition:color .2s;z-index:1}
+.modal-close:hover{color:var(--text-bright)}
+.modal-icon{font-size:32px;margin-bottom:14px}
+.modal-title{font-size:20px;font-weight:700;color:var(--text-bright);margin-bottom:6px;font-family:var(--sans)}
+.modal-tag-row{margin-bottom:16px}
+.modal-desc{font-size:13px;color:var(--text-dim);line-height:1.75;margin-bottom:20px}
+.modal-skill-content{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:20px 24px;margin-bottom:20px;max-height:400px;overflow-y:auto;font-size:13px;color:var(--text-dim);line-height:1.75;white-space:pre-wrap;word-wrap:break-word}
+.modal-skill-content h1,.modal-skill-content h2,.modal-skill-content h3{color:var(--text-bright);font-family:var(--sans);margin:16px 0 8px}
+.modal-skill-content h1{font-size:18px}.modal-skill-content h2{font-size:15px}.modal-skill-content h3{font-size:13px}
+.modal-skill-content p{margin:8px 0}
+.modal-skill-content code{color:var(--accent);background:var(--accent-dim);padding:1px 5px;border-radius:3px;font-size:12px}
+.modal-skill-content pre{background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:12px 14px;margin:10px 0;overflow-x:auto;font-size:12px;color:var(--text)}
+.modal-skill-content pre code{background:none;padding:0}
+.modal-skill-content table{border-collapse:collapse;width:100%;margin:10px 0}
+.modal-skill-content th,.modal-skill-content td{border:1px solid var(--border);padding:6px 10px;font-size:12px;text-align:left}
+.modal-skill-content th{color:var(--text-bright);background:var(--surface-2)}
+.modal-skill-content hr{border:none;border-top:1px solid var(--border);margin:16px 0}
+.modal-skill-content ul,.modal-skill-content ol{padding-left:20px;margin:8px 0}
+.modal-skill-content li{margin:4px 0}
+.modal-skill-content strong{color:var(--text-bright)}
+.modal-loading{text-align:center;padding:32px;color:var(--text-dim);font-size:13px}
+.modal-install{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px 16px;font-size:12px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.modal-install code{color:var(--accent);flex:1}
+.modal-install .dollar{color:var(--text-dim)}
+.copy-btn{background:var(--accent-dim);color:var(--accent);border:none;padding:5px 10px;border-radius:5px;font-size:11px;font-family:var(--mono);font-weight:600;cursor:pointer;transition:all .2s}
+.copy-btn:hover{background:var(--accent);color:var(--bg)}
+.modal-actions{display:flex;gap:10px}
+
+/* FOOTER */
+footer{text-align:center;padding:40px;border-top:1px solid var(--border);font-size:12px;color:var(--text-dim)}
+footer a{color:var(--accent)}
+
+/* ANIMATIONS */
+@keyframes fadeSlideUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes modalIn{from{opacity:0;transform:scale(.96) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.cursor-blink{animation:blink 1s step-end infinite;color:var(--accent)}
+
+/* RESPONSIVE */
+@media(max-width:640px){
+  nav{padding:0 18px}
+  .hero{padding:32px 18px 0}
+  .tab-btn{padding:12px 16px;font-size:12px}
+  .tab-panel{padding:32px 18px}
+  .skill-grid{grid-template-columns:1fr}
+  .learnings-grid{grid-template-columns:1fr}
+  .heleni-showcase{grid-template-columns:1fr}
+  .heleni-profile{flex-direction:column;text-align:center}
+  .heleni-badges{justify-content:center}
+  .modal-body{padding:24px 20px}
+  .controls{flex-direction:column;align-items:stretch}
+  .search-box{max-width:100%}
+  .story-block{padding:18px}
+  .nav-right .nav-cmd.hide-mobile{display:none}
 }
-
-* { margin:0; padding:0; box-sizing:border-box; }
-
-html { scroll-behavior: smooth; }
-
-body {
-  font-family: var(--mono);
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
-}
-
-::selection { background: var(--accent); color: var(--bg); }
-
-a { color: inherit; text-decoration: none; }
-
-/* ── GRAIN OVERLAY ── */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  opacity: .028;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  z-index: 9999;
-}
-
-/* ── NAV ── */
-nav {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 40px;
-  height: 56px;
-  background: rgba(7,8,13,.88);
-  backdrop-filter: blur(20px) saturate(1.4);
-  border-bottom: 1px solid var(--border);
-}
-
-.nav-logo {
-  font-weight: 700;
-  font-size: 15px;
-  color: var(--text-bright);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.nav-logo .prompt { color: var(--accent); }
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.nav-cmd {
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text-dim);
-  padding: 5px 12px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  transition: all .2s;
-  cursor: pointer;
-}
-
-.nav-cmd:hover { color: var(--text); border-color: var(--border-hover); }
-.nav-cmd .dollar { color: var(--accent); margin-right: 4px; }
-
-/* ── HERO ── */
-.hero {
-  position: relative;
-  padding: 100px 40px 80px;
-  text-align: center;
-  overflow: hidden;
-}
-
-.hero::before {
-  content: '';
-  position: absolute;
-  top: -120px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 800px;
-  height: 500px;
-  background: radial-gradient(ellipse, rgba(56,189,148,.07) 0%, transparent 65%);
-  pointer-events: none;
-}
-
-/* Terminal frame in hero */
-.hero-terminal {
-  display: inline-block;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  text-align: left;
-  max-width: 720px;
-  width: 100%;
-  margin-bottom: 40px;
-  overflow: hidden;
-  animation: fadeSlideUp .7s ease both;
-}
-
-.terminal-bar {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 12px 16px;
-  background: rgba(255,255,255,.02);
-  border-bottom: 1px solid var(--border);
-}
-
-.terminal-dot { width: 11px; height: 11px; border-radius: 50%; }
-.terminal-dot.r { background: #ff5f57; }
-.terminal-dot.y { background: #febc2e; }
-.terminal-dot.g { background: #28c840; }
-
-.terminal-title {
-  font-size: 12px;
-  color: var(--text-dim);
-  margin-left: 8px;
-}
-
-.terminal-body {
-  padding: 24px 24px 28px;
-  font-size: 14px;
-  line-height: 1.8;
-}
-
-.terminal-body .comment { color: var(--text-dim); }
-.terminal-body .keyword { color: var(--accent); }
-.terminal-body .string { color: var(--amber); }
-.terminal-body .number { color: var(--blue); font-size: 42px; font-weight: 800; }
-
-.hero h1 {
-  font-family: var(--sans);
-  font-size: clamp(36px, 5.5vw, 62px);
-  font-weight: 700;
-  color: var(--text-bright);
-  line-height: 1.08;
-  letter-spacing: -.03em;
-  margin-bottom: 18px;
-  animation: fadeSlideUp .7s ease .15s both;
-}
-
-.hero h1 .accent { color: var(--accent); }
-
-.hero-sub {
-  font-size: 15px;
-  color: var(--text-dim);
-  max-width: 520px;
-  margin: 0 auto 36px;
-  line-height: 1.7;
-  font-weight: 400;
-  animation: fadeSlideUp .7s ease .25s both;
-}
-
-.hero-sub code {
-  color: var(--accent);
-  background: var(--accent-dim);
-  padding: 2px 7px;
-  border-radius: 4px;
-  font-size: 13px;
-}
-
-.hero-actions {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  flex-wrap: wrap;
-  animation: fadeSlideUp .7s ease .35s both;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-family: var(--mono);
-  font-size: 13px;
-  font-weight: 600;
-  transition: all .2s;
-  cursor: pointer;
-  border: none;
-}
-
-.btn-primary {
-  background: var(--accent);
-  color: var(--bg);
-}
-.btn-primary:hover { opacity: .85; transform: translateY(-1px); }
-
-.btn-outline {
-  background: transparent;
-  color: var(--text);
-  border: 1px solid var(--border);
-}
-.btn-outline:hover { border-color: var(--border-hover); color: var(--text-bright); }
-
-/* ── STATS BAR ── */
-.stats-bar {
-  display: flex;
-  justify-content: center;
-  gap: 56px;
-  padding: 32px 40px;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  flex-wrap: wrap;
-  animation: fadeSlideUp .7s ease .45s both;
-}
-
-.stat { text-align: center; }
-
-.stat-val {
-  font-size: 28px;
-  font-weight: 800;
-  color: var(--accent);
-}
-
-.stat-label {
-  font-size: 11px;
-  color: var(--text-dim);
-  margin-top: 4px;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-}
-
-/* ── SECTION ── */
-.section {
-  padding: 72px 40px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.section-header {
-  margin-bottom: 36px;
-}
-
-.section-prompt {
-  font-size: 12px;
-  color: var(--accent);
-  font-weight: 600;
-  margin-bottom: 8px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.section-prompt::before {
-  content: '$';
-  color: var(--text-dim);
-}
-
-.section-title {
-  font-family: var(--sans);
-  font-size: clamp(24px, 3vw, 34px);
-  font-weight: 700;
-  color: var(--text-bright);
-  margin-bottom: 8px;
-}
-
-.section-sub {
-  font-size: 13px;
-  color: var(--text-dim);
-  line-height: 1.6;
-}
-
-/* ── FILTER / SEARCH ── */
-.controls {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 28px;
-  flex-wrap: wrap;
-}
-
-.search-box {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 9px 14px;
-  flex: 1;
-  min-width: 200px;
-  max-width: 360px;
-  transition: border-color .2s;
-}
-
-.search-box:focus-within { border-color: var(--border-hover); }
-
-.search-box .dollar { color: var(--text-dim); font-size: 13px; }
-
-.search-input {
-  background: none;
-  border: none;
-  outline: none;
-  color: var(--text-bright);
-  font-family: var(--mono);
-  font-size: 13px;
-  width: 100%;
-}
-
-.search-input::placeholder { color: var(--text-dim); }
-
-.filter-pills {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.pill {
-  font-size: 11px;
-  font-weight: 600;
-  padding: 6px 13px;
-  border-radius: 6px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text-dim);
-  cursor: pointer;
-  transition: all .2s;
-  font-family: var(--mono);
-  text-transform: lowercase;
-}
-
-.pill:hover { border-color: var(--border-hover); color: var(--text); }
-.pill.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
-
-/* ── SKILL GRID ── */
-.skill-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 14px;
-}
-
-.skill-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 22px 24px;
-  cursor: pointer;
-  transition: all .25s;
-  position: relative;
-  overflow: hidden;
-}
-
-.skill-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--accent), transparent);
-  opacity: 0;
-  transition: opacity .25s;
-}
-
-.skill-card:hover {
-  border-color: var(--border-hover);
-  background: var(--surface-2);
-  transform: translateY(-2px);
-}
-
-.skill-card:hover::before { opacity: 1; }
-
-.skill-card-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-
-.skill-name {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--text-bright);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.skill-name .icon { font-size: 18px; }
-
-.skill-tag {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  padding: 3px 8px;
-  border-radius: 4px;
-  white-space: nowrap;
-}
-
-.tag-monitoring { color: var(--red); background: rgba(232,88,88,.1); }
-.tag-communication { color: var(--blue); background: rgba(88,152,232,.1); }
-.tag-setup { color: var(--amber); background: rgba(232,168,56,.1); }
-.tag-memory { color: #c77dff; background: rgba(199,125,255,.1); }
-.tag-productivity { color: var(--accent); background: var(--accent-dim); }
-.tag-integration { color: #ff8c42; background: rgba(255,140,66,.1); }
-.tag-language { color: #e8587a; background: rgba(232,88,122,.1); }
-.tag-execution { color: #58e8c5; background: rgba(88,232,197,.1); }
-
-.skill-desc {
-  font-size: 12px;
-  color: var(--text-dim);
-  line-height: 1.65;
-  margin-bottom: 14px;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.skill-meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 11px;
-  color: var(--text-dim);
-}
-
-.skill-meta-left {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.skill-arrow {
-  opacity: 0;
-  transition: opacity .2s;
-  color: var(--accent);
-}
-
-.skill-card:hover .skill-arrow { opacity: 1; }
-
-/* ── CATEGORIES ── */
-.cat-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 12px;
-}
-
-.cat-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px;
-  cursor: pointer;
-  transition: all .25s;
-}
-
-.cat-card:hover { border-color: var(--border-hover); transform: translateY(-1px); }
-
-.cat-icon { font-size: 24px; margin-bottom: 10px; }
-
-.cat-name {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text-bright);
-  margin-bottom: 4px;
-}
-
-.cat-count {
-  font-size: 11px;
-  color: var(--text-dim);
-}
-
-/* ── INSTALL SECTION ── */
-.install-section {
-  padding: 64px 40px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.install-terminal {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
-  max-width: 640px;
-  margin: 0 auto;
-}
-
-.install-body {
-  padding: 24px;
-  font-size: 13px;
-  line-height: 2;
-}
-
-.install-body .comment { color: var(--text-dim); }
-.install-body .cmd { color: var(--text-bright); }
-.install-body .cmd .arg { color: var(--accent); }
-
-/* ── FAQ ── */
-.faq-list {
-  max-width: 720px;
-}
-
-.faq-item {
-  border-bottom: 1px solid var(--border);
-}
-
-.faq-q {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 0;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-bright);
-  transition: color .2s;
-  width: 100%;
-  background: none;
-  border: none;
-  font-family: var(--mono);
-  text-align: left;
-}
-
-.faq-q:hover { color: var(--accent); }
-
-.faq-q .num {
-  font-size: 12px;
-  color: var(--text-dim);
-  margin-right: 14px;
-  font-weight: 400;
-}
-
-.faq-toggle {
-  font-size: 18px;
-  color: var(--text-dim);
-  transition: transform .3s;
-}
-
-.faq-item.open .faq-toggle { transform: rotate(45deg); }
-
-.faq-a {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height .35s ease, padding .35s ease;
-}
-
-.faq-item.open .faq-a {
-  max-height: 300px;
-}
-
-.faq-a-inner {
-  padding: 0 0 20px 34px;
-  font-size: 13px;
-  color: var(--text-dim);
-  line-height: 1.7;
-}
-
-.faq-a-inner code {
-  color: var(--accent);
-  background: var(--accent-dim);
-  padding: 1px 6px;
-  border-radius: 3px;
-  font-size: 12px;
-}
-
-/* ── MODAL ── */
-.overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.72);
-  backdrop-filter: blur(6px);
-  z-index: 200;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-}
-
-.overlay.active { display: flex; }
-
-.modal {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  max-width: 560px;
-  width: 100%;
-  position: relative;
-  overflow: hidden;
-  animation: modalIn .25s ease;
-}
-
-.modal-glow {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--accent), var(--blue));
-}
-
-.modal-body {
-  padding: 32px 32px 28px;
-}
-
-.modal-close {
-  position: absolute;
-  top: 14px;
-  right: 18px;
-  font-size: 20px;
-  color: var(--text-dim);
-  cursor: pointer;
-  background: none;
-  border: none;
-  font-family: var(--mono);
-  transition: color .2s;
-}
-
-.modal-close:hover { color: var(--text-bright); }
-
-.modal-icon { font-size: 32px; margin-bottom: 14px; }
-.modal-title { font-size: 20px; font-weight: 700; color: var(--text-bright); margin-bottom: 6px; font-family: var(--sans); }
-.modal-tag-row { margin-bottom: 16px; }
-
-.modal-desc {
-  font-size: 13px;
-  color: var(--text-dim);
-  line-height: 1.75;
-  margin-bottom: 20px;
-}
-
-.modal-install {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 14px 16px;
-  font-size: 12px;
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.modal-install code { color: var(--accent); flex: 1; }
-.modal-install .dollar { color: var(--text-dim); }
-
-.copy-btn {
-  background: var(--accent-dim);
-  color: var(--accent);
-  border: none;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 11px;
-  font-family: var(--mono);
-  font-weight: 600;
-  cursor: pointer;
-  transition: all .2s;
-}
-
-.copy-btn:hover { background: var(--accent); color: var(--bg); }
-
-.modal-actions {
-  display: flex;
-  gap: 10px;
-}
-
-/* ── FOOTER ── */
-footer {
-  text-align: center;
-  padding: 48px 40px;
-  border-top: 1px solid var(--border);
-  font-size: 12px;
-  color: var(--text-dim);
-}
-
-footer a { color: var(--accent); }
-
-footer .footer-links {
-  display: flex;
-  justify-content: center;
-  gap: 24px;
-  margin-bottom: 16px;
-}
-
-/* ── ANIMATIONS ── */
-@keyframes fadeSlideUp {
-  from { opacity: 0; transform: translateY(18px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes modalIn {
-  from { opacity: 0; transform: scale(.96) translateY(8px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-.cursor-blink { animation: blink 1s step-end infinite; color: var(--accent); }
-
-/* ── RESPONSIVE ── */
-@media (max-width: 640px) {
-  nav { padding: 0 18px; }
-  .hero { padding: 60px 18px 50px; }
-  .section { padding: 48px 18px; }
-  .install-section { padding: 48px 18px; }
-  .stats-bar { gap: 24px; padding: 24px 18px; }
-  .skill-grid { grid-template-columns: 1fr; }
-  .cat-grid { grid-template-columns: repeat(2, 1fr); }
-  .nav-links .nav-cmd.hide-mobile { display: none; }
-  .modal-body { padding: 24px 20px 20px; }
-  .controls { flex-direction: column; align-items: stretch; }
-  .search-box { max-width: 100%; }
-}
-
-/* ── HELENI SECTION ── */
-.heleni-showcase {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 24px;
-  align-items: start;
-}
-
-.heleni-profile {
-  display: flex;
-  gap: 20px;
-  align-items: center;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 28px;
-}
-
-.heleni-avatar {
-  width: 88px;
-  height: 88px;
-  border-radius: 50%;
-  border: 2px solid var(--accent);
-  object-fit: cover;
-  flex-shrink: 0;
-}
-
-.heleni-name {
-  font-family: var(--sans);
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--text-bright);
-  margin-bottom: 2px;
-}
-
-.heleni-role {
-  font-size: 12px;
-  color: var(--accent);
-  font-weight: 600;
-  margin-bottom: 6px;
-}
-
-.heleni-tagline {
-  font-size: 13px;
-  color: var(--text-dim);
-  margin-bottom: 12px;
-  font-style: italic;
-}
-
-.heleni-badges {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.heleni-badge {
-  font-size: 10px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: .04em;
-  padding: 3px 8px;
-  border-radius: 4px;
-  color: var(--accent);
-  background: var(--accent-dim);
-  border: 1px solid rgba(56,189,148,.15);
-}
-
-.heleni-terminal {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.learnings-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 14px;
-}
-
-.learning-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 20px;
-  transition: all .25s;
-}
-
-.learning-card:hover {
-  border-color: var(--border-hover);
-  transform: translateY(-1px);
-}
-
-.learning-icon { font-size: 20px; margin-bottom: 10px; }
-
-.learning-title {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text-bright);
-  margin-bottom: 8px;
-}
-
-.learning-desc {
-  font-size: 12px;
-  color: var(--text-dim);
-  line-height: 1.65;
-}
-
-@media (max-width: 640px) {
-  .heleni-showcase { grid-template-columns: 1fr; }
-  .heleni-profile { flex-direction: column; text-align: center; }
-  .heleni-badges { justify-content: center; }
-  .learnings-grid { grid-template-columns: 1fr; }
-}
-
-/* ── STAGGER CARDS ── */
-.skill-card { animation: fadeSlideUp .5s ease both; }
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
-  <a href="#" class="nav-logo">
+  <a href="#" class="nav-logo" onclick="switchTab('heleni')">
     <span class="prompt">~/</span>pa-skills
   </a>
-  <div class="nav-links">
-    <a class="nav-cmd hide-mobile" href="#skills"><span class="dollar">$</span>ls skills/</a>
-    <a class="nav-cmd hide-mobile" href="#heleni"><span class="dollar">$</span>whoami</a>
-    <a class="nav-cmd hide-mobile" href="#install"><span class="dollar">$</span>install</a>
-    <a class="nav-cmd hide-mobile" href="#faq"><span class="dollar">$</span>man faq</a>
-    <a class="nav-cmd" href="https://github.com/netanel-abergel/pa-skills" target="_blank"><span class="dollar">$</span>git clone</a>
+  <div class="nav-right">
+    <a class="nav-cmd" href="https://github.com/netanel-abergel/pa-skills" target="_blank"><span class="dollar">$</span>contribute</a>
   </div>
 </nav>
 
-<!-- HERO -->
+<!-- HERO (compact) -->
 <div class="hero">
-  <div class="hero-terminal">
-    <div class="terminal-bar">
-      <div class="terminal-dot r"></div>
-      <div class="terminal-dot y"></div>
-      <div class="terminal-dot g"></div>
-      <span class="terminal-title">pa-skills.marketplace</span>
-    </div>
-    <div class="terminal-body">
-      <div class="comment">// open-source skills for AI personal assistants</div>
-      <div style="margin-top:8px">
-        <span class="keyword">const</span> skills = <span class="number" id="skill-counter">19</span><span style="font-size:14px">;</span>
-      </div>
-      <div style="margin-top:4px">
-        <span class="comment">/**</span>
-      </div>
-      <div>
-        <span class="comment"> * SKILL.md playbooks, model-agnostic, ready to drop in.</span>
-      </div>
-      <div>
-        <span class="comment"> * Compatible with OpenClaw, Claude Code, Codex CLI.</span>
-      </div>
-      <div>
-        <span class="comment"> */</span>
-      </div>
-    </div>
+  <div style="margin-bottom:16px;animation:fadeSlideUp .6s ease both">
+    <img src="heleni.jpg" alt="Heleni" style="width:80px;height:80px;border-radius:50%;border:2px solid var(--accent);object-fit:cover">
   </div>
-
-  <h1>Agent Skills<br><span class="accent">Marketplace</span></h1>
+  <h1>Heleni<br><span class="accent">AI Personal Assistant</span></h1>
   <p class="hero-sub">
-    Battle-tested <code>SKILL.md</code> playbooks for AI Personal Assistants.
-    Browse, install, ship.
+    Execution-first AI PA, running 24/7 in production. These are her skills, learnings, and the playbooks that keep her sharp.
   </p>
   <div class="hero-actions">
-    <a class="btn btn-primary" href="#skills">Browse Skills</a>
-    <a class="btn btn-outline" href="https://github.com/netanel-abergel/pa-skills" target="_blank">View Source</a>
+    <button class="btn btn-primary" onclick="switchTab('skills')">Browse Skills</button>
+    <button class="btn btn-outline" onclick="switchTab('learnings')">View Learnings</button>
+    <a class="btn btn-outline" href="https://github.com/netanel-abergel/pa-skills" target="_blank">Contribute</a>
   </div>
 </div>
 
-<!-- STATS -->
-<div class="stats-bar">
-  <div class="stat"><div class="stat-val">19</div><div class="stat-label">Skills</div></div>
-  <div class="stat"><div class="stat-val">7</div><div class="stat-label">Categories</div></div>
-  <div class="stat"><div class="stat-val">100%</div><div class="stat-label">Open Source</div></div>
-  <div class="stat"><div class="stat-val">Any LLM</div><div class="stat-label">Model-Agnostic</div></div>
+<!-- TAB BAR -->
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="heleni" onclick="switchTab('heleni')">Heleni</button>
+  <button class="tab-btn" data-tab="skills" onclick="switchTab('skills')">Skills</button>
+  <button class="tab-btn" data-tab="learnings" onclick="switchTab('learnings')">Learnings</button>
+  <button class="tab-btn" data-tab="install" onclick="switchTab('install')">Install</button>
+  <button class="tab-btn" data-tab="faq" onclick="switchTab('faq')">FAQ</button>
 </div>
 
-<!-- CATEGORIES -->
-<div class="section">
-  <div class="section-header">
-    <div class="section-prompt">cd /categories</div>
-    <div class="section-title">Browse by Category</div>
-    <div class="section-sub">// skills organized by primary function</div>
-  </div>
-  <div class="cat-grid" id="catGrid"></div>
-</div>
-
-<!-- SKILLS -->
-<div class="section" id="skills">
-  <div class="section-header">
-    <div class="section-prompt">ls --all skills/</div>
-    <div class="section-title">All Skills</div>
-    <div class="section-sub">// click any skill for details and install command</div>
-  </div>
-
-  <div class="controls">
-    <div class="search-box">
-      <span class="dollar">$</span>
-      <span style="color:var(--text-dim);font-size:13px">find</span>
-      <input class="search-input" type="text" placeholder="search skills..." id="searchInput">
-    </div>
-    <div class="filter-pills" id="filterPills"></div>
-  </div>
-
-  <div class="skill-grid" id="skillGrid"></div>
-  <div id="noResults" style="display:none;text-align:center;padding:48px 0;color:var(--text-dim);font-size:13px">
-    <div style="font-size:32px;margin-bottom:12px">404</div>
-    No skills match your search.
-  </div>
-</div>
-
-<!-- MEET HELENI -->
-<div class="section" id="heleni">
-  <div class="section-header">
-    <div class="section-prompt">cat IDENTITY.md</div>
-    <div class="section-title">Meet Heleni</div>
-    <div class="section-sub">// the AI PA that battle-tested every skill in this repo</div>
-  </div>
+<!-- TAB: HELENI -->
+<div class="tab-panel active" id="tab-heleni">
+  <div class="section-prompt">cat IDENTITY.md</div>
+  <div class="section-title">Meet Heleni</div>
+  <div class="section-sub">// the AI PA that battle-tested every skill in this repo</div>
 
   <div class="heleni-showcase">
     <div class="heleni-profile">
-      <img src="heleni.jpg" alt="Heleni — AI Personal Assistant" class="heleni-avatar">
-      <div class="heleni-info">
+      <img src="heleni.jpg" alt="Heleni" class="heleni-avatar">
+      <div>
         <div class="heleni-name">Heleni</div>
         <div class="heleni-role">AI Personal Assistant</div>
         <div class="heleni-tagline">Sharp, direct, execution-first.</div>
@@ -989,12 +265,9 @@ footer .footer-links {
         </div>
       </div>
     </div>
-
     <div class="heleni-terminal">
       <div class="terminal-bar">
-        <div class="terminal-dot r"></div>
-        <div class="terminal-dot y"></div>
-        <div class="terminal-dot g"></div>
+        <div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div>
         <span class="terminal-title">SOUL.md</span>
       </div>
       <div class="terminal-body" style="font-size:13px;line-height:1.7">
@@ -1007,66 +280,72 @@ footer .footer-links {
     </div>
   </div>
 
-  <div style="margin-top:36px">
-    <div class="section-prompt">cat .learnings/LEARNINGS.md</div>
-    <div class="section-title" style="font-size:22px;margin-bottom:20px">Key Learnings from Production</div>
-    <div class="learnings-grid">
-      <div class="learning-card">
-        <div class="learning-icon">🎯</div>
-        <div class="learning-title">Execution > Conversation</div>
-        <div class="learning-desc">Execute first, report results only. Never share reasoning, intermediate steps, or "let me check" narration. Lead with one recommendation instead of listing options.</div>
-      </div>
-      <div class="learning-card">
-        <div class="learning-icon">🔒</div>
-        <div class="learning-title">Credential Exposure Protocol</div>
-        <div class="learning-desc">If credentials appear in chat, warn immediately on receipt — before any operations. Then proceed with task, and remind to revoke after completion.</div>
-      </div>
-      <div class="learning-card">
-        <div class="learning-icon">📡</div>
-        <div class="learning-title">Explicit Delivery Targets</div>
-        <div class="learning-desc">Cron jobs without explicit delivery targets fall back to last active session — can leak messages to wrong chats. Always pin the target explicitly.</div>
-      </div>
-      <div class="learning-card">
-        <div class="learning-icon">🧠</div>
-        <div class="learning-title">Memory Discipline</div>
-        <div class="learning-desc">Daily memory files should stay under 50 lines. Extract only durable facts: contacts, decisions, persistent rules, unresolved blockers. Not event logs.</div>
-      </div>
-      <div class="learning-card">
-        <div class="learning-icon">🔍</div>
-        <div class="learning-title">Runtime Identity Check</div>
-        <div class="learning-desc">Model identity must be checked via live session status, never assumed from context. Models can change mid-session without notice.</div>
-      </div>
-      <div class="learning-card">
-        <div class="learning-icon">💳</div>
-        <div class="learning-title">Proactive Billing Alerts</div>
-        <div class="learning-desc">Billing errors should trigger automatic fallback + notification, not reactive handling. Install billing-monitor with heartbeat integration for periodic health checks.</div>
-      </div>
-      <div class="learning-card">
-        <div class="learning-icon">📋</div>
-        <div class="learning-title">Config Deduplication</div>
-        <div class="learning-desc">SOUL.md, AGENTS.md, and MEMORY.md had 60% content overlap causing contradictions. Keep one source of truth per concern — facts vs behavior vs identity.</div>
-      </div>
-      <div class="learning-card">
-        <div class="learning-icon">📱</div>
-        <div class="learning-title">Connected != Working</div>
-        <div class="learning-desc">"Connected and listening" with Messages=0 means the ingest layer is broken, not the messaging platform. Escalate as platform issue, not user config.</div>
-      </div>
+  <div class="story-section">
+    <div class="story-block">
+      <div class="story-label">// what is an AI PA?</div>
+      <div class="story-title">An AI Personal Assistant is not a chatbot.</div>
+      <div class="story-text">A chatbot waits for you to ask something. An AI PA <em>works for you</em>. It manages your calendar, monitors your systems, coordinates with other agents, sends your morning briefing, and handles tasks end-to-end &mdash; without needing hand-holding.<br><br>Heleni is a production AI PA built on <strong>OpenClaw</strong>, an open-source agent runtime. She runs 24/7, connected to WhatsApp, Google Calendar, and monday.com. She schedules meetings by talking to other PAs, detects billing failures before they cascade, and delivers daily briefings at 7:30 AM &mdash; all autonomously.</div>
+    </div>
+    <div class="story-block">
+      <div class="story-label">// why these skills exist</div>
+      <div class="story-title">Every skill here was born from a real problem.</div>
+      <div class="story-text">This isn't a theoretical skill library. Every <code>SKILL.md</code> in this repo was created because Heleni needed it in production. The <strong>billing-monitor</strong> was built after 5+ PAs went down from undetected API billing errors in a single day. The <strong>self-learning</strong> skill exists because Heleni kept repeating the same mistakes across sessions &mdash; corrections weren't persisting. The <strong>memory-tiering</strong> system was designed when daily memory files grew past 200 lines and started wasting the context window.<br><br>These skills represent months of iteration with a real AI PA serving a real person &mdash; scheduling meetings, managing a network of 15+ peer PAs, handling WhatsApp groups, and running autonomous cron jobs. The patterns are hard-won.</div>
+    </div>
+    <div class="story-block">
+      <div class="story-label">// how heleni thinks</div>
+      <div class="story-title">Execution model, not conversation model.</div>
+      <div class="story-text">Heleni's behavior is defined in a <code>SOUL.md</code> file &mdash; a behavioral contract that shapes how she operates.<br><br><strong>Execute, then report.</strong> Never narrate what you're about to do. Never share intermediate steps. Do the thing, then say what happened.<br><br><strong>Silence is correct behavior.</strong> In group chats, Heleni only speaks when directly addressed. No reactions, no echoing, no noise.<br><br><strong>Proactive over reactive.</strong> She monitors for calendar conflicts, unanswered messages, billing issues, and system health &mdash; and alerts without being asked.<br><br><strong>Permission boundaries.</strong> Internal and reversible = execute. External or irreversible = confirm first.</div>
     </div>
   </div>
 </div>
 
-<!-- INSTALL -->
-<div class="install-section" id="install">
-  <div class="section-header" style="text-align:center;margin-bottom:32px">
-    <div class="section-prompt" style="justify-content:center">cat INSTALL.md</div>
-    <div class="section-title">Quick Install</div>
-    <div class="section-sub">// three ways to add skills to your agent</div>
+<!-- TAB: SKILLS -->
+<div class="tab-panel" id="tab-skills">
+  <div class="section-prompt">ls --all skills/</div>
+  <div class="section-title">All Skills</div>
+  <div class="section-sub">// click any skill for details and full SKILL.md content</div>
+
+  <div class="controls">
+    <div class="search-box">
+      <span class="dollar">$</span>
+      <span style="color:var(--text-dim);font-size:13px">find</span>
+      <input class="search-input" type="text" placeholder="search skills..." id="searchInput">
+    </div>
+    <div class="filter-pills" id="filterPills"></div>
   </div>
+  <div class="skill-grid" id="skillGrid"></div>
+  <div id="noResults" style="display:none;text-align:center;padding:48px 0;color:var(--text-dim);font-size:13px">
+    <div style="font-size:32px;margin-bottom:12px">404</div>No skills match your search.
+  </div>
+</div>
+
+<!-- TAB: LEARNINGS -->
+<div class="tab-panel" id="tab-learnings">
+  <div class="section-prompt">cat .learnings/LEARNINGS.md</div>
+  <div class="section-title">Key Learnings from Production</div>
+  <div class="section-sub">// real corrections and patterns discovered while running Heleni in production &mdash; each one caused a bug, outage, or user frustration before it became a rule</div>
+
+  <div class="learnings-grid">
+    <div class="learning-card"><div class="learning-icon">🎯</div><div class="learning-title">Execution > Conversation</div><div class="learning-desc">Execute first, report results only. Never share reasoning, intermediate steps, or "let me check" narration. Lead with one recommendation instead of listing options.</div><div class="learning-why"><strong>Why:</strong> The owner explicitly corrected this pattern. Showing search process and multiple options added friction without value.</div></div>
+    <div class="learning-card"><div class="learning-icon">🔒</div><div class="learning-title">Credential Exposure Protocol</div><div class="learning-desc">If credentials appear in chat, warn immediately on receipt — before any operations. Then proceed with task, and remind to revoke after completion.</div><div class="learning-why"><strong>Why:</strong> GitHub tokens were shared in WhatsApp. The PA used them first and warned after — too late.</div></div>
+    <div class="learning-card"><div class="learning-icon">📡</div><div class="learning-title">Explicit Delivery Targets</div><div class="learning-desc">Cron jobs without explicit delivery targets fall back to last active session — can leak messages to wrong chats. Always pin the target explicitly.</div><div class="learning-why"><strong>Why:</strong> A daily AI digest intended for a work group was delivered to the owner's private DM.</div></div>
+    <div class="learning-card"><div class="learning-icon">🧠</div><div class="learning-title">Memory Discipline</div><div class="learning-desc">Daily memory files should stay under 50 lines. Extract only durable facts: contacts, decisions, persistent rules, unresolved blockers.</div><div class="learning-why"><strong>Why:</strong> A daily notes file grew to 200+ lines with transient events, eating context window for no value.</div></div>
+    <div class="learning-card"><div class="learning-icon">🔍</div><div class="learning-title">Runtime Identity Check</div><div class="learning-desc">Model identity must be checked via live session status, never assumed from context. Models can change mid-session without notice.</div><div class="learning-why"><strong>Why:</strong> Model switched from GPT to Claude mid-session. PA kept reporting the old model from compacted context.</div></div>
+    <div class="learning-card"><div class="learning-icon">💳</div><div class="learning-title">Proactive Billing Alerts</div><div class="learning-desc">Billing errors should trigger automatic fallback + notification, not reactive handling. Use billing-monitor with heartbeat integration.</div><div class="learning-why"><strong>Why:</strong> 5+ PAs went down simultaneously from billing errors. Each required manual detection and intervention.</div></div>
+    <div class="learning-card"><div class="learning-icon">📋</div><div class="learning-title">Config Deduplication</div><div class="learning-desc">SOUL.md, AGENTS.md, and MEMORY.md had 60% content overlap causing contradictions. One source of truth per concern.</div><div class="learning-why"><strong>Why:</strong> Conflicting instructions caused inconsistent behavior. Fixed: SOUL = behavior, MEMORY = facts, IDENTITY = who.</div></div>
+    <div class="learning-card"><div class="learning-icon">📱</div><div class="learning-title">Connected != Working</div><div class="learning-desc">"Connected and listening" with Messages=0 means the ingest layer is broken, not the messaging platform.</div><div class="learning-why"><strong>Why:</strong> Multiple PAs showed WhatsApp connected but never responded. Problem was the runtime binding, not WhatsApp.</div></div>
+  </div>
+</div>
+
+<!-- TAB: INSTALL -->
+<div class="tab-panel" id="tab-install">
+  <div class="section-prompt">cat INSTALL.md</div>
+  <div class="section-title">Quick Install</div>
+  <div class="section-sub">// three ways to add skills to your agent</div>
+
   <div class="install-terminal">
     <div class="terminal-bar">
-      <div class="terminal-dot r"></div>
-      <div class="terminal-dot y"></div>
-      <div class="terminal-dot g"></div>
+      <div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div>
       <span class="terminal-title">install.sh</span>
     </div>
     <div class="install-body">
@@ -1085,31 +364,22 @@ footer .footer-links {
   </div>
 </div>
 
-<!-- FAQ -->
-<div class="section" id="faq">
-  <div class="section-header">
-    <div class="section-prompt">man faq</div>
-    <div class="section-title">Frequently Asked Questions</div>
-    <div class="section-sub">// common questions about PA skills</div>
-  </div>
+<!-- TAB: FAQ -->
+<div class="tab-panel" id="tab-faq">
+  <div class="section-prompt">man faq</div>
+  <div class="section-title">Frequently Asked Questions</div>
+  <div class="section-sub">// common questions about PA skills</div>
   <div class="faq-list" id="faqList"></div>
 </div>
 
-<!-- FOOTER -->
 <footer>
-  <div class="footer-links">
-    <a href="https://github.com/netanel-abergel/pa-skills" target="_blank">GitHub</a>
-    <a href="#heleni">Heleni</a>
-    <a href="#skills">Skills</a>
-    <a href="#faq">FAQ</a>
-  </div>
   <div>Built by <a href="https://github.com/netanel-abergel" target="_blank">Netanel Abergel</a> &middot; Open source under MIT</div>
   <div style="margin-top:6px;font-size:11px">$ echo "Made for the SKILL.md ecosystem"<span class="cursor-blink">|</span></div>
 </footer>
 
 <!-- MODAL -->
 <div class="overlay" id="overlay" onclick="closeModal(event)">
-  <div class="modal" id="modal" onclick="event.stopPropagation()">
+  <div class="modal" onclick="event.stopPropagation()">
     <div class="modal-glow"></div>
     <button class="modal-close" onclick="closeModal()">&#x2715;</button>
     <div class="modal-body">
@@ -1117,208 +387,165 @@ footer .footer-links {
       <div class="modal-title" id="m-title"></div>
       <div class="modal-tag-row" id="m-tag-row"></div>
       <div class="modal-desc" id="m-desc"></div>
-      <div class="modal-install">
-        <span class="dollar">$</span>
-        <code id="m-install-cmd"></code>
-        <button class="copy-btn" id="m-copy" onclick="copyInstall()">copy</button>
-      </div>
-      <div class="modal-actions">
-        <a id="m-gh" class="btn btn-primary" target="_blank" style="font-size:12px;padding:10px 18px">View on GitHub &rarr;</a>
-      </div>
+      <div class="modal-skill-content" id="m-content"><div class="modal-loading">Loading SKILL.md...</div></div>
+      <div class="modal-install"><span class="dollar">$</span><code id="m-install-cmd"></code><button class="copy-btn" id="m-copy" onclick="copyInstall()">copy</button></div>
+      <div class="modal-actions"><a id="m-gh" class="btn btn-outline" target="_blank" style="font-size:12px;padding:10px 18px">View on GitHub &rarr;</a></div>
     </div>
   </div>
 </div>
 
 <script>
+// ── Tab switching ──
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === 'tab-' + tab));
+  window.scrollTo({ top: document.querySelector('.tab-bar').offsetTop - 56, behavior: 'smooth' });
+}
+
+// Handle hash on load
+const hash = location.hash.replace('#','');
+if (['heleni','skills','learnings','install','faq'].includes(hash)) switchTab(hash);
+
 const SKILLS = [
-  { icon:'🌐', slug:'ai-pa', title:'AI-PA Network', cat:'communication',
-    desc:'Multi-agent PA coordination — contact peer PAs, delegate tasks, share context across the network. Reads from a local PA directory.' },
-  { icon:'💳', slug:'billing-monitor', title:'Billing Monitor', cat:'monitoring',
-    desc:'Detects API billing errors (402, quota exceeded, insufficient balance), alerts the owner immediately, and switches to a fallback model automatically.' },
-  { icon:'📆', slug:'calendar-setup', title:'Calendar Setup', cat:'setup',
-    desc:'Step-by-step wizard to connect Google Calendar with write permissions. Handles multi-account setups and troubleshooting.' },
-  { icon:'⚖️', slug:'eval', title:'Eval', cat:'monitoring',
-    desc:'Evaluate everything the PA manages — tasks, skills, billing, calendar, memory quality. Combines supervisor status with quality scoring.' },
-  { icon:'🔤', slug:'hebrew-nikud', title:'Hebrew Nikud', cat:'language',
-    desc:'Hebrew vowel points (nikud) reference for AI agents. Correct rules for binyanim, dagesh, gender suffixes, and homographs. Essential for TTS.' },
-  { icon:'🔧', slug:'maintenance', title:'Maintenance', cat:'productivity',
-    desc:'Unified workspace maintenance: backup to GitHub and update OpenClaw + skills. Runs on schedule or on demand.' },
-  { icon:'📅', slug:'meetings', title:'Meetings', cat:'communication',
-    desc:'All-in-one meetings skill. Schedule by coordinating with another PA and finding free slots, or paste notes/transcript for summaries and action items.' },
-  { icon:'🧠', slug:'memory-tiering', title:'Memory Tiering', cat:'memory',
-    desc:'Three-tiered memory management (HOT, WARM, COLD). Organizes, prunes, and archives context for optimal retrieval and token efficiency.' },
-  { icon:'📊', slug:'monday-for-agents', title:'monday.com', cat:'integration',
-    desc:'Read/write monday.com boards, create items, post updates, and track projects via GraphQL API or MCP server.' },
-  { icon:'📋', slug:'owner-briefing', title:'Owner Briefing', cat:'productivity',
-    desc:'Daily morning briefing: upcoming meetings, urgent emails, open tasks, and what needs attention today. Sent at owner\'s preferred time.' },
-  { icon:'🎓', slug:'pa-onboarding', title:'PA Onboarding', cat:'setup',
-    desc:'Complete step-by-step guide for setting up a new AI Personal Assistant on OpenClaw from scratch. One step at a time.' },
-  { icon:'🧬', slug:'self-learning', title:'Self Learning', cat:'memory',
-    desc:'Continuous self-improvement: logs corrections and failures, detects patterns, promotes behavioral rules to SOUL.md for durable change.' },
-  { icon:'🤖', slug:'self-monitor', title:'Self Monitor', cat:'monitoring',
-    desc:'Proactive infrastructure monitoring: disk, memory, load, services, cron health. Auto-fixes safe issues. By Polycat.' },
-  { icon:'🗂️', slug:'skill-master', title:'Skill Master', cat:'productivity',
-    desc:'Meta-skill for routing. Use when unsure which skill fits a task. Decision tree, keyword triggers, and multi-skill composition guidance.' },
-  { icon:'🔎', slug:'skill-scout', title:'Skill Scout', cat:'productivity',
-    desc:'Daily automated discovery — scans memory for unmet needs, searches the web for new OpenClaw skills, and delivers a curated digest.' },
-  { icon:'📡', slug:'supervisor', title:'Supervisor', cat:'monitoring',
-    desc:'Central status dashboard: active tasks, open issues, pending follow-ups, and system health aggregated into one structured report.' },
-  { icon:'💬', slug:'whatsapp', title:'WhatsApp', cat:'communication',
-    desc:'Complete WhatsApp management: per-conversation memory for groups and DMs, unanswered message tracking, loop prevention, and multi-PA coordination.' },
-  { icon:'📺', slug:'youtube-watcher', title:'YouTube Watcher', cat:'integration',
-    desc:'Fetch and read transcripts from YouTube videos. Summarize, answer questions about content, or extract structured information. By Michael Gathara.' },
+  {icon:'🌐',slug:'ai-pa',title:'AI-PA Network',cat:'communication',desc:'Multi-agent PA coordination — contact peer PAs, delegate tasks, share context across the network.'},
+  {icon:'💳',slug:'billing-monitor',title:'Billing Monitor',cat:'monitoring',desc:'Detects API billing errors (402, quota exceeded, insufficient balance), alerts owner, switches to fallback model automatically.'},
+  {icon:'📆',slug:'calendar-setup',title:'Calendar Setup',cat:'setup',desc:'Step-by-step wizard to connect Google Calendar with write permissions. Handles multi-account setups.'},
+  {icon:'⚖️',slug:'eval',title:'Eval',cat:'monitoring',desc:'Evaluate everything the PA manages — tasks, skills, billing, calendar, memory quality with scoring.'},
+  {icon:'🔤',slug:'hebrew-nikud',title:'Hebrew Nikud',cat:'language',desc:'Hebrew vowel points reference for AI agents. Correct rules for binyanim, dagesh, gender suffixes. Essential for TTS.'},
+  {icon:'🔧',slug:'maintenance',title:'Maintenance',cat:'productivity',desc:'Unified workspace maintenance: backup to GitHub and update OpenClaw + skills. On schedule or on demand.'},
+  {icon:'📅',slug:'meetings',title:'Meetings',cat:'communication',desc:'Schedule meetings by coordinating with another PA, or paste notes/transcript for summaries and action items.'},
+  {icon:'🧠',slug:'memory-tiering',title:'Memory Tiering',cat:'memory',desc:'Three-tiered memory management (HOT, WARM, COLD). Prunes and archives context for optimal token efficiency.'},
+  {icon:'📊',slug:'monday-for-agents',title:'monday.com',cat:'integration',desc:'Read/write monday.com boards, create items, post updates, track projects via GraphQL API or MCP server.'},
+  {icon:'📋',slug:'owner-briefing',title:'Owner Briefing',cat:'productivity',desc:'Daily morning briefing: upcoming meetings, urgent emails, open tasks, and what needs attention today.'},
+  {icon:'🎓',slug:'pa-onboarding',title:'PA Onboarding',cat:'setup',desc:'Complete step-by-step guide for setting up a new AI Personal Assistant on OpenClaw from scratch.'},
+  {icon:'🧬',slug:'self-learning',title:'Self Learning',cat:'memory',desc:'Continuous self-improvement: logs corrections and failures, detects patterns, promotes rules to SOUL.md.'},
+  {icon:'🤖',slug:'self-monitor',title:'Self Monitor',cat:'monitoring',desc:'Proactive infrastructure monitoring: disk, memory, load, services, cron health. Auto-fixes safe issues.'},
+  {icon:'🗂️',slug:'skill-master',title:'Skill Master',cat:'productivity',desc:'Meta-skill for routing. Decision tree, keyword triggers, and multi-skill composition guidance.'},
+  {icon:'🔎',slug:'skill-scout',title:'Skill Scout',cat:'productivity',desc:'Daily automated discovery — scans memory for unmet needs, searches web for new OpenClaw skills.'},
+  {icon:'📡',slug:'supervisor',title:'Supervisor',cat:'monitoring',desc:'Central status dashboard: active tasks, open issues, pending follow-ups, system health in one report.'},
+  {icon:'💬',slug:'whatsapp',title:'WhatsApp',cat:'communication',desc:'Per-conversation memory for groups and DMs, unanswered message tracking, loop prevention, multi-PA coordination.'},
+  {icon:'📺',slug:'youtube-watcher',title:'YouTube Watcher',cat:'integration',desc:'Fetch and read transcripts from YouTube videos. Summarize, answer questions, extract information.'},
 ];
 
 const CATEGORIES = [
-  { id:'monitoring', icon:'📡', name:'Monitoring', desc:'Health checks, billing alerts, status dashboards' },
-  { id:'communication', icon:'💬', name:'Communication', desc:'WhatsApp, meetings, PA network' },
-  { id:'productivity', icon:'⚡', name:'Productivity', desc:'Briefings, discovery, maintenance' },
-  { id:'memory', icon:'🧠', name:'Memory', desc:'Self-learning, tiered context management' },
-  { id:'setup', icon:'🔧', name:'Setup', desc:'Onboarding, calendar, first-time config' },
-  { id:'integration', icon:'🔌', name:'Integration', desc:'monday.com, YouTube, external services' },
-  { id:'language', icon:'🌍', name:'Language', desc:'Hebrew nikud, linguistic references' },
+  {id:'monitoring',icon:'📡',name:'Monitoring'},{id:'communication',icon:'💬',name:'Communication'},
+  {id:'productivity',icon:'⚡',name:'Productivity'},{id:'memory',icon:'🧠',name:'Memory'},
+  {id:'setup',icon:'🔧',name:'Setup'},{id:'integration',icon:'🔌',name:'Integration'},
+  {id:'language',icon:'🌍',name:'Language'},
 ];
 
-// ── Render categories ──
-const catGrid = document.getElementById('catGrid');
-CATEGORIES.forEach(c => {
-  const count = SKILLS.filter(s => s.cat === c.id).length;
-  const el = document.createElement('div');
-  el.className = 'cat-card';
-  el.innerHTML = `<div class="cat-icon">${c.icon}</div><div class="cat-name">${c.name}</div><div class="cat-count">${count} skill${count!==1?'s':''}</div>`;
-  el.onclick = () => { filterBy(c.id); document.getElementById('skills').scrollIntoView({ behavior:'smooth' }); };
-  catGrid.appendChild(el);
-});
-
-// ── Render filter pills ──
+// ── Filter pills ──
 const filterPills = document.getElementById('filterPills');
 const allPill = document.createElement('button');
-allPill.className = 'pill active';
-allPill.textContent = 'all';
+allPill.className = 'pill active'; allPill.textContent = 'all';
 allPill.onclick = () => filterBy(null);
 filterPills.appendChild(allPill);
 CATEGORIES.forEach(c => {
-  const pill = document.createElement('button');
-  pill.className = 'pill';
-  pill.textContent = c.name.toLowerCase();
-  pill.dataset.cat = c.id;
-  pill.onclick = () => filterBy(c.id);
-  filterPills.appendChild(pill);
+  const p = document.createElement('button');
+  p.className = 'pill'; p.textContent = c.name.toLowerCase(); p.dataset.cat = c.id;
+  p.onclick = () => filterBy(c.id);
+  filterPills.appendChild(p);
 });
 
 let activeFilter = null;
-
 function filterBy(cat) {
   activeFilter = cat;
-  document.querySelectorAll('.pill').forEach(p => {
-    p.classList.toggle('active', cat ? p.dataset.cat === cat : !p.dataset.cat);
-  });
+  document.querySelectorAll('.pill').forEach(p => p.classList.toggle('active', cat ? p.dataset.cat === cat : !p.dataset.cat));
   renderSkills();
 }
 
-// ── Render skills ──
 const skillGrid = document.getElementById('skillGrid');
 const noResults = document.getElementById('noResults');
 const searchInput = document.getElementById('searchInput');
-
 searchInput.addEventListener('input', renderSkills);
 
 function renderSkills() {
   const q = searchInput.value.toLowerCase().trim();
   skillGrid.innerHTML = '';
   let count = 0;
-
-  SKILLS.forEach((s, i) => {
-    const matchesFilter = !activeFilter || s.cat === activeFilter;
-    const matchesSearch = !q || s.title.toLowerCase().includes(q) || s.desc.toLowerCase().includes(q) || s.cat.includes(q) || s.slug.includes(q);
-    if (!matchesFilter || !matchesSearch) return;
-
+  SKILLS.forEach(s => {
+    if (activeFilter && s.cat !== activeFilter) return;
+    if (q && !s.title.toLowerCase().includes(q) && !s.desc.toLowerCase().includes(q) && !s.cat.includes(q) && !s.slug.includes(q)) return;
     count++;
     const card = document.createElement('div');
     card.className = 'skill-card';
     card.style.animationDelay = `${count * .04}s`;
-
-    const tagClass = 'tag-' + s.cat;
-    card.innerHTML = `
-      <div class="skill-card-head">
-        <div class="skill-name"><span class="icon">${s.icon}</span> ${s.title}</div>
-        <span class="skill-tag ${tagClass}">${s.cat}</span>
-      </div>
-      <div class="skill-desc">${s.desc}</div>
-      <div class="skill-meta">
-        <div class="skill-meta-left">
-          <span style="color:var(--text-dim)">SKILL.md</span>
-        </div>
-        <span class="skill-arrow">&rarr;</span>
-      </div>`;
+    card.innerHTML = `<div class="skill-card-head"><div class="skill-name"><span class="icon">${s.icon}</span> ${s.title}</div><span class="skill-tag tag-${s.cat}">${s.cat}</span></div><div class="skill-desc">${s.desc}</div><div class="skill-meta"><span style="color:var(--text-dim)">SKILL.md</span><span class="skill-arrow">&rarr;</span></div>`;
     card.onclick = () => openModal(s);
     skillGrid.appendChild(card);
   });
-
   noResults.style.display = count === 0 ? 'block' : 'none';
 }
-
 renderSkills();
 
+// ── Markdown renderer ──
+function renderMd(md) {
+  md = md.replace(/^---[\s\S]*?---\n*/,'');
+  md = md.replace(/```(\w*)\n([\s\S]*?)```/g, (_,l,c) => `<pre><code>${c.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</code></pre>`);
+  md = md.replace(/^\|(.+)\|\n\|[-| :]+\|\n((?:\|.+\|\n)*)/gm, (_,h,rows) => {
+    const ths = h.split('|').map(x=>`<th>${x.trim()}</th>`).join('');
+    const trs = rows.trim().split('\n').map(r => `<tr>${r.replace(/^\||\|$/g,'').split('|').map(c=>`<td>${c.trim()}</td>`).join('')}</tr>`).join('');
+    return `<table><thead><tr>${ths}</tr></thead><tbody>${trs}</tbody></table>`;
+  });
+  md = md.replace(/^### (.+)$/gm,'<h3>$1</h3>').replace(/^## (.+)$/gm,'<h2>$1</h2>').replace(/^# (.+)$/gm,'<h1>$1</h1>');
+  md = md.replace(/^---$/gm,'<hr>');
+  md = md.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\*(.+?)\*/g,'<em>$1</em>');
+  md = md.replace(/`([^`]+)`/g,'<code>$1</code>');
+  md = md.replace(/^(\d+)\. (.+)$/gm,'<li>$2</li>').replace(/^[*-] (.+)$/gm,'<li>$1</li>');
+  md = md.replace(/\n\n/g,'</p><p>');
+  return `<p>${md}</p>`;
+}
+
 // ── Modal ──
+const skillCache = {};
 function openModal(s) {
   document.getElementById('m-icon').textContent = s.icon;
   document.getElementById('m-title').textContent = s.title;
-  const tagClass = 'tag-' + s.cat;
-  document.getElementById('m-tag-row').innerHTML = `<span class="skill-tag ${tagClass}">${s.cat}</span>`;
+  document.getElementById('m-tag-row').innerHTML = `<span class="skill-tag tag-${s.cat}">${s.cat}</span>`;
   document.getElementById('m-desc').textContent = s.desc;
   document.getElementById('m-install-cmd').textContent = `cp -r skills/${s.slug} ~/.openclaw/workspace/skills/`;
   document.getElementById('m-gh').href = `https://github.com/netanel-abergel/pa-skills/tree/main/skills/${s.slug}`;
+  const el = document.getElementById('m-content');
+  if (skillCache[s.slug]) { el.innerHTML = skillCache[s.slug]; }
+  else {
+    el.innerHTML = '<div class="modal-loading">Loading SKILL.md...</div>';
+    fetch(`https://raw.githubusercontent.com/netanel-abergel/pa-skills/main/skills/${s.slug}/SKILL.md`)
+      .then(r => r.ok ? r.text() : Promise.reject())
+      .then(md => { const html = renderMd(md); skillCache[s.slug] = html; el.innerHTML = html; })
+      .catch(() => { el.innerHTML = '<div class="modal-loading" style="color:var(--red)">Could not load SKILL.md</div>'; });
+  }
   document.getElementById('overlay').classList.add('active');
   document.body.style.overflow = 'hidden';
 }
-
 function closeModal(e) {
   if (!e || e.target === document.getElementById('overlay')) {
     document.getElementById('overlay').classList.remove('active');
     document.body.style.overflow = '';
   }
 }
-
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { document.getElementById('overlay').classList.remove('active'); document.body.style.overflow = ''; }});
-
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal({target:document.getElementById('overlay')}); });
 function copyInstall() {
-  const cmd = document.getElementById('m-install-cmd').textContent;
-  navigator.clipboard.writeText(cmd).then(() => {
-    const btn = document.getElementById('m-copy');
-    btn.textContent = 'copied!';
-    setTimeout(() => btn.textContent = 'copy', 1500);
+  navigator.clipboard.writeText(document.getElementById('m-install-cmd').textContent).then(() => {
+    const b = document.getElementById('m-copy'); b.textContent = 'copied!'; setTimeout(() => b.textContent = 'copy', 1500);
   });
 }
 
 // ── FAQ ──
 const FAQS = [
-  { q: 'What are SKILL.md playbooks?', a: 'SKILL.md files are concise, executable instructions that guide any LLM through a specific task. Each skill contains a frontmatter with metadata (name, description, triggers) and step-by-step procedures. They\'re model-agnostic and work with any AI agent that reads markdown.' },
-  { q: 'How do I install a skill?', a: 'Copy the skill folder into your OpenClaw workspace at <code>~/.openclaw/workspace/skills/</code>. You can also reference the SKILL.md directly in your agent\'s system prompt, or clone the entire repo for all skills at once.' },
-  { q: 'Are these skills model-specific?', a: 'No. Every skill uses the open SKILL.md standard and works with any LLM — Anthropic Claude, OpenAI GPT, Google Gemini, Llama, Mistral, or others. Most skills note their minimum model requirements (usually "any model").' },
-  { q: 'Can I use multiple skills together?', a: 'Yes. The <code>skill-master</code> skill acts as a router that helps your agent pick the right skill for each task. Skills are designed to compose — for example, <code>meetings</code> can trigger <code>calendar-setup</code> if the calendar isn\'t connected yet.' },
-  { q: 'How do I contribute a skill?', a: 'Add your skill in <code>skills/&lt;skill-name&gt;/</code> with a <code>SKILL.md</code> file. Follow the frontmatter format (name, description) and include clear trigger phrases. Submit a PR to the repository.' },
-  { q: 'What is OpenClaw?', a: 'OpenClaw is an open-source platform for running AI Personal Assistants. It provides the runtime, gateway, and workspace infrastructure that skills plug into.' },
-  { q: 'Are these skills safe to use?', a: 'All skills are open source and can be reviewed before installation. They\'re procedural playbooks (markdown instructions), not executable code — your agent interprets them. Always review any skill before adding it to your workspace.' },
+  {q:'What are SKILL.md playbooks?',a:'SKILL.md files are concise, executable instructions that guide any LLM through a specific task. Each skill contains frontmatter with metadata and step-by-step procedures. They\'re model-agnostic and work with any AI agent that reads markdown.'},
+  {q:'How do I install a skill?',a:'Copy the skill folder into your OpenClaw workspace at <code>~/.openclaw/workspace/skills/</code>. You can also reference the SKILL.md directly in your agent\'s system prompt, or clone the entire repo.'},
+  {q:'Are these skills model-specific?',a:'No. Every skill uses the open SKILL.md standard and works with any LLM — Claude, GPT, Gemini, Llama, Mistral, or others.'},
+  {q:'Can I use multiple skills together?',a:'Yes. The <code>skill-master</code> skill acts as a router that helps your agent pick the right skill for each task. Skills are designed to compose.'},
+  {q:'How do I contribute a skill?',a:'Add your skill in <code>skills/&lt;skill-name&gt;/</code> with a <code>SKILL.md</code> file. Follow the frontmatter format and submit a PR.'},
+  {q:'What is OpenClaw?',a:'OpenClaw is an open-source platform for running AI Personal Assistants. It provides the runtime, gateway, and workspace infrastructure that skills plug into.'},
+  {q:'Are these skills safe to use?',a:'All skills are open source and reviewable. They\'re procedural playbooks (markdown), not executable code. Always review before installing.'},
 ];
-
 const faqList = document.getElementById('faqList');
-FAQS.forEach((f, i) => {
-  const el = document.createElement('div');
-  el.className = 'faq-item';
-  el.innerHTML = `
-    <button class="faq-q" onclick="toggleFaq(this)">
-      <span><span class="num">0${i+1}</span>${f.q}</span>
-      <span class="faq-toggle">+</span>
-    </button>
-    <div class="faq-a"><div class="faq-a-inner">${f.a}</div></div>`;
+FAQS.forEach((f,i) => {
+  const el = document.createElement('div'); el.className = 'faq-item';
+  el.innerHTML = `<button class="faq-q" onclick="this.closest('.faq-item').classList.toggle('open')"><span><span class="num">0${i+1}</span>${f.q}</span><span class="faq-toggle">+</span></button><div class="faq-a"><div class="faq-a-inner">${f.a}</div></div>`;
   faqList.appendChild(el);
 });
-
-function toggleFaq(btn) {
-  const item = btn.closest('.faq-item');
-  item.classList.toggle('open');
-}
 </script>
 </body>
 </html>

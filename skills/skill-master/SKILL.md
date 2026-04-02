@@ -11,7 +11,7 @@ Any model. This is a lookup table — any model can use it.
 ---
 
 ## ⚠️ Skill Count Rule
-**Sweet spot: 28–32 active skills. Above 40 = routing breaks down.**
+**Current: 18 active skills. Sweet spot: 15–25. Above 30 = routing breaks down.**
 Start lean. Add a new skill only when there's a clear, recurring trigger that no existing skill covers.
 
 ---
@@ -42,7 +42,6 @@ Do not improvise. If no skill matches, say so and ask the owner.
 | "contact [person]'s PA" / "find PA phone number" | ai-pa |
 | "set up monday.com" / "create a board item" / "monday question" | monday-for-agents |
 | "I made a mistake" / "owner corrected me" | self-learning |
-| "this task will take long" / "run in background" | self-learning |
 | "backup workspace" / "push to git" | maintenance |
 | "update openclaw" / "update skills" / "run maintenance" | maintenance |
 | "what was discussed in [group]" | whatsapp |
@@ -117,17 +116,6 @@ What kind of task is this?
 | **supervisor** | Operations | Network-wide status dashboard — all PAs, tasks, system health |
 | **whatsapp** | Memory | Per-conversation context, unanswered tracking, loop prevention |
 | **youtube-watcher** | Utility | Fetch and summarize YouTube video transcripts |
-| **ai-meeting-notes** | ⚠️ DEPRECATED | → Use **meetings** |
-| **git-backup** | ⚠️ DEPRECATED | → Use **maintenance** |
-| **meeting-scheduler** | ⚠️ DEPRECATED | → Use **meetings** |
-| **openclaw-auto-updater** | ⚠️ DEPRECATED | → Use **maintenance** |
-| **openclaw-email-orientation** | ⚠️ DEPRECATED | → Use **calendar-setup** |
-| **pa-eval** | ⚠️ DEPRECATED | → Use **eval** |
-| **pa-status** | ⚠️ DEPRECATED | → Use **supervisor** |
-| **security-guardian** | ⚠️ DEPRECATED | → Use **self-monitor** |
-| **spawn-subagent** | ⚠️ DEPRECATED | → See AGENTS.md subagent section |
-| **whatsapp-diagnostics** | ⚠️ DEPRECATED | → See **whatsapp** skill troubleshooting appendix |
-| **whatsapp-memory** | ⚠️ DEPRECATED | → Use **whatsapp** |
 
 ---
 
