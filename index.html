@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>PA Skills — Agent Skill Marketplace for OpenClaw</title>
+<title>Heleni's Skill Marketplace — AI PA Skills for OpenClaw</title>
 <meta name="description" content="Discover and install open-source SKILL.md playbooks for AI Personal Assistants. 19 battle-tested skills for OpenClaw agents.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -617,11 +617,79 @@ nav {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 14px;
-  max-width: 560px;
+  max-width: 800px;
   width: 100%;
+  max-height: 90vh;
   position: relative;
   overflow: hidden;
   animation: modalIn .25s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-body { overflow-y: auto; }
+
+.modal-skill-content {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  max-height: 400px;
+  overflow-y: auto;
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.75;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.modal-skill-content h1, .modal-skill-content h2, .modal-skill-content h3 {
+  color: var(--text-bright);
+  font-family: var(--sans);
+  margin: 16px 0 8px;
+}
+.modal-skill-content h1 { font-size: 18px; }
+.modal-skill-content h2 { font-size: 15px; }
+.modal-skill-content h3 { font-size: 13px; }
+.modal-skill-content p { margin: 8px 0; }
+.modal-skill-content code {
+  color: var(--accent);
+  background: var(--accent-dim);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+.modal-skill-content pre {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 14px;
+  margin: 10px 0;
+  overflow-x: auto;
+  font-size: 12px;
+  color: var(--text);
+}
+.modal-skill-content pre code { background: none; padding: 0; }
+.modal-skill-content table { border-collapse: collapse; width: 100%; margin: 10px 0; }
+.modal-skill-content th, .modal-skill-content td {
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  font-size: 12px;
+  text-align: left;
+}
+.modal-skill-content th { color: var(--text-bright); background: var(--surface-2); }
+.modal-skill-content hr { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+.modal-skill-content ul, .modal-skill-content ol { padding-left: 20px; margin: 8px 0; }
+.modal-skill-content li { margin: 4px 0; }
+.modal-skill-content strong { color: var(--text-bright); }
+.modal-skill-content em { color: var(--text); }
+
+.modal-loading {
+  text-align: center;
+  padding: 32px;
+  color: var(--text-dim);
+  font-size: 13px;
 }
 
 .modal-glow {
@@ -976,14 +1044,14 @@ footer .footer-links {
     </div>
   </div>
 
-  <h1>Agent Skills<br><span class="accent">Marketplace</span></h1>
+  <h1>Heleni's Skill<br><span class="accent">Marketplace</span></h1>
   <p class="hero-sub">
     Battle-tested <code>SKILL.md</code> playbooks for AI Personal Assistants.
     Browse, install, ship.
   </p>
   <div class="hero-actions">
     <a class="btn btn-primary" href="#skills">Browse Skills</a>
-    <a class="btn btn-outline" href="https://github.com/netanel-abergel/pa-skills" target="_blank">View Source</a>
+    <a class="btn btn-outline" href="https://github.com/netanel-abergel/pa-skills" target="_blank">Contribute</a>
   </div>
 </div>
 
@@ -993,40 +1061,6 @@ footer .footer-links {
   <div class="stat"><div class="stat-val">7</div><div class="stat-label">Categories</div></div>
   <div class="stat"><div class="stat-val">100%</div><div class="stat-label">Open Source</div></div>
   <div class="stat"><div class="stat-val">Any LLM</div><div class="stat-label">Model-Agnostic</div></div>
-</div>
-
-<!-- CATEGORIES -->
-<div class="section">
-  <div class="section-header">
-    <div class="section-prompt">cd /categories</div>
-    <div class="section-title">Browse by Category</div>
-    <div class="section-sub">// skills organized by primary function</div>
-  </div>
-  <div class="cat-grid" id="catGrid"></div>
-</div>
-
-<!-- SKILLS -->
-<div class="section" id="skills">
-  <div class="section-header">
-    <div class="section-prompt">ls --all skills/</div>
-    <div class="section-title">All Skills</div>
-    <div class="section-sub">// click any skill for details and install command</div>
-  </div>
-
-  <div class="controls">
-    <div class="search-box">
-      <span class="dollar">$</span>
-      <span style="color:var(--text-dim);font-size:13px">find</span>
-      <input class="search-input" type="text" placeholder="search skills..." id="searchInput">
-    </div>
-    <div class="filter-pills" id="filterPills"></div>
-  </div>
-
-  <div class="skill-grid" id="skillGrid"></div>
-  <div id="noResults" style="display:none;text-align:center;padding:48px 0;color:var(--text-dim);font-size:13px">
-    <div style="font-size:32px;margin-bottom:12px">404</div>
-    No skills match your search.
-  </div>
 </div>
 
 <!-- MEET HELENI -->
@@ -1160,6 +1194,40 @@ footer .footer-links {
   </div>
 </div>
 
+<!-- CATEGORIES -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-prompt">cd /categories</div>
+    <div class="section-title">Browse by Category</div>
+    <div class="section-sub">// skills organized by primary function</div>
+  </div>
+  <div class="cat-grid" id="catGrid"></div>
+</div>
+
+<!-- SKILLS -->
+<div class="section" id="skills">
+  <div class="section-header">
+    <div class="section-prompt">ls --all skills/</div>
+    <div class="section-title">All Skills</div>
+    <div class="section-sub">// click any skill for details and install command</div>
+  </div>
+
+  <div class="controls">
+    <div class="search-box">
+      <span class="dollar">$</span>
+      <span style="color:var(--text-dim);font-size:13px">find</span>
+      <input class="search-input" type="text" placeholder="search skills..." id="searchInput">
+    </div>
+    <div class="filter-pills" id="filterPills"></div>
+  </div>
+
+  <div class="skill-grid" id="skillGrid"></div>
+  <div id="noResults" style="display:none;text-align:center;padding:48px 0;color:var(--text-dim);font-size:13px">
+    <div style="font-size:32px;margin-bottom:12px">404</div>
+    No skills match your search.
+  </div>
+</div>
+
 <!-- INSTALL -->
 <div class="install-section" id="install">
   <div class="section-header" style="text-align:center;margin-bottom:32px">
@@ -1222,13 +1290,16 @@ footer .footer-links {
       <div class="modal-title" id="m-title"></div>
       <div class="modal-tag-row" id="m-tag-row"></div>
       <div class="modal-desc" id="m-desc"></div>
+      <div class="modal-skill-content" id="m-content">
+        <div class="modal-loading">Loading SKILL.md...</div>
+      </div>
       <div class="modal-install">
         <span class="dollar">$</span>
         <code id="m-install-cmd"></code>
         <button class="copy-btn" id="m-copy" onclick="copyInstall()">copy</button>
       </div>
       <div class="modal-actions">
-        <a id="m-gh" class="btn btn-primary" target="_blank" style="font-size:12px;padding:10px 18px">View on GitHub &rarr;</a>
+        <a id="m-gh" class="btn btn-outline" target="_blank" style="font-size:12px;padding:10px 18px">View on GitHub &rarr;</a>
       </div>
     </div>
   </div>
@@ -1365,7 +1436,44 @@ function renderSkills() {
 
 renderSkills();
 
+// ── Minimal markdown renderer ──
+function renderMd(md) {
+  // Remove frontmatter
+  md = md.replace(/^---[\s\S]*?---\n*/,'');
+  // Code blocks
+  md = md.replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) =>
+    `<pre><code>${code.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</code></pre>`);
+  // Tables
+  md = md.replace(/^\|(.+)\|\n\|[-| :]+\|\n((?:\|.+\|\n)*)/gm, (_, header, rows) => {
+    const ths = header.split('|').map(h=>`<th>${h.trim()}</th>`).join('');
+    const trs = rows.trim().split('\n').map(r => {
+      const tds = r.replace(/^\||\|$/g,'').split('|').map(c=>`<td>${c.trim()}</td>`).join('');
+      return `<tr>${tds}</tr>`;
+    }).join('');
+    return `<table><thead><tr>${ths}</tr></thead><tbody>${trs}</tbody></table>`;
+  });
+  // Headers
+  md = md.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+  md = md.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+  md = md.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+  // HR
+  md = md.replace(/^---$/gm, '<hr>');
+  // Bold & italic
+  md = md.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  md = md.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  // Inline code
+  md = md.replace(/`([^`]+)`/g, '<code>$1</code>');
+  // Lists
+  md = md.replace(/^(\d+)\. (.+)$/gm, '<li>$2</li>');
+  md = md.replace(/^[*-] (.+)$/gm, '<li>$1</li>');
+  // Paragraphs (double newline)
+  md = md.replace(/\n\n/g, '</p><p>');
+  return `<p>${md}</p>`;
+}
+
 // ── Modal ──
+const skillCache = {};
+
 function openModal(s) {
   document.getElementById('m-icon').textContent = s.icon;
   document.getElementById('m-title').textContent = s.title;
@@ -1374,6 +1482,25 @@ function openModal(s) {
   document.getElementById('m-desc').textContent = s.desc;
   document.getElementById('m-install-cmd').textContent = `cp -r skills/${s.slug} ~/.openclaw/workspace/skills/`;
   document.getElementById('m-gh').href = `https://github.com/netanel-abergel/pa-skills/tree/main/skills/${s.slug}`;
+
+  const contentEl = document.getElementById('m-content');
+
+  if (skillCache[s.slug]) {
+    contentEl.innerHTML = skillCache[s.slug];
+  } else {
+    contentEl.innerHTML = '<div class="modal-loading">Loading SKILL.md...</div>';
+    fetch(`https://raw.githubusercontent.com/netanel-abergel/pa-skills/main/skills/${s.slug}/SKILL.md`)
+      .then(r => r.ok ? r.text() : Promise.reject('not found'))
+      .then(md => {
+        const html = renderMd(md);
+        skillCache[s.slug] = html;
+        contentEl.innerHTML = html;
+      })
+      .catch(() => {
+        contentEl.innerHTML = '<div class="modal-loading" style="color:var(--red)">Could not load SKILL.md</div>';
+      });
+  }
+
   document.getElementById('overlay').classList.add('active');
   document.body.style.overflow = 'hidden';
 }
