@@ -1,507 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Heleni — AI Personal Assistant</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PA Skills — OpenClaw Agent Playbooks</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0f;color:#e8e8f0;min-height:100vh}
+  a{color:inherit;text-decoration:none}
 
-    :root {
-      --cream: #faf8f5;
-      --sand: #f0ece4;
-      --border: #e2ddd6;
-      --text: #1a1a1a;
-      --muted: #6b6560;
-      --accent: #2d2d2d;
-      --tag-bg: #ede9e2;
-      --tag-text: #5a5550;
-      --card-bg: #ffffff;
-      --install-bg: #1a1a1a;
-      --install-text: #f5f5f5;
-    }
+  /* NAV */
+  nav{display:flex;align-items:center;justify-content:space-between;padding:20px 48px;border-bottom:1px solid rgba(255,255,255,.08)}
+  .logo{font-size:18px;font-weight:700;background:linear-gradient(135deg,#6c63ff,#00d4aa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .nav-link{font-size:14px;color:#999;padding:8px 16px;border:1px solid rgba(255,255,255,.15);border-radius:8px;transition:all .2s}
+  .nav-link:hover{color:#fff;border-color:rgba(255,255,255,.4)}
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
-      background: var(--cream);
-      color: var(--text);
-      min-height: 100vh;
-    }
+  /* HERO */
+  .hero{text-align:center;padding:100px 24px 80px;position:relative;overflow:hidden}
+  .hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(108,99,255,.18) 0%,transparent 70%);pointer-events:none}
+  .badge{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#6c63ff;background:rgba(108,99,255,.12);border:1px solid rgba(108,99,255,.3);border-radius:20px;padding:6px 14px;margin-bottom:28px}
+  h1{font-size:clamp(36px,6vw,72px);font-weight:800;line-height:1.1;letter-spacing:-.02em;max-width:800px;margin:0 auto 24px}
+  h1 span{background:linear-gradient(135deg,#6c63ff,#00d4aa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .subtitle{font-size:18px;color:#888;max-width:540px;margin:0 auto 48px;line-height:1.6}
+  .cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .btn-primary{background:linear-gradient(135deg,#6c63ff,#5a52e0);color:#fff;padding:14px 28px;border-radius:10px;font-weight:600;font-size:15px;transition:opacity .2s}
+  .btn-primary:hover{opacity:.85}
+  .btn-secondary{background:rgba(255,255,255,.06);color:#ccc;padding:14px 28px;border-radius:10px;font-weight:600;font-size:15px;border:1px solid rgba(255,255,255,.12);transition:all .2s}
+  .btn-secondary:hover{background:rgba(255,255,255,.1);color:#fff}
 
-    /* NAV */
-    nav {
-      background: var(--cream);
-      border-bottom: 1px solid var(--border);
-      padding: 0 32px;
-      height: 56px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
+  /* STATS */
+  .stats{display:flex;justify-content:center;gap:48px;padding:40px 24px;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);flex-wrap:wrap}
+  .stat{text-align:center}
+  .stat-num{font-size:32px;font-weight:800;background:linear-gradient(135deg,#6c63ff,#00d4aa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .stat-label{font-size:13px;color:#666;margin-top:4px}
 
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-      color: var(--text);
-    }
+  /* SKILLS GRID */
+  .section{padding:80px 48px;max-width:1200px;margin:0 auto}
+  .section-title{font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#6c63ff;margin-bottom:16px}
+  .section-h2{font-size:clamp(28px,4vw,42px);font-weight:800;margin-bottom:12px}
+  .section-sub{font-size:16px;color:#666;margin-bottom:48px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+  .card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:28px;transition:all .25s;cursor:default}
+  .card:hover{background:rgba(255,255,255,.06);border-color:rgba(108,99,255,.35);transform:translateY(-2px)}
+  .card-icon{font-size:28px;margin-bottom:16px}
+  .card-title{font-size:17px;font-weight:700;margin-bottom:8px}
+  .card-desc{font-size:14px;color:#777;line-height:1.6}
+  .card-tag{display:inline-block;font-size:11px;font-weight:600;color:#00d4aa;background:rgba(0,212,170,.1);border-radius:4px;padding:2px 8px;margin-top:12px}
 
-    .nav-logo img {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
+  /* FOOTER */
+  footer{text-align:center;padding:40px;border-top:1px solid rgba(255,255,255,.06);color:#444;font-size:13px}
+  footer a{color:#6c63ff}
 
-    .nav-logo span {
-      font-weight: 700;
-      font-size: 1rem;
-      letter-spacing: -0.01em;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .nav-links a {
-      text-decoration: none;
-      color: var(--muted);
-      font-size: 0.875rem;
-      padding: 6px 12px;
-      border-radius: 6px;
-      transition: background 0.15s, color 0.15s;
-    }
-
-    .nav-links a:hover {
-      background: var(--sand);
-      color: var(--text);
-    }
-
-    /* HERO */
-    .hero {
-      max-width: 740px;
-      margin: 0 auto;
-      padding: 72px 24px 56px;
-      text-align: center;
-    }
-
-    .hero-avatar {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid var(--border);
-      margin-bottom: 20px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-    }
-
-    .hero h1 {
-      font-size: 2.4rem;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      color: var(--text);
-      margin-bottom: 12px;
-      line-height: 1.1;
-    }
-
-    .hero p {
-      font-size: 1.05rem;
-      color: var(--muted);
-      line-height: 1.65;
-      max-width: 520px;
-      margin: 0 auto 28px;
-    }
-
-    /* Install block */
-    .install-block {
-      display: inline-flex;
-      align-items: center;
-      gap: 0;
-      background: var(--install-bg);
-      border-radius: 10px;
-      overflow: hidden;
-      margin-bottom: 32px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-    }
-
-    .install-block code {
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      font-size: 0.82rem;
-      color: #a8d8a8;
-      padding: 10px 16px;
-      letter-spacing: 0.02em;
-    }
-
-    .install-block code span {
-      color: #888;
-    }
-
-    .copy-btn {
-      background: rgba(255,255,255,0.08);
-      border: none;
-      color: #aaa;
-      padding: 10px 14px;
-      cursor: pointer;
-      font-size: 0.78rem;
-      transition: background 0.15s;
-      border-left: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .copy-btn:hover { background: rgba(255,255,255,0.14); color: #fff; }
-
-    .hero-tags {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .tag {
-      background: var(--tag-bg);
-      color: var(--tag-text);
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.78rem;
-      font-weight: 500;
-      border: 1px solid var(--border);
-    }
-
-    /* SECTION */
-    .section {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 0 24px 80px;
-    }
-
-    .section-header {
-      display: flex;
-      align-items: baseline;
-      gap: 10px;
-      margin-bottom: 20px;
-      padding-bottom: 14px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .section-header h2 {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text);
-    }
-
-    .section-header span {
-      font-size: 0.82rem;
-      color: var(--muted);
-    }
-
-    /* SKILL CARDS */
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-      gap: 12px;
-      margin-bottom: 60px;
-    }
-
-    .skill-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px;
-      text-decoration: none;
-      color: inherit;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      transition: border-color 0.15s, box-shadow 0.15s;
-    }
-
-    .skill-card:hover {
-      border-color: #c0bab2;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-    }
-
-    .skill-card-top {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .skill-emoji {
-      font-size: 1.6rem;
-      width: 42px;
-      height: 42px;
-      background: var(--sand);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .skill-meta { flex: 1; min-width: 0; }
-
-    .skill-name {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 2px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .skill-author {
-      font-size: 0.75rem;
-      color: var(--muted);
-    }
-
-    .skill-desc {
-      font-size: 0.82rem;
-      color: var(--muted);
-      line-height: 1.55;
-      flex: 1;
-    }
-
-    .skill-card-bottom {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 4px;
-    }
-
-    .skill-version {
-      font-size: 0.72rem;
-      color: #aaa;
-      font-family: monospace;
-    }
-
-    .install-cmd {
-      font-size: 0.72rem;
-      font-family: 'SF Mono', monospace;
-      background: var(--sand);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      padding: 3px 8px;
-      border-radius: 5px;
-    }
-
-    /* CAPS SECTION */
-    .caps-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 10px;
-    }
-
-    .cap-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 16px 18px;
-    }
-
-    .cap-icon { font-size: 1.2rem; margin-bottom: 8px; }
-    .cap-title { font-size: 0.88rem; font-weight: 600; margin-bottom: 4px; }
-    .cap-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
-
-    /* FOOTER */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 28px 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    footer p { font-size: 0.8rem; color: var(--muted); }
-    footer a { color: var(--muted); text-decoration: none; }
-    footer a:hover { color: var(--text); }
-
-    .footer-links { display: flex; gap: 20px; }
-
-    @media (max-width: 600px) {
-      .hero h1 { font-size: 1.8rem; }
-      nav { padding: 0 16px; }
-      .section { padding: 0 16px 60px; }
-      footer { flex-direction: column; align-items: flex-start; }
-    }
-  </style>
+  @media(max-width:600px){nav{padding:16px 20px}.section{padding:60px 20px}.stats{gap:24px}}
+</style>
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav>
-    <a class="nav-logo" href="#">
-      <img src="heleni.jpg" alt="Heleni" />
-      <span>Heleni</span>
-    </a>
-    <div class="nav-links">
-      <a href="#skills">Skills</a>
-      <a href="#capabilities">Capabilities</a>
-      <a href="https://clawhub.ai" target="_blank">ClawHub ↗</a>
+<nav>
+  <div class="logo">⚡ PA Skills</div>
+  <a class="nav-link" href="https://github.com/netanel-abergel/pa-skills" target="_blank">GitHub →</a>
+</nav>
+
+<div class="hero">
+  <div class="badge">Open Source · OpenClaw · AI Agents</div>
+  <h1>Skill playbooks for<br><span>AI Personal Assistants</span></h1>
+  <p class="subtitle">Battle-tested skills for OpenClaw agents. Drop them in, customize, ship. Built by real PA deployments.</p>
+  <div class="cta-row">
+    <a class="btn-primary" href="https://github.com/netanel-abergel/pa-skills" target="_blank">Browse Skills</a>
+    <a class="btn-secondary" href="https://ocana.ai" target="_blank">Get an Agent</a>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="stat-num">17+</div><div class="stat-label">Skills</div></div>
+  <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Model-agnostic</div></div>
+  <div class="stat"><div class="stat-num">Open</div><div class="stat-label">Source</div></div>
+  <div class="stat"><div class="stat-num">Live</div><div class="stat-label">In Production</div></div>
+</div>
+
+<div class="section">
+  <div class="section-title">Skills Library</div>
+  <div class="section-h2">Everything your PA needs</div>
+  <p class="section-sub">Each skill is a SKILL.md playbook — concise, executable instructions for any LLM.</p>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-icon">📅</div>
+      <div class="card-title">Meeting Scheduler</div>
+      <div class="card-desc">PA-to-PA coordination to find free slots, book on Google Calendar, send invites automatically.</div>
+      <span class="card-tag">Calendar</span>
     </div>
-  </nav>
-
-  <!-- HERO -->
-  <div class="hero">
-    <img src="heleni.jpg" alt="Heleni" class="hero-avatar" />
-    <h1>Meet Heleni ⚡</h1>
-    <p>Execution-first AI Personal Assistant. Built on OpenClaw. Proactive, autonomous, and always on — no hand-holding required.</p>
-
-    <div class="install-block">
-      <code><span>$</span> npx clawhub@latest install unanswered-messages</code>
-      <button class="copy-btn" onclick="navigator.clipboard.writeText('npx clawhub@latest install unanswered-messages')">copy</button>
+    <div class="card">
+      <div class="card-icon">🧠</div>
+      <div class="card-title">Self Learning</div>
+      <div class="card-desc">Logs corrections and failures, detects patterns, drives durable behavioral improvement over time.</div>
+      <span class="card-tag">Memory</span>
     </div>
-
-    <div class="hero-tags">
-      <span class="tag">OpenClaw Agent</span>
-      <span class="tag">WhatsApp Native</span>
-      <span class="tag">monday.com</span>
-      <span class="tag">Autonomous Crons</span>
-      <span class="tag">Multi-agent</span>
-      <span class="tag">PA Network</span>
+    <div class="card">
+      <div class="card-icon">💳</div>
+      <div class="card-title">Billing Monitor</div>
+      <div class="card-desc">Detects API billing errors, alerts owner immediately, switches to fallback model automatically.</div>
+      <span class="card-tag">Reliability</span>
+    </div>
+    <div class="card">
+      <div class="card-icon">🌐</div>
+      <div class="card-title">AI PA Network</div>
+      <div class="card-desc">Multi-agent coordination — contact peer PAs, delegate tasks, share context across the network.</div>
+      <span class="card-tag">Network</span>
+    </div>
+    <div class="card">
+      <div class="card-icon">📊</div>
+      <div class="card-title">monday.com</div>
+      <div class="card-desc">Read/write boards, create items, post updates, track projects via GraphQL or MCP server.</div>
+      <span class="card-tag">Integration</span>
+    </div>
+    <div class="card">
+      <div class="card-icon">📋</div>
+      <div class="card-title">Owner Briefing</div>
+      <div class="card-desc">Daily morning briefing: upcoming meetings, urgent emails, open tasks, what needs attention today.</div>
+      <span class="card-tag">Proactive</span>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔍</div>
+      <div class="card-title">PA Status</div>
+      <div class="card-desc">Network health dashboard — checks all PAs are active, billing OK, calendars connected.</div>
+      <span class="card-tag">Monitoring</span>
+    </div>
+    <div class="card">
+      <div class="card-icon">💬</div>
+      <div class="card-title">WhatsApp Diagnostics</div>
+      <div class="card-desc">Diagnose and fix WhatsApp connectivity issues. Works for new setups and existing deployments.</div>
+      <span class="card-tag">Troubleshooting</span>
+    </div>
+    <div class="card">
+      <div class="card-icon">🚀</div>
+      <div class="card-title">Spawn Subagent</div>
+      <div class="card-desc">Offload long-running or complex tasks to isolated subagents without blocking the main session.</div>
+      <span class="card-tag">Execution</span>
     </div>
   </div>
+</div>
 
-  <!-- SKILLS -->
-  <div class="section" id="skills">
-    <div class="section-header">
-      <h2>Published Skills</h2>
-      <span>5 skills on ClawHub</span>
-    </div>
-    <div class="skills-grid">
-
-      <a class="skill-card" href="https://clawhub.ai/skills/unanswered-messages" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">📩</div>
-          <div class="skill-meta">
-            <div class="skill-name">unanswered-messages</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">Scans chat history to surface messages you never replied to. Runs every 5 minutes as an autonomous cron.</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">install unanswered-messages</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://clawhub.ai/skills/proactive-pa" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">⚡</div>
-          <div class="skill-meta">
-            <div class="skill-name">proactive-pa</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">Transforms any agent from reactive to proactive. Heartbeat protocols, autonomous crons, anticipation patterns.</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">install proactive-pa</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://clawhub.ai/skills/monday-for-agents" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">📌</div>
-          <div class="skill-meta">
-            <div class="skill-name">monday-for-agents</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">Full monday.com integration — boards, items, updates, MCP server setup for any OpenClaw agent.</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">install monday-for-agents</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://clawhub.ai/skills/ai-pa" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">🤝</div>
-          <div class="skill-meta">
-            <div class="skill-name">ai-pa</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">Multi-agent PA coordination — PA-to-PA communication, context sharing, task delegation across agents.</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">install ai-pa</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://clawhub.ai/skills/pa-onboarding" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">🚀</div>
-          <div class="skill-meta">
-            <div class="skill-name">pa-onboarding</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">New PA setup wizard — channel config, first contacts, first tasks. Onboard any agent in minutes.</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">install pa-onboarding</span>
-        </div>
-      </a>
-
-    </div>
-
-    <!-- CAPABILITIES -->
-    <div class="section-header" id="capabilities">
-      <h2>Capabilities</h2>
-      <span>What Heleni does out of the box</span>
-    </div>
-    <div class="caps-grid">
-      <div class="cap-card">
-        <div class="cap-icon">📋</div>
-        <div class="cap-title">Task Execution</div>
-        <div class="cap-desc">End-to-end task ownership — research, draft, send, schedule, follow up.</div>
-      </div>
-      <div class="cap-card">
-        <div class="cap-icon">🔔</div>
-        <div class="cap-title">Proactive Monitoring</div>
-        <div class="cap-desc">Checks every 5 minutes — unanswered messages, calendar, billing, cron health.</div>
-      </div>
-      <div class="cap-card">
-        <div class="cap-icon">🗓️</div>
-        <div class="cap-title">Calendar & Scheduling</div>
-        <div class="cap-desc">Google Calendar, morning briefings, PA-to-PA meeting coordination.</div>
-      </div>
-      <div class="cap-card">
-        <div class="cap-icon">🤝</div>
-        <div class="cap-title">PA Network</div>
-        <div class="cap-desc">Coordinates with other AI PAs — shares context, schedules meetings, delegates tasks.</div>
-      </div>
-      <div class="cap-card">
-        <div class="cap-icon">📊</div>
-        <div class="cap-title">monday.com</div>
-        <div class="cap-desc">Read/write boards, create items, post updates, track rollout progress.</div>
-      </div>
-      <div class="cap-card">
-        <div class="cap-icon">🧠</div>
-        <div class="cap-title">Persistent Memory</div>
-        <div class="cap-desc">Daily logs + long-term memory. Remembers decisions, preferences, lessons learned.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- FOOTER -->
-  <footer>
-    <p>Heleni — AI Personal Assistant · Built with <a href="https://openclaw.ai" target="_blank">OpenClaw</a></p>
-    <div class="footer-links">
-      <a href="https://clawhub.ai/profiles/netanel-abergel" target="_blank">ClawHub</a>
-      <a href="https://github.com/netanel-abergel/pa-skills" target="_blank">GitHub</a>
-      <a href="https://openclaw.ai" target="_blank">OpenClaw</a>
-    </div>
-  </footer>
+<footer>
+  Built with ❤️ by the <a href="https://ocana.ai" target="_blank">Ocana</a> team · <a href="https://github.com/netanel-abergel/pa-skills" target="_blank">View on GitHub</a>
+</footer>
 
 </body>
 </html>
