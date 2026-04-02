@@ -166,3 +166,99 @@ Or run manually as part of your workflow:
 ```bash
 ./health-check.sh
 ```
+
+---
+
+## Security Checks
+
+Run daily (or alongside any health check). Uses only `sha256sum`/`shasum`, `grep`, `find`, `jq`. Designed to complete in under 5 seconds.
+
+### Critical Files to Monitor
+
+```
+/opt/ocana/openclaw/workspace/SOUL.md
+/opt/ocana/openclaw/workspace/IDENTITY.md
+/opt/ocana/openclaw/workspace/MEMORY.md
+/opt/ocana/openclaw/workspace/AGENTS.md
+/opt/ocana/openclaw/workspace/TOOLS.md
+```
+
+### 1. File Integrity (SHA256 Baseline)
+
+See `../security-guardian/scripts/check_integrity.sh` for the full script.
+
+Logic:
+- On first run: generate `data/security-baseline.json` with SHA256 of each critical file
+- On subsequent runs: compare current hashes against baseline; report any drift
+- Manual reset: "reset security baseline" → regenerate baseline (do this after intentional edits to SOUL.md/MEMORY.md)
+
+Baseline format:
+```json
+{
+  "generated_at": "2026-04-02T07:00:00Z",
+  "files": {
+    "/opt/ocana/openclaw/workspace/SOUL.md": "sha256:<hash>"
+  }
+}
+```
+
+### 2. Prompt Injection Scan
+
+See `../security-guardian/scripts/scan_injections.sh` for the full script.
+
+Scans last 3 days of `memory/*.md` files for patterns like:
+- "ignore previous instructions"
+- "you are now" / "pretend you are"
+- "forget everything" / "override your"
+- "new system prompt"
+
+### 3. Credential Leak Scan
+
+See `../security-guardian/scripts/scan_credentials.sh` for the full script.
+
+Scans workspace `*.md`, `*.json`, `*.txt`, `*.yaml` (excluding `.git/`, `node_modules/`) for:
+- `api_key = 'xxx'` / `token = 'xxx'`
+- `sk-...` (OpenAI/Anthropic keys)
+- `ghp_...` (GitHub tokens)
+- Hardcoded passwords
+
+### Security Report Format
+
+```
+🛡️ Security Report — YYYY-MM-DD HH:MM UTC
+
+✅ File Integrity: OK (5/5 files match baseline)
+⚠️  Injection Scan: 1 suspicious pattern in memory/2026-04-01.md
+✅ Credential Scan: Clean
+
+ Summary: 1 warning — review flagged file
+```
+
+### Severity & Alerting
+
+| Level | Meaning | Action |
+|---|---|---|
+| ✅ OK | All clear | Log only |
+| ⚠️ WARNING | Suspicious but not confirmed | Note in report |
+| 🚨 CRITICAL | Confirmed drift or credential exposed | Alert Netanel immediately |
+
+**CRITICAL triggers:**
+- SOUL.md or IDENTITY.md hash changed without "reset baseline" command
+- Credential pattern found in a committed/shared file
+- Injection pattern found in a file that was then acted upon
+
+**On CRITICAL:** alert via WhatsApp to group `120363407274831275@g.us`.
+
+### Cron Schedule
+
+Run daily at 06:00 UTC (before morning briefing). Silent unless CRITICAL found.
+
+```json
+{
+  "id": "security-daily",
+  "schedule": "0 6 * * *",
+  "timezone": "UTC",
+  "task": "Run self-monitor security checks: file integrity, injection scan, credential scan. Alert Netanel at 120363407274831275@g.us if CRITICAL.",
+  "delivery": { "mode": "silent" }
+}
+```

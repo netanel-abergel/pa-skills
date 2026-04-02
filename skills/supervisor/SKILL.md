@@ -234,3 +234,78 @@ Example — if asked in the PA Team group:
 
 Example — if asked in a DM from owner:
 → Full report (all categories)
+
+---
+
+## PA Network Health (Merged from pa-status skill)
+
+Use this section to check the health of all PA agents in the network. Reads from `data/pa-directory.json`.
+
+### Status Checks (per PA)
+
+| Check | Field | Healthy State |
+|---|---|---|
+| Last active | `last_seen` | Within 24 hours |
+| Billing | `billing_error` | `false` |
+| Calendar | `calendar_connected` | `true` |
+| Status | `status` | `"active"` |
+
+### Network Report Script
+
+```python
+#!/usr/bin/env python3
+import json, datetime
+
+try:
+    with open('data/pa-directory.json') as f:
+        d = json.load(f)
+except FileNotFoundError:
+    print("ERROR: data/pa-directory.json not found"); exit(1)
+
+today = datetime.date.today().isoformat()
+online, issues, offline = [], [], []
+
+for pa in d.get('pas', []):
+    name, owner = pa['name'], pa['owner']
+    status = pa.get('status', 'unknown')
+    model = pa.get('model', 'unknown')
+    calendar = "✅" if pa.get('calendar_connected') else "❌"
+    billing_ok = not pa.get('billing_error', False)
+
+    if status == 'active' and billing_ok:
+        online.append(f"• {name} ({owner}) — {model}, cal {calendar}")
+    elif status == 'inactive':
+        offline.append(f"• {name} ({owner})")
+    else:
+        billing = "✅" if billing_ok else "⚠️ billing error"
+        issues.append(f"• {name} ({owner}) — {billing}")
+
+total = len(d.get('pas', []))
+print(f"📊 PA Network Status — {today}\n")
+print(f"✅ ONLINE ({len(online)}/{total})")
+for line in online: print(line)
+if issues:
+    print("\n⚠️ ISSUES")
+    for line in issues: print(line)
+if offline:
+    print("\n❌ OFFLINE")
+    for line in offline: print(line)
+if not issues and not offline:
+    print("\nAll PAs are healthy 🎉")
+```
+
+### Quick Ping (Reachability)
+
+Only ping PAs flagged with issues (not healthy ones — avoids noise):
+```
+For each PA in issues list:
+  Send: "ping 🏓" → wait up to 5 minutes
+  Response received → ONLINE
+  No response → check whatsapp-diagnostics section + billing-monitor skill
+```
+
+### Schedule
+
+- **Daily at 09:00** — Full network report to admin
+- **On billing error** — Immediate partial report for affected PA
+- **On demand** — When admin asks "what's the status?"

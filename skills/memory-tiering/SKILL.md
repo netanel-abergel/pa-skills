@@ -43,3 +43,59 @@ Whenever a memory reorganization is triggered (manual or post-compaction), follo
 ## Usage Trigger
 - Trigger manually with: "Run memory tiering" or "整理记忆层级".
 - Trigger automatically after any `/compact` command.
+
+---
+
+## Automated Maintenance (Merged from memory-maintenance skill)
+
+The memory-maintenance skill provided a scheduled automation layer for memory upkeep. Key concepts integrated here:
+
+### Why Maintenance Matters
+
+Without regular maintenance:
+- Daily notes pile up and become unsearchable
+- Important decisions get buried in old sessions
+- Context windows fill with irrelevant history
+- You repeat the same context-setting every day
+
+### Maintenance Workflow
+
+```
+Daily Session Notes (memory/YYYY-MM-DD.md)
+    ↓
+Review (scheduled or on heartbeat)
+    ↓
+Structured Suggestions
+    ↓
+Human Review (approve/reject)
+    ↓
+Approved Updates → MEMORY.md
+    ↓
+Auto-Cleanup (archive old files)
+```
+
+### What to Do (Periodically, Every 7 Days)
+
+1. Scan recent `memory/YYYY-MM-DD.md` files (last 7 days)
+2. Identify decisions, lessons, and insights worth keeping long-term
+3. Update `MEMORY.md` with distilled learnings — remove outdated entries
+4. Archive or clean up old daily notes
+
+### Safety Rules
+
+- **Content changes** (updating MEMORY.md): require explicit review — never auto-apply
+- **Safe maintenance** (archiving old files): can run automatically
+- **Risky operations** (rename, delete): require confirmation
+- **Prefer `trash` over `rm`**: recoverable beats gone forever
+
+### Retention Policy
+
+- Daily notes: keep 30 days, then archive to `memory/archive/YYYY-MM/`
+- Archive files: keep 90 days, then delete
+- MEMORY.md: prune if >200 lines — keep only what's still relevant
+
+### Health Indicators
+
+- ✅ Healthy: MEMORY.md <200 lines, daily notes exist, weekly reflection done
+- ⚠️ Warning: MEMORY.md 200–300 lines, daily notes missing for 2+ days
+- ❌ Critical: MEMORY.md >300 lines (too bloated to be useful), no daily notes in 7+ days

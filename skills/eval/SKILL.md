@@ -255,3 +255,48 @@ Any model that can:
 3. Format a structured report
 
 No advanced reasoning needed.
+
+---
+
+## PA Performance Scoring (Merged from pa-eval skill)
+
+Use this section when evaluating individual PA agents (weekly self-eval or on-demand when owner gives feedback).
+
+### Scoring Dimensions (1–5 each, max 40 points)
+
+| Dimension | What to Measure |
+|---|---|
+| **Execution** | Tasks completed without reminders |
+| **Accuracy** | Results are correct and complete |
+| **Speed** | Response time is fast |
+| **Proactivity** | Acts without being asked |
+| **Communication** | Concise and context-appropriate |
+| **Memory** | Remembers context across sessions |
+| **Tool Use** | Tools used correctly and efficiently |
+| **Judgment** | Knows when to act vs. when to ask |
+
+**Grade:** A (36–40), B (28–35), C (20–27), D (<20)
+
+### Owner Feedback Signals
+
+Log these automatically when detected:
+
+| Signal | Action |
+|---|---|
+| 👍 reaction / "תודה" / "great" | Log +1 positive |
+| 👎 reaction / "wrong" / "לא טוב" | Log -1, record the correction |
+| Owner re-asks the same question | Log -1 memory gap |
+| Owner does the task themselves | Log -1 initiative gap |
+| Owner surprised by proactive action | Log +2 proactivity |
+
+**Rule:** Log feedback signals immediately — don't batch them.
+
+### Weekly Eval File
+
+Save to `.learnings/eval/YYYY-MM-DD.md` with: scores table, owner feedback, tasks completed/failed, what went well, what to improve, actions for next week.
+
+### Benchmark Tests (Run Monthly)
+
+- **Task Completion Rate:** `completed / assigned × 100%` — Target: >90%
+- **Accuracy Rate:** `(tasks - corrections) / tasks × 100%` — Target: >95%
+- **Memory Retention:** Ask about something discussed 7+ days ago — Target: >80% recall

@@ -263,3 +263,50 @@ fi
 - **Expensive:** Writing nuanced behavioral rules — use a medium model for this step.
 - **Batch:** Review all weekly logs at once during the monthly reflection, not one by one.
 - **Small model OK:** Pattern detection is mostly grep — no model needed for that step.
+
+---
+
+## Phase 2: Reflection (Merged from self-reflection skill)
+
+When the owner wants to improve how you operate, follow this structured process. Goal: turn vague dissatisfaction into specific, technical changes.
+
+### Reflection Process
+
+**1. Understand the Problem (2–3 questions max)**
+Ask focused questions to pin down:
+- What specifically is wrong? (Get a concrete example)
+- What would "good" look like? (Expected vs actual behavior)
+- How important is this? (Tweak vs fundamental change)
+
+If the complaint is clear enough, skip to step 2.
+
+**2. Deep System Scan**
+Read ALL relevant parts before changing anything:
+- Core identity: SOUL.md, AGENTS.md, USER.md, MEMORY.md, TOOLS.md
+- All active skills (custom + bundled + workspace)
+- Configuration (model, tools, channels, heartbeat, cron jobs)
+
+Read broadly, change surgically.
+
+**3. Diagnose & Propose**
+Present findings:
+1. Root cause — what causes the unwanted behavior
+2. Proposed changes — specific files and edits
+3. Side effects — anything else affected
+4. Alternatives — if multiple approaches exist
+
+**4. Implement (after approval)**
+- Edit workspace files (persona, memory, etc.)
+- Edit/create/modify skills
+- Update config and cron jobs
+- Every change must be technically concrete. "I'll be more careful" is NOT a valid change.
+
+**5. Verify & Document**
+- Test the change if possible
+- Document what changed and why
+- Commit workspace changes
+
+**Key principles:**
+- Scan everything, change only what's needed
+- No fake fixes — if no technical change is possible, say so
+- Compound improvements — each reflection makes the system permanently better

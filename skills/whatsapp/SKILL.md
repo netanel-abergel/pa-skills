@@ -372,3 +372,43 @@ Before sending to a group or DM:
 - Use `tail -10` instead of reading full context files
 - Batch log multiple events before pushing backup
 - Small model OK for all memory operations
+
+---
+
+## Troubleshooting
+
+Use this section when the agent is not responding to WhatsApp messages.
+
+**Step 1 — Classify the problem:**
+- Dashboard shows "Disconnected" → **Connection issue**: re-link WhatsApp in OpenClaw settings, scan QR code with WhatsApp Business app. Session expires after ~14 days of inactivity.
+- Dashboard shows "Connected" but Messages = 0 → **Ingest issue**: run `openclaw gateway restart`, wait 30s, check if count increments.
+- Messages count increments but no reply → **Runtime issue**: check billing and API key.
+
+**Step 2 — Fix ingest issues (Messages = 0):**
+```bash
+openclaw gateway status
+openclaw gateway restart
+# Wait 30 seconds, then test
+openclaw gateway logs --last 50  # Look for: binding failed, session dropped, ingest error
+```
+If errors persist → escalate to platform admin (infrastructure issue).
+
+**Step 3 — Fix runtime issues (no reply despite incoming messages):**
+```bash
+# Check for billing errors
+grep -i "billing\|402\|credits" ~/.openclaw/logs/agent.log | tail -20
+
+# Verify API key (expect HTTP 200)
+curl -s -o /dev/null -w "%{http_code}" \
+  -H "x-api-key: $ANTHROPIC_API_KEY" \
+  -H "anthropic-version: 2023-06-01" \
+  https://api.anthropic.com/v1/models
+# 200 = OK | 401 = invalid key | 402 = billing error
+```
+
+**Prevention:**
+- Send at least one message every 7 days to prevent session expiry
+- Check Messages count during heartbeat to catch ingest issues early
+- Never use the same phone number on two devices simultaneously
+
+**When to escalate:** Gateway restart doesn't fix Messages = 0, logs show `socket`/`binding`/`session` errors, or multiple agents affected at the same time.
