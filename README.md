@@ -48,7 +48,7 @@ description: "Monitor API billing errors and alert the owner. Use when: ..."
 
 ---
 
-## Skills (19)
+## Skills (20)
 
 ### Core
 
@@ -82,6 +82,7 @@ description: "Monitor API billing errors and alert the owner. Use when: ..."
 |-------|-------------|
 | [self-learning](skills/self-learning/) | Continuous improvement via logging, pattern detection, and behavioral updates |
 | [self-monitor](skills/self-monitor/) | Health monitoring and infrastructure checks |
+| [skill-analytics](skills/skill-analytics/) | Track skill usage across sessions — invocation logs, daily summaries, unused skill detection |
 | [heleni-best-practices](skills/heleni-best-practices/) | Daily sync of production lessons from the pa-skills website |
 | [skill-scout](skills/skill-scout/) | Automated daily discovery of new skills and PA automation ideas |
 | [memory-tiering](skills/memory-tiering/) | Multi-tiered memory management (HOT/WARM/COLD) with automated pruning |

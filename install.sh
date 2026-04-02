@@ -40,6 +40,7 @@ SKILLS=(
   pa-onboarding
   self-learning
   self-monitor
+  skill-analytics
   skill-master
   skill-scout
   supervisor

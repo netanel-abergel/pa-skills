@@ -36,6 +36,7 @@ Modular SKILL.md-based playbooks for OpenClaw AI Personal Assistant agents. Each
 |-------|-------------|
 | [self-learning](self-learning/) | Continuous improvement via logging, pattern detection, and behavioral updates |
 | [self-monitor](self-monitor/) | Health monitoring and infrastructure checks |
+| [skill-analytics](skill-analytics/) | Track skill usage across sessions — logs invocations, generates daily summaries, spots unused skills |
 | [heleni-best-practices](heleni-best-practices/) | Daily sync of best practices from the pa-skills website |
 | [skill-scout](skill-scout/) | Automated daily discovery of new skills and PA automation ideas |
 | [memory-tiering](memory-tiering/) | Multi-tiered memory management (HOT/WARM/COLD) with automated pruning |
