@@ -17,7 +17,7 @@ Daily, Skill Scout:
 2. **Web Search** — Searches for new skills that address those gaps + general PA automation ideas.
 3. **Dedup + Score** — Filters out already-installed skills, scores remaining by impact.
 4. **URL Validation** — Verifies all URLs are real before including them.
-5. **Digest Delivery** — Sends curated results to Netanel in group 120363407274831275@g.us.
+5. **Digest Delivery** — Sends curated results to owner via WhatsApp.
 
 ---
 
@@ -30,14 +30,14 @@ Before searching the web, scan internally:
 1. Read `memory/` files from the last 7 days → look for:
    - Tasks marked as failed or blocked
    - Manual steps done repeatedly (e.g., "manually checked X", "had to do Y by hand")
-   - Things Netanel complained about or asked for repeatedly
+   - Things owner complained about or asked for repeatedly
 2. Read `HEARTBEAT.md` → look for todo items with no associated skill
 3. Check `.learnings/skill-scout/backlog.md` → pending items from prior weeks
 
 From this, generate a short list: "Gap → Skill type needed"
 
 Example:
-- "Netanel asked to summarize meeting 3x this week" → needs meeting-notetaker skill
+- "Owner asked to summarize meeting 3x this week" → needs meeting-notetaker skill
 - "Calendar check done manually" → smart-scheduler skill
 
 ### Phase 2: Dedup Check
@@ -114,7 +114,7 @@ Save to: `/opt/ocana/openclaw/workspace/.learnings/skill-scout/YYYY-MM-DD.md`
 
 Auto-append 🟡 BACKLOG items to: `/opt/ocana/openclaw/workspace/.learnings/skill-scout/backlog.md`
 
-Send digest to WhatsApp group: `120363407274831275@g.us`
+Send digest to owner via WhatsApp (configure YOUR_GROUP_JID)
 
 ---
 
@@ -167,11 +167,11 @@ Daily at 08:00 Israel time (06:00 UTC):
   "id": "skill-scout-daily",
   "schedule": "0 6 * * *",
   "timezone": "UTC",
-  "task": "Run skill-scout: (1) Scan memory/ files from last 7 days and HEARTBEAT.md for unmet needs and repeated manual tasks — list gaps. (2) Dedup against installed skills. (3) Run web searches for new OpenClaw skills addressing those gaps. (4) Score and filter. (5) Validate URLs. (6) Format digest. (7) Save to .learnings/skill-scout/YYYY-MM-DD.md. (8) Append backlog items. (9) Send digest to WhatsApp group 120363407274831275@g.us.",
+  "task": "Run skill-scout: (1) Scan memory/ files from last 7 days and HEARTBEAT.md for unmet needs and repeated manual tasks — list gaps. (2) Dedup against installed skills. (3) Run web searches for new OpenClaw skills addressing those gaps. (4) Score and filter. (5) Validate URLs. (6) Format digest. (7) Save to .learnings/skill-scout/YYYY-MM-DD.md. (8) Append backlog items. (9) Send digest to owner via WhatsApp (YOUR_GROUP_JID).",
   "delivery": {
     "mode": "message",
     "channel": "whatsapp",
-    "to": "120363407274831275@g.us"
+    "to": "YOUR_GROUP_JID@g.us"
   }
 }
 ```

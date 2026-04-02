@@ -240,14 +240,14 @@ Scans workspace `*.md`, `*.json`, `*.txt`, `*.yaml` (excluding `.git/`, `node_mo
 |---|---|---|
 | ✅ OK | All clear | Log only |
 | ⚠️ WARNING | Suspicious but not confirmed | Note in report |
-| 🚨 CRITICAL | Confirmed drift or credential exposed | Alert Netanel immediately |
+| 🚨 CRITICAL | Confirmed drift or credential exposed | Alert owner immediately |
 
 **CRITICAL triggers:**
 - SOUL.md or IDENTITY.md hash changed without "reset baseline" command
 - Credential pattern found in a committed/shared file
 - Injection pattern found in a file that was then acted upon
 
-**On CRITICAL:** alert via WhatsApp to group `120363407274831275@g.us`.
+**On CRITICAL:** alert owner via WhatsApp.
 
 ### Cron Schedule
 
@@ -258,7 +258,7 @@ Run daily at 06:00 UTC (before morning briefing). Silent unless CRITICAL found.
   "id": "security-daily",
   "schedule": "0 6 * * *",
   "timezone": "UTC",
-  "task": "Run self-monitor security checks: file integrity, injection scan, credential scan. Alert Netanel at 120363407274831275@g.us if CRITICAL.",
+  "task": "Run self-monitor security checks: file integrity, injection scan, credential scan. Alert owner via WhatsApp if CRITICAL.",
   "delivery": { "mode": "silent" }
 }
 ```
