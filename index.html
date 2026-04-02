@@ -858,11 +858,73 @@ footer .footer-links {
   line-height: 1.65;
 }
 
+/* ── STORY BLOCKS ── */
+.story-section {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.story-block {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 32px;
+  border-left: 3px solid var(--accent);
+}
+
+.story-label {
+  font-size: 11px;
+  color: var(--accent);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  margin-bottom: 10px;
+}
+
+.story-title {
+  font-family: var(--sans);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 14px;
+  line-height: 1.3;
+}
+
+.story-text {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.8;
+}
+
+.story-text em { color: var(--text); font-style: italic; }
+.story-text strong { color: var(--text-bright); font-weight: 600; }
+.story-text code {
+  color: var(--accent);
+  background: var(--accent-dim);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+.learning-why {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+.learning-why strong { color: var(--amber); }
+
 @media (max-width: 640px) {
   .heleni-showcase { grid-template-columns: 1fr; }
   .heleni-profile { flex-direction: column; text-align: center; }
   .heleni-badges { justify-content: center; }
   .learnings-grid { grid-template-columns: 1fr; }
+  .story-block { padding: 20px; }
 }
 
 /* ── STAGGER CARDS ── */
@@ -1007,49 +1069,92 @@ footer .footer-links {
     </div>
   </div>
 
-  <div style="margin-top:36px">
+  <!-- STORY: What is an AI PA? -->
+  <div class="story-section">
+    <div class="story-block">
+      <div class="story-label">// what is an AI PA?</div>
+      <div class="story-title">An AI Personal Assistant is not a chatbot.</div>
+      <div class="story-text">
+        A chatbot waits for you to ask something. An AI PA <em>works for you</em>. It manages your calendar, monitors your systems, coordinates with other agents, sends your morning briefing, and handles tasks end-to-end &mdash; without needing hand-holding.<br><br>
+        Heleni is a production AI PA built on <strong>OpenClaw</strong>, an open-source agent runtime. She runs 24/7, connected to WhatsApp, Google Calendar, and monday.com. She schedules meetings by talking to other PAs, detects billing failures before they cascade, and delivers daily briefings at 7:30 AM &mdash; all autonomously.
+      </div>
+    </div>
+
+    <div class="story-block">
+      <div class="story-label">// why these skills exist</div>
+      <div class="story-title">Every skill here was born from a real problem.</div>
+      <div class="story-text">
+        This isn't a theoretical skill library. Every <code>SKILL.md</code> in this repo was created because Heleni needed it in production. The <strong>billing-monitor</strong> was built after 5+ PAs went down from undetected API billing errors in a single day. The <strong>self-learning</strong> skill exists because Heleni kept repeating the same mistakes across sessions &mdash; corrections weren't persisting. The <strong>memory-tiering</strong> system was designed when daily memory files grew past 200 lines and started wasting the context window.<br><br>
+        These skills represent months of iteration with a real AI PA serving a real person &mdash; scheduling meetings, managing a network of 15+ peer PAs, handling WhatsApp groups, and running autonomous cron jobs. The patterns are hard-won.
+      </div>
+    </div>
+
+    <div class="story-block">
+      <div class="story-label">// how heleni thinks</div>
+      <div class="story-title">Execution model, not conversation model.</div>
+      <div class="story-text">
+        Heleni's behavior is defined in a <code>SOUL.md</code> file &mdash; a behavioral contract that shapes how she operates. The core principles:<br><br>
+        <strong>Execute, then report.</strong> Never narrate what you're about to do. Never share intermediate steps. Never list pros and cons when one clear answer exists. Do the thing, then say what happened.<br><br>
+        <strong>Silence is correct behavior.</strong> In group chats, Heleni only speaks when directly addressed or when she has clear responsibility. No reactions, no echoing, no noise. When there's nothing valuable to add, the right move is silence.<br><br>
+        <strong>Proactive over reactive.</strong> Before ending any task, Heleni asks herself: "Is there anything the owner would want to know that I haven't surfaced?" She monitors for calendar conflicts, unanswered messages, billing issues, and system health &mdash; and alerts without being asked.<br><br>
+        <strong>Permission boundaries.</strong> Reading data, organizing files, updating memory &mdash; free to do. Sending messages to people, making purchases, deleting external data &mdash; always ask first. The line is: internal and reversible = execute; external or irreversible = confirm.
+      </div>
+    </div>
+  </div>
+
+  <!-- LEARNINGS -->
+  <div style="margin-top:48px">
     <div class="section-prompt">cat .learnings/LEARNINGS.md</div>
-    <div class="section-title" style="font-size:22px;margin-bottom:20px">Key Learnings from Production</div>
+    <div class="section-title" style="font-size:22px;margin-bottom:8px">Key Learnings from Production</div>
+    <div class="section-sub" style="margin-bottom:24px">// these are real corrections and patterns discovered while running Heleni in production &mdash; each one caused a bug, outage, or user frustration before it became a rule</div>
     <div class="learnings-grid">
       <div class="learning-card">
         <div class="learning-icon">🎯</div>
         <div class="learning-title">Execution > Conversation</div>
         <div class="learning-desc">Execute first, report results only. Never share reasoning, intermediate steps, or "let me check" narration. Lead with one recommendation instead of listing options.</div>
+        <div class="learning-why"><strong>Why:</strong> The owner explicitly corrected this pattern. Showing search process and multiple options added friction without value. Results matter, process doesn't.</div>
       </div>
       <div class="learning-card">
         <div class="learning-icon">🔒</div>
         <div class="learning-title">Credential Exposure Protocol</div>
         <div class="learning-desc">If credentials appear in chat, warn immediately on receipt — before any operations. Then proceed with task, and remind to revoke after completion.</div>
+        <div class="learning-why"><strong>Why:</strong> GitHub tokens were shared in WhatsApp. The PA used them first and warned after — too late. The security warning must come before any action.</div>
       </div>
       <div class="learning-card">
         <div class="learning-icon">📡</div>
         <div class="learning-title">Explicit Delivery Targets</div>
         <div class="learning-desc">Cron jobs without explicit delivery targets fall back to last active session — can leak messages to wrong chats. Always pin the target explicitly.</div>
+        <div class="learning-why"><strong>Why:</strong> A daily AI digest intended for a work group was delivered to the owner's private DM because the cron job used session context instead of a pinned target.</div>
       </div>
       <div class="learning-card">
         <div class="learning-icon">🧠</div>
         <div class="learning-title">Memory Discipline</div>
         <div class="learning-desc">Daily memory files should stay under 50 lines. Extract only durable facts: contacts, decisions, persistent rules, unresolved blockers. Not event logs.</div>
+        <div class="learning-why"><strong>Why:</strong> A daily notes file grew to 200+ lines with transient events, eating context window for no value. Most content was stale within hours.</div>
       </div>
       <div class="learning-card">
         <div class="learning-icon">🔍</div>
         <div class="learning-title">Runtime Identity Check</div>
         <div class="learning-desc">Model identity must be checked via live session status, never assumed from context. Models can change mid-session without notice.</div>
+        <div class="learning-why"><strong>Why:</strong> Model switched from GPT to Claude mid-session. The PA kept reporting the old model because it relied on compacted context instead of checking runtime state.</div>
       </div>
       <div class="learning-card">
         <div class="learning-icon">💳</div>
         <div class="learning-title">Proactive Billing Alerts</div>
         <div class="learning-desc">Billing errors should trigger automatic fallback + notification, not reactive handling. Install billing-monitor with heartbeat integration for periodic health checks.</div>
+        <div class="learning-why"><strong>Why:</strong> 5+ PAs went down simultaneously from billing errors. Each required manual detection and intervention. Now automated with the billing-monitor skill.</div>
       </div>
       <div class="learning-card">
         <div class="learning-icon">📋</div>
         <div class="learning-title">Config Deduplication</div>
         <div class="learning-desc">SOUL.md, AGENTS.md, and MEMORY.md had 60% content overlap causing contradictions. Keep one source of truth per concern — facts vs behavior vs identity.</div>
+        <div class="learning-why"><strong>Why:</strong> Conflicting instructions across three config files caused inconsistent PA behavior. Merged into clear separation: SOUL = behavior, MEMORY = facts, IDENTITY = who.</div>
       </div>
       <div class="learning-card">
         <div class="learning-icon">📱</div>
         <div class="learning-title">Connected != Working</div>
         <div class="learning-desc">"Connected and listening" with Messages=0 means the ingest layer is broken, not the messaging platform. Escalate as platform issue, not user config.</div>
+        <div class="learning-why"><strong>Why:</strong> Multiple PAs showed WhatsApp as connected but never responded. The problem wasn't WhatsApp — it was the binding between the channel and the agent runtime.</div>
       </div>
     </div>
   </div>
