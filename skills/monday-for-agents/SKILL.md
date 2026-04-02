@@ -1,6 +1,6 @@
 ---
 name: monday-for-agents
-description: "Set up a monday.com account for an OpenClaw agent and work with monday.com boards, items, and updates via the GraphQL API or MCP server. Use when: creating a monday.com workspace for a PA, connecting the PA to monday.com, querying boards and items, creating or updating items, or troubleshooting monday.com API access. Also covers self-registration via HATCHA, GraphQL cookbook, column types, and MCP configuration. Works with any LLM model."
+description: "Set up a monday.com account for an OpenClaw agent and work with monday.com boards, items, and updates via the GraphQL API or MCP server. Use when: creating a monday.com workspace for a PA, connecting the PA to monday.com, querying boards and items, creating or updating items, or troubleshooting monday.com API access. Covers GraphQL cookbook, column types, and MCP configuration. Works with any LLM model."
 metadata:
   {
     "openclaw":
@@ -8,11 +8,8 @@ metadata:
         "emoji": "📋",
         "requires":
           {
-            "bins": ["playwright"],
             "env": ["MONDAY_API_TOKEN"],
-            "skills": ["gog"],
           },
-        "variant": "browser-full",
       },
   }
 ---
@@ -36,48 +33,27 @@ Each PA needs its own account — do not use the owner's.
 2. Use the agent email (e.g. `agent@agentdomain.com`).
 3. Owner invites the PA via Admin → Users → Invite.
 
-### Option B: Automated Self-Registration (HATCHA)
-
-First-time setup can be fully automated via `scripts/register.py`:
-
-1. Navigate to the Monday.com agent signup page
-2. Solve a HATCHA challenge (see `scripts/hatcha.py` for the solver)
-3. Enter email, agent name, and password
-4. Retrieve the verification email (via `gog` or `himalaya`)
-5. Complete signup and extract the API token
-
-```bash
-python3 scripts/register.py \
-  --email agent@example.com \
-  --agent-name "My Agent" \
-  --password "SecureP4ss!"
-```
-
 ### Get an API Token
 
 1. Log into monday.com as the agent.
 2. Click avatar → **Developers** → **My Access Tokens** → **Copy**.
-3. Save the token securely:
+3. Set the token as an environment variable via OpenClaw's config (preferred) or your system's secret manager.
+   ❌ Do **not** write the token to a plaintext file or add it to shell startup files.
+   ❌ Do **not** commit tokens to version control.
 
+**Recommended: OpenClaw env config**
+Add `MONDAY_API_TOKEN` to your OpenClaw agent environment via the Ocana dashboard or `openclaw.json` `env` block — never hardcode it in scripts.
+
+**For local dev only (not production):**
 ```bash
-mkdir -p ~/.credentials
-chmod 700 ~/.credentials
-echo "TOKEN_HERE" > ~/.credentials/monday-token.txt
-chmod 600 ~/.credentials/monday-token.txt
-
-# Load into environment
-export MONDAY_API_TOKEN=$(cat ~/.credentials/monday-token.txt)
-
-# Make permanent
-echo 'export MONDAY_API_TOKEN=$(cat ~/.credentials/monday-token.txt)' >> ~/.bashrc
+export MONDAY_API_TOKEN="TOKEN_HERE"  # current shell only, not persisted
 ```
 
 ### Setup Checklist
 
 ```
 [ ] PA has a monday.com account (agent email, not owner's)
-[ ] API token saved to ~/.credentials/monday-token.txt
-[ ] MONDAY_API_TOKEN exported in shell
+[ ] MONDAY_API_TOKEN set in OpenClaw agent environment (not a plaintext file)
 [ ] Workspace access confirmed
 [ ] Verified with: monday_query '{"query": "{ me { id name } }"}'
 [ ] If using MCP: server added to config and tested
@@ -101,8 +77,10 @@ https://api.monday.com/graphql  (also works)
 ```bash
 MONDAY_API_URL="https://api.monday.com/v2"
 
+# MONDAY_API_TOKEN must be set in the agent's environment (not read from file)
 if [ -z "$MONDAY_API_TOKEN" ]; then
-  MONDAY_API_TOKEN=$(cat ~/.credentials/monday-token.txt 2>/dev/null)
+  echo "ERROR: MONDAY_API_TOKEN is not set. Configure it in your OpenClaw agent environment." >&2
+  exit 1
 fi
 
 monday_query() {
