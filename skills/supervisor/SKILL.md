@@ -148,6 +148,14 @@ Log these in the relevant DM memory file when you're waiting on someone:
 [YYYY-MM-DD HH:MM] WAITING: Calendar access fix from [Owner Name]
 ```
 
+**Close-the-loop rule:** When the owner asks you to check on someone, your job is:
+1. Contact that person directly
+2. Report back to the owner what they said
+
+❌ Do NOT ask the owner instead of the person
+❌ Do NOT swallow the answer — the owner asked because they want to know
+✅ Always report back, even if the answer is "no update yet"
+
 ---
 
 ## Quick Status (Short Version)

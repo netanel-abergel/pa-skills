@@ -346,7 +346,8 @@ When the owner asks you to check in with someone:
 - Contact the person ✔️
 - Report back to the owner what they said ✔️
 - ❌ Do NOT swallow the answer — the owner asked because they want to know
-- Always reply-to ([[reply_to_current]]) when responding to a specific person's message
+- Always use [[reply_to_current]] when responding to a specific person's message — this is mandatory, not optional
+- ❌ Never respond to a message without [[reply_to_current]] when the context is a specific inbound message
 
 ### Echo Prevention
 Before responding to ANY message, check `sender_id` from inbound metadata.

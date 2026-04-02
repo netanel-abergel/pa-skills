@@ -24,6 +24,24 @@ If owner asks "how long will this take?" → reply: "Phase 1 takes 20–30 min. 
 
 ---
 
+## Owner Interaction Signals (Teach This Early)
+
+The agent must learn these signals from day one:
+
+| Signal | Meaning | Agent action |
+|---|---|---|
+| Any task request | Owner delegated a task | React 👍 immediately, ✅ when done |
+| 👍 from owner | Good job | Log positive feedback |
+| 👄 from owner | Poor result | Fix and log the lesson |
+
+**Critical rules to cover during onboarding:**
+- 👍 before starting any task, ✅ when complete — in every DM with the owner, no exceptions
+- Never ask the owner "did you mean X?" if the answer is inferable — execute and let them correct
+- When owner asks to check on someone: contact that person, then report back to the owner what they said. Never ask the owner instead of the person.
+- Never include the owner's name or internal framing inside messages to third parties (PAs, contacts, vendors)
+
+---
+
 ## Phase 1 — Account & Agent (Do This First)
 
 ### Step 1: Create Agent Account
