@@ -253,7 +253,7 @@ footer a{color:var(--accent)}
 
   <div class="heleni-showcase">
     <div class="heleni-profile">
-      <img src="heleni.jpg" alt="Heleni" class="heleni-avatar">
+      <img src="heleni-hero.png" alt="Heleni" style="width:100px;height:100px;border-radius:50%;border:3px solid var(--accent);object-fit:cover;object-position:top;background:var(--bg);flex-shrink:0">
       <div>
         <div class="heleni-name">Heleni</div>
         <div class="heleni-role">AI Personal Assistant</div>
@@ -295,6 +295,33 @@ footer a{color:var(--accent)}
       <div class="story-label">// how heleni thinks</div>
       <div class="story-title">Execution model, not conversation model.</div>
       <div class="story-text">Heleni's behavior is defined in a <code>SOUL.md</code> file &mdash; a behavioral contract that shapes how she operates.<br><br><strong>Execute, then report.</strong> Never narrate what you're about to do. Never share intermediate steps. Do the thing, then say what happened.<br><br><strong>Silence is correct behavior.</strong> In group chats, Heleni only speaks when directly addressed. No reactions, no echoing, no noise.<br><br><strong>Proactive over reactive.</strong> She monitors for calendar conflicts, unanswered messages, billing issues, and system health &mdash; and alerts without being asked.<br><br><strong>Permission boundaries.</strong> Internal and reversible = execute. External or irreversible = confirm first.</div>
+    </div>
+  </div>
+
+  <!-- MUST-HAVE SKILLS -->
+  <div style="margin-top:48px">
+    <div class="section-prompt">cat RECOMMENDED.md</div>
+    <div class="section-title" style="font-size:22px;margin-bottom:8px">Must-Have Skills</div>
+    <div class="section-sub" style="margin-bottom:20px">// start here — these two skills define how Heleni operates and how she picks the right tool for the job</div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px">
+      <div class="skill-card" style="border-color:var(--accent);animation:none;cursor:pointer" onclick="openModal(SKILLS.find(s=>s.slug==='skill-master'))">
+        <div class="skill-card-head">
+          <div class="skill-name"><span class="icon">🗂️</span> Skill Master</div>
+          <span class="skill-tag tag-productivity" style="background:var(--accent);color:var(--bg);font-weight:700">ESSENTIAL</span>
+        </div>
+        <div class="skill-desc" style="-webkit-line-clamp:unset;overflow:visible">The brain's routing table. When Heleni receives a task, this skill decides which other skill to load. Contains the decision tree, trigger phrases, multi-skill workflows, and model guidance. <strong style="color:var(--text-bright)">Install this first.</strong></div>
+        <div class="skill-meta"><span style="color:var(--text-dim)">SKILL.md</span><span class="skill-arrow" style="opacity:1">&rarr;</span></div>
+      </div>
+
+      <div class="skill-card" style="border-color:var(--amber);animation:none;cursor:pointer" onclick="openModal(SKILLS.find(s=>s.slug==='heleni-best-practices'))">
+        <div class="skill-card-head">
+          <div class="skill-name"><span class="icon">⚡</span> Heleni Best Practices</div>
+          <span class="skill-tag" style="background:rgba(232,168,56,.15);color:var(--amber);font-weight:700">RECOMMENDED</span>
+        </div>
+        <div class="skill-desc" style="-webkit-line-clamp:unset;overflow:visible">Daily sync of production lessons from Heleni. Fetches latest best practices, learnings, and skill updates — then applies relevant lessons to your own PA setup. The <code style="color:var(--accent);background:var(--accent-dim);padding:1px 5px;border-radius:3px;font-size:12px">SOUL.md</code> in skill form.</div>
+        <div class="skill-meta"><span style="color:var(--text-dim)">SKILL.md</span><span class="skill-arrow" style="opacity:1">&rarr;</span></div>
+      </div>
     </div>
   </div>
 </div>
@@ -411,6 +438,7 @@ const SKILLS = [
   {icon:'💳',slug:'billing-monitor',title:'Billing Monitor',cat:'monitoring',desc:'Detects API billing errors (402, quota exceeded, insufficient balance), alerts owner, switches to fallback model automatically.'},
   {icon:'📆',slug:'calendar-setup',title:'Calendar Setup',cat:'setup',desc:'Step-by-step wizard to connect Google Calendar with write permissions. Handles multi-account setups.'},
   {icon:'⚖️',slug:'eval',title:'Eval',cat:'monitoring',desc:'Evaluate everything the PA manages — tasks, skills, billing, calendar, memory quality with scoring.'},
+  {icon:'⚡',slug:'heleni-best-practices',title:'Heleni Best Practices',cat:'productivity',desc:'Daily sync of production lessons from Heleni. Fetches latest best practices, learnings, and skill updates to apply to your own PA setup.'},
   {icon:'🔤',slug:'hebrew-nikud',title:'Hebrew Nikud',cat:'language',desc:'Hebrew vowel points reference for AI agents. Correct rules for binyanim, dagesh, gender suffixes. Essential for TTS.'},
   {icon:'🔧',slug:'maintenance',title:'Maintenance',cat:'productivity',desc:'Unified workspace maintenance: backup to GitHub and update OpenClaw + skills. On schedule or on demand.'},
   {icon:'📅',slug:'meetings',title:'Meetings',cat:'communication',desc:'Schedule meetings by coordinating with another PA, or paste notes/transcript for summaries and action items.'},
