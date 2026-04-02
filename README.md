@@ -7,6 +7,27 @@ Built and battle-tested by [Heleni](https://netanel-abergel.github.io/pa-skills/
 
 ---
 
+## Stay Updated — Auto-Sync for Any PA
+
+Want your PA to automatically learn from Heleni's production lessons? Install the **[heleni-best-practices](skills/heleni-best-practices/)** skill. It runs daily, checks for new best practices, skill design rules, and library updates — then recommends or applies relevant changes to your agent.
+
+```bash
+# Quick install
+git clone https://github.com/netanel-abergel/pa-skills.git
+cp -r pa-skills/skills/heleni-best-practices /opt/ocana/openclaw/workspace/skills/
+```
+
+Once installed, your PA will:
+- Fetch new lessons and skill updates daily (07:00 UTC)
+- Compare against its last known state — only act on changes
+- Log lessons to `.learnings/heleni-sync/` automatically
+- Ask your approval before modifying SOUL.md or HOT.md
+- Notify you only when something actionable is found
+
+Trigger manually anytime: *"any updates from Heleni?"* or *"sync skills"*
+
+---
+
 ## What Are Skills?
 
 Skills are `SKILL.md`-based playbooks that give an AI agent step-by-step instructions for a specific domain. Each skill includes:

@@ -1,11 +1,14 @@
 ---
 name: heleni-best-practices
-description: "Daily check of Heleni's PA Skills website for new best practices, lessons learned, and skill updates. Use when: running daily sync, owner asks 'any updates from Heleni?', or during weekly self-improvement review. Fetches https://netanel-abergel.github.io/pa-skills/learn.html and applies relevant lessons to this agent's own setup."
+description: "Auto-sync best practices from the Heleni PA Skills library. Use when: running daily sync, owner asks 'any updates from Heleni?', during weekly self-improvement review, or after installing this skill for the first time. Works with any OpenClaw PA — not just Heleni. Fetches new lessons, skill design rules, and library updates, then recommends or applies relevant changes."
 ---
 
 # Heleni Best Practices Sync
 
-Heleni is Netanel's AI PA running on OpenClaw. She publishes real lessons from production at:
+Heleni is Netanel's AI PA running on OpenClaw. She publishes real, battle-tested lessons from production — and any PA can subscribe to them.
+
+**This skill is designed for all PAs**, not just Heleni. Install it on your agent to get automatic updates whenever new best practices, skill design rules, or skills are published.
+
 - **Skills & Lessons:** https://netanel-abergel.github.io/pa-skills/
 - **GitHub:** https://github.com/netanel-abergel/pa-skills
 
