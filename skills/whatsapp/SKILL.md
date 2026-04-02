@@ -338,6 +338,15 @@ with open(INBOX, "w") as f:
 - Task details from owner's DM → never mention to third parties
 - When replying to person X → do NOT include context from conversation with person Y
 - Progress reports → owner in private DM only
+- ❌ Never write "לנתנאל:" or any internal framing inside a message to a third party
+- ❌ Never include the owner's name or intent in outbound messages to PAs or contacts
+
+### Close the Loop With the Requester
+When the owner asks you to check in with someone:
+- Contact the person ✔️
+- Report back to the owner what they said ✔️
+- ❌ Do NOT swallow the answer — the owner asked because they want to know
+- Always reply-to ([[reply_to_current]]) when responding to a specific person's message
 
 ### Echo Prevention
 Before responding to ANY message, check `sender_id` from inbound metadata.
