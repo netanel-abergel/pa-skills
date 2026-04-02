@@ -1,90 +1,55 @@
 # AI-PA Ecosystem
 
+Open-source skill library for [OpenClaw](https://openclaw.ai) AI Personal Assistant agents.
 
 ## Structure
 
 ```
-pa-skills-repo/
-  skills/     ← AgentSkill playbooks (SKILL.md-based)
+pa-skills/
+  skills/           <- SKILL.md-based playbooks
+  index.html        <- GitHub Pages site
+  install.sh        <- Skill installer
 ```
 
----
+## Skills
 
-## 🧠 Skills
-
-Skills are SKILL.md-based playbooks that guide agent behavior for specific tasks.
-
-**Available skills:**
+Skills are modular playbooks that guide agent behavior for specific tasks. Each skill has a `SKILL.md` with YAML frontmatter defining its name, description, and trigger conditions.
 
 | Skill | Description |
 |-------|-------------|
-| [ai-pa](skills/ai-pa/) | Multi-agent PA coordination |
-| [billing-monitor](skills/billing-monitor/) | Monitor API billing and alert on failures |
-| [calendar-setup](skills/calendar-setup/) | Connect Google Calendar to your agent |
-| [eval](skills/eval/) | Evaluate PA tasks, skills, and health |
-| [git-backup](skills/git-backup/) | Backup workspace to GitHub |
-| [meeting-scheduler](skills/meeting-scheduler/) | Schedule meetings via PA-to-PA coordination |
-| [monday-for-agents](skills/monday-for-agents/) | monday.com integration for agents |
-| [openclaw-email-orientation](skills/openclaw-email-orientation/) | Email/calendar setup orientation |
-| [owner-briefing](skills/owner-briefing/) | Daily briefing for the owner |
-| [pa-eval](skills/pa-eval/) | PA performance scoring |
-| [pa-onboarding](skills/pa-onboarding/) | New PA setup wizard |
-| [pa-status](skills/pa-status/) | PA network health dashboard |
-| [self-learning](skills/self-learning/) | Continuous self-improvement |
-| [skill-master](skills/skill-master/) | Skill selection and routing |
-| [skill-scout](skills/skill-scout/) | Daily skill discovery |
-| [spawn-subagent](skills/spawn-subagent/) | Spawn isolated subagents |
-| [supervisor](skills/supervisor/) | Central PA status dashboard |
-| [whatsapp-diagnostics](skills/whatsapp-diagnostics/) | WhatsApp connectivity troubleshooting |
-| [whatsapp-memory](skills/whatsapp-memory/) | Per-conversation memory contexts |
+| [ai-pa](skills/ai-pa/) | Multi-agent PA coordination and peer messaging |
+| [billing-monitor](skills/billing-monitor/) | API billing error detection, alerting, and fallback switching |
+| [calendar-setup](skills/calendar-setup/) | Connect Google Calendar to an OpenClaw agent |
+| [eval](skills/eval/) | Evaluate PA tasks, skills, network health, and memory quality |
+| [hebrew-nikud](skills/hebrew-nikud/) | Hebrew vowel-point reference for nikud and TTS |
+| [heleni-best-practices](skills/heleni-best-practices/) | Daily sync of best practices from the pa-skills website |
+| [maintenance](skills/maintenance/) | Workspace backup to GitHub + OpenClaw/skill updates |
+| [meetings](skills/meetings/) | Schedule meetings via PA coordination + summarize notes |
+| [memory-tiering](skills/memory-tiering/) | Multi-tiered memory management (HOT/WARM/COLD) |
+| [monday-for-agents](skills/monday-for-agents/) | monday.com boards, items, GraphQL API, and MCP config |
+| [owner-briefing](skills/owner-briefing/) | Daily briefing: meetings, emails, tasks, action items |
+| [pa-onboarding](skills/pa-onboarding/) | Step-by-step setup wizard for new PAs |
+| [self-learning](skills/self-learning/) | Continuous improvement via logging and pattern detection |
+| [self-monitor](skills/self-monitor/) | Health monitoring and infrastructure checks |
+| [skill-master](skills/skill-master/) | Meta-skill for skill selection and routing |
+| [skill-scout](skills/skill-scout/) | Automated daily discovery of new skills and ideas |
+| [supervisor](skills/supervisor/) | Central status dashboard for the PA agent |
+| [whatsapp](skills/whatsapp/) | Per-conversation memory, message tracking, loop prevention |
+| [youtube-watcher](skills/youtube-watcher/) | Fetch YouTube transcripts for summarization and Q&A |
 
-### Install a skill
+See [skills/README.md](skills/README.md) for categorized details.
 
-Copy the skill directory into your OpenClaw workspace:
+## Install a Skill
 
 ```bash
+# Using the installer
+./install.sh billing-monitor
+
+# Or manually
 cp -r skills/billing-monitor /opt/ocana/openclaw/workspace/skills/
 ```
 
-Or reference it directly in your agent's system prompt.
-
----
-
-
-
-
-|--------|-------------|
-
-
-```bash
-```
-
-Or manually:
-
-```bash
-openclaw gateway restart
-```
-
-Then configure in `openclaw.json`:
-
-```json
-{
-    "entries": {
-      "ai-pa-billing-monitor": {
-        "enabled": true,
-        "config": {
-          "adminPhone": "+1XXXXXXXXXX",
-          "checkInterval": 60
-        }
-      }
-    }
-  }
-}
-```
-
----
-
 ## Contributing
 
-1. Skills go in `skills/<skill-name>/` with a `SKILL.md`
-3. Update this README with your addition
+1. Create `skills/<skill-name>/SKILL.md` with proper frontmatter
+2. Update both `README.md` and `skills/README.md`
