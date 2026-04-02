@@ -262,3 +262,61 @@ Run daily at 06:00 UTC (before morning briefing). Silent unless CRITICAL found.
   "delivery": { "mode": "silent" }
 }
 ```
+
+---
+
+## 📊 Skill Analytics Section
+
+Include this in the daily self-monitor report (after security checks).
+
+```bash
+LOG="/opt/ocana/openclaw/workspace/data/skill-analytics.jsonl"
+TODAY=$(date -u +%Y-%m-%d)
+
+if [ ! -f "$LOG" ] || [ $(wc -l < "$LOG") -eq 0 ]; then
+  echo "### 📊 Skill Analytics\n_No data yet._"
+else
+  echo "### 📊 Skill Analytics (last 24h)"
+  echo ""
+  
+  # Total today
+  TOTAL=$(grep "$TODAY" "$LOG" | wc -l)
+  echo "**Invocations:** $TOTAL"
+  echo ""
+  
+  # Top 5 skills today
+  echo "**Top skills:**"
+  grep "$TODAY" "$LOG" \
+    | jq -r '.skill' \
+    | sort | uniq -c | sort -rn \
+    | head -5 \
+    | awk '{printf "- %s (%d)\n", $2, $1}'
+  echo ""
+  
+  # Unused skills (never logged)
+  KNOWN="ai-pa billing-monitor calendar-setup eval hebrew-nikud maintenance meetings memory-tiering monday-for-agents owner-briefing pa-onboarding self-learning self-monitor skill-master skill-scout supervisor whatsapp youtube-watcher skill-analytics"
+  UNUSED=""
+  for s in $KNOWN; do
+    COUNT=$(jq -r '.skill' "$LOG" | grep -c "^${s}$" 2>/dev/null || echo 0)
+    [ "$COUNT" -eq 0 ] && UNUSED="$UNUSED $s"
+  done
+  [ -n "$UNUSED" ] && echo "**Never used:**$UNUSED" || echo "**Never used:** none"
+fi
+```
+
+### Output Example
+
+```
+### 📊 Skill Analytics (last 24h)
+
+**Invocations:** 11
+
+**Top skills:**
+- supervisor (4)
+- owner-briefing (2)
+- meetings (2)
+- whatsapp (2)
+- self-monitor (1)
+
+**Never used:** hebrew-nikud youtube-watcher
+```

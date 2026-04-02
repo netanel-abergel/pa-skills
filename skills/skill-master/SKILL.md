@@ -11,7 +11,7 @@ Any model. This is a lookup table — any model can use it.
 ---
 
 ## ⚠️ Skill Count Rule
-**Current: 18 active skills. Sweet spot: 15–25. Above 30 = routing breaks down.**
+**Current: 19 active skills. Sweet spot: 15–25. Above 30 = routing breaks down.**
 Start lean. Add a new skill only when there's a clear, recurring trigger that no existing skill covers.
 
 ---
@@ -21,9 +21,31 @@ Start lean. Add a new skill only when there's a clear, recurring trigger that no
 1. Read the owner's request.
 2. Find a match in the **Quick Lookup** table below.
 3. If not found, use the **Decision Tree**.
-4. Load that skill's SKILL.md and follow it.
+4. **Log the selection** (see Analytics below).
+5. Load that skill's SKILL.md and follow it.
 
 Do not improvise. If no skill matches, say so and ask the owner.
+
+---
+
+## 📊 Analytics — Log Every Skill Use
+
+After selecting a skill, append one line to the analytics log **before** starting work:
+
+```bash
+mkdir -p /opt/ocana/openclaw/workspace/data
+echo "{\"ts\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"skill\":\"SKILL_NAME\",\"trigger\":\"TRIGGER\",\"context\":\"CONTEXT\"}" \
+  >> /opt/ocana/openclaw/workspace/data/skill-analytics.jsonl
+```
+
+Replace:
+- `SKILL_NAME` → the skill selected (e.g. `meetings`)
+- `TRIGGER` → the phrase that matched (e.g. `schedule meeting with Daniel`)
+- `CONTEXT` → `dm`, `group:<name>`, or `cron`
+
+This is lightweight (~50 bytes/entry). Do it every time, no exceptions.
+
+---
 
 ---
 
@@ -46,6 +68,8 @@ Do not improvise. If no skill matches, say so and ask the owner.
 | "update openclaw" / "update skills" / "run maintenance" | maintenance |
 | "what was discussed in [group]" | whatsapp |
 | "find new skill ideas" / "what skills are trending" | skill-scout |
+| "skill usage" / "skill stats" / "skill report" | skill-analytics |
+| "which skills am I using" / "unused skills" | skill-analytics |
 | "security check" / "check for vulnerabilities" | self-monitor |
 | "health check" / "check infrastructure" | self-monitor |
 | "how are all the PAs doing" / "PA network status" | supervisor |
@@ -116,6 +140,7 @@ What kind of task is this?
 | **supervisor** | Operations | Network-wide status dashboard — all PAs, tasks, system health |
 | **whatsapp** | Memory | Per-conversation context, unanswered tracking, loop prevention |
 | **youtube-watcher** | Utility | Fetch and summarize YouTube video transcripts |
+| **skill-analytics** | Analytics | Track skill usage, generate daily reports, find unused skills |
 
 ---
 
@@ -187,6 +212,7 @@ When a new skill is added:
 3. Update the **Decision Tree** if it fits a new category.
 4. Add to any relevant **Multi-Skill Workflows**.
 5. Check skill count — stay under 32 active skills.
+6. Add the skill name to the `KNOWN_SKILLS` list in `skill-analytics/SKILL.md`.
 
 ---
 
