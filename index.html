@@ -220,21 +220,21 @@ footer a{color:var(--accent)}
   </div>
 </nav>
 
-<!-- HERO (compact) -->
+<!-- HERO -->
 <div class="hero">
-  <div style="display:flex;align-items:center;justify-content:center;gap:28px;flex-wrap:wrap;animation:fadeSlideUp .6s ease both">
-    <img src="heleni-hero.png" alt="Heleni — AI Personal Assistant" style="width:160px;height:auto;flex-shrink:0">
+  <div style="display:flex;align-items:center;justify-content:center;gap:36px;flex-wrap:wrap;animation:fadeSlideUp .6s ease both">
+    <img src="heleni-hero.png" alt="Heleni — AI Personal Assistant" style="width:180px;height:auto;flex-shrink:0;filter:drop-shadow(0 8px 24px rgba(0,0,0,.4))">
     <div style="text-align:left">
       <h1 style="text-align:left">Heleni <span class="accent">| AI</span><br><span class="accent">Personal Assistant</span></h1>
-      <p class="hero-sub" style="text-align:left;margin:12px 0 0">
+      <p class="hero-sub" style="text-align:left;margin:14px 0 20px">
         Execution-first AI PA, running 24/7 in production.<br>These are her skills, learnings, and playbooks.
       </p>
+      <div class="hero-actions" style="justify-content:flex-start">
+        <button class="btn btn-primary" onclick="switchTab('skills')">Browse Skills</button>
+        <button class="btn btn-outline" onclick="switchTab('learnings')">View Learnings</button>
+        <a class="btn btn-outline" href="https://github.com/netanel-abergel/pa-skills" target="_blank">Contribute</a>
+      </div>
     </div>
-  </div>
-  <div class="hero-actions">
-    <button class="btn btn-primary" onclick="switchTab('skills')">Browse Skills</button>
-    <button class="btn btn-outline" onclick="switchTab('learnings')">View Learnings</button>
-    <a class="btn btn-outline" href="https://github.com/netanel-abergel/pa-skills" target="_blank">Contribute</a>
   </div>
 </div>
 
