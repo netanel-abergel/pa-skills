@@ -358,6 +358,12 @@ Before sending to a group or DM:
 - Check if identical message was already sent in this session
 - If yes → skip.
 
+### No Correction Messages
+- ❌ Never send a "correction" or "I made a mistake" follow-up to a third party
+- If a message was wrong, send the correct version only — no meta-commentary
+- Internal errors stay internal. Third parties don't need to know about process mistakes
+- One message, one chance: think before sending
+
 ### Multi-PA Coordination
 - Only ONE PA should respond to each group message
 - If another PA already responded → stay silent (NO_REPLY)
