@@ -2,56 +2,65 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>PA Skills — OpenClaw Agent Playbooks</title>
 <style>
-  *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0f;color:#e8e8f0;min-height:100vh}
-  a{color:inherit;text-decoration:none}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0f;color:#e8e8f0;min-height:100vh}
+a{color:inherit;text-decoration:none}
+nav{display:flex;align-items:center;justify-content:space-between;padding:20px 48px;border-bottom:1px solid rgba(255,255,255,.08)}
+.logo{font-size:18px;font-weight:700;background:linear-gradient(135deg,#6c63ff,#00d4aa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-link{font-size:14px;color:#999;padding:8px 16px;border:1px solid rgba(255,255,255,.15);border-radius:8px;transition:all .2s}
+.nav-link:hover{color:#fff;border-color:rgba(255,255,255,.4)}
+.hero{text-align:center;padding:90px 24px 70px;position:relative}
+.hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(108,99,255,.15) 0%,transparent 70%);pointer-events:none}
+.badge{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#6c63ff;background:rgba(108,99,255,.12);border:1px solid rgba(108,99,255,.3);border-radius:20px;padding:6px 14px;margin-bottom:24px}
+h1{font-size:clamp(32px,5vw,64px);font-weight:800;line-height:1.1;letter-spacing:-.02em;max-width:750px;margin:0 auto 20px}
+h1 span{background:linear-gradient(135deg,#6c63ff,#00d4aa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.subtitle{font-size:17px;color:#888;max-width:500px;margin:0 auto 40px;line-height:1.6}
+.cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-primary{background:linear-gradient(135deg,#6c63ff,#5a52e0);color:#fff;padding:13px 26px;border-radius:10px;font-weight:600;font-size:15px;transition:opacity .2s}
+.btn-primary:hover{opacity:.85}
+.btn-secondary{background:rgba(255,255,255,.06);color:#ccc;padding:13px 26px;border-radius:10px;font-weight:600;font-size:15px;border:1px solid rgba(255,255,255,.12);transition:all .2s}
+.btn-secondary:hover{background:rgba(255,255,255,.1);color:#fff}
+.stats{display:flex;justify-content:center;gap:48px;padding:36px 24px;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-size:30px;font-weight:800;background:linear-gradient(135deg,#6c63ff,#00d4aa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-label{font-size:13px;color:#666;margin-top:4px}
+.section{padding:70px 48px;max-width:1200px;margin:0 auto}
+.section-label{font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#6c63ff;margin-bottom:12px}
+.section-h2{font-size:clamp(26px,3.5vw,38px);font-weight:800;margin-bottom:10px}
+.section-sub{font-size:15px;color:#666;margin-bottom:40px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px}
+.card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:26px;transition:all .25s;cursor:pointer}
+.card:hover{background:rgba(255,255,255,.07);border-color:rgba(108,99,255,.4);transform:translateY(-2px)}
+.card-icon{font-size:26px;margin-bottom:14px}
+.card-title{font-size:16px;font-weight:700;margin-bottom:8px}
+.card-desc{font-size:13px;color:#777;line-height:1.6}
+.card-tag{display:inline-block;font-size:11px;font-weight:600;color:#00d4aa;background:rgba(0,212,170,.1);border-radius:4px;padding:2px 8px;margin-top:12px}
+.card-more{font-size:12px;color:#6c63ff;margin-top:10px;opacity:0;transition:opacity .2s}
+.card:hover .card-more{opacity:1}
 
-  /* NAV */
-  nav{display:flex;align-items:center;justify-content:space-between;padding:20px 48px;border-bottom:1px solid rgba(255,255,255,.08)}
-  .logo{font-size:18px;font-weight:700;background:linear-gradient(135deg,#6c63ff,#00d4aa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-  .nav-link{font-size:14px;color:#999;padding:8px 16px;border:1px solid rgba(255,255,255,.15);border-radius:8px;transition:all .2s}
-  .nav-link:hover{color:#fff;border-color:rgba(255,255,255,.4)}
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;align-items:center;justify-content:center;padding:20px}
+.overlay.active{display:flex}
+.modal{background:#13131f;border:1px solid rgba(255,255,255,.12);border-radius:20px;max-width:560px;width:100%;padding:40px;position:relative;max-height:90vh;overflow-y:auto}
+.modal-close{position:absolute;top:16px;right:20px;font-size:22px;color:#555;cursor:pointer;line-height:1}
+.modal-close:hover{color:#fff}
+.modal-icon{font-size:36px;margin-bottom:16px}
+.modal-title{font-size:22px;font-weight:800;margin-bottom:8px}
+.modal-tag{display:inline-block;font-size:11px;font-weight:600;color:#00d4aa;background:rgba(0,212,170,.1);border-radius:4px;padding:3px 10px;margin-bottom:16px}
+.modal-desc{font-size:15px;color:#aaa;line-height:1.7;margin-bottom:24px}
+.modal-links{display:flex;gap:12px;flex-wrap:wrap}
+.modal-btn{padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+.modal-btn-primary{background:linear-gradient(135deg,#6c63ff,#5a52e0);color:#fff}
+.modal-btn-primary:hover{opacity:.85}
+.modal-btn-secondary{background:rgba(255,255,255,.06);color:#ccc;border:1px solid rgba(255,255,255,.12)}
+.modal-btn-secondary:hover{background:rgba(255,255,255,.12);color:#fff}
 
-  /* HERO */
-  .hero{text-align:center;padding:100px 24px 80px;position:relative;overflow:hidden}
-  .hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:700px;height:700px;background:radial-gradient(circle,rgba(108,99,255,.18) 0%,transparent 70%);pointer-events:none}
-  .badge{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#6c63ff;background:rgba(108,99,255,.12);border:1px solid rgba(108,99,255,.3);border-radius:20px;padding:6px 14px;margin-bottom:28px}
-  h1{font-size:clamp(36px,6vw,72px);font-weight:800;line-height:1.1;letter-spacing:-.02em;max-width:800px;margin:0 auto 24px}
-  h1 span{background:linear-gradient(135deg,#6c63ff,#00d4aa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-  .subtitle{font-size:18px;color:#888;max-width:540px;margin:0 auto 48px;line-height:1.6}
-  .cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-  .btn-primary{background:linear-gradient(135deg,#6c63ff,#5a52e0);color:#fff;padding:14px 28px;border-radius:10px;font-weight:600;font-size:15px;transition:opacity .2s}
-  .btn-primary:hover{opacity:.85}
-  .btn-secondary{background:rgba(255,255,255,.06);color:#ccc;padding:14px 28px;border-radius:10px;font-weight:600;font-size:15px;border:1px solid rgba(255,255,255,.12);transition:all .2s}
-  .btn-secondary:hover{background:rgba(255,255,255,.1);color:#fff}
-
-  /* STATS */
-  .stats{display:flex;justify-content:center;gap:48px;padding:40px 24px;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);flex-wrap:wrap}
-  .stat{text-align:center}
-  .stat-num{font-size:32px;font-weight:800;background:linear-gradient(135deg,#6c63ff,#00d4aa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-  .stat-label{font-size:13px;color:#666;margin-top:4px}
-
-  /* SKILLS GRID */
-  .section{padding:80px 48px;max-width:1200px;margin:0 auto}
-  .section-title{font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#6c63ff;margin-bottom:16px}
-  .section-h2{font-size:clamp(28px,4vw,42px);font-weight:800;margin-bottom:12px}
-  .section-sub{font-size:16px;color:#666;margin-bottom:48px}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
-  .card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:28px;transition:all .25s;cursor:default}
-  .card:hover{background:rgba(255,255,255,.06);border-color:rgba(108,99,255,.35);transform:translateY(-2px)}
-  .card-icon{font-size:28px;margin-bottom:16px}
-  .card-title{font-size:17px;font-weight:700;margin-bottom:8px}
-  .card-desc{font-size:14px;color:#777;line-height:1.6}
-  .card-tag{display:inline-block;font-size:11px;font-weight:600;color:#00d4aa;background:rgba(0,212,170,.1);border-radius:4px;padding:2px 8px;margin-top:12px}
-
-  /* FOOTER */
-  footer{text-align:center;padding:40px;border-top:1px solid rgba(255,255,255,.06);color:#444;font-size:13px}
-  footer a{color:#6c63ff}
-
-  @media(max-width:600px){nav{padding:16px 20px}.section{padding:60px 20px}.stats{gap:24px}}
+footer{text-align:center;padding:40px;border-top:1px solid rgba(255,255,255,.06);color:#444;font-size:13px}
+footer a{color:#6c63ff}
+@media(max-width:600px){nav{padding:16px 20px}.section{padding:50px 20px}.stats{gap:20px}}
 </style>
 </head>
 <body>
@@ -64,86 +73,94 @@
 <div class="hero">
   <div class="badge">Open Source · OpenClaw · AI Agents</div>
   <h1>Skill playbooks for<br><span>AI Personal Assistants</span></h1>
-  <p class="subtitle">Battle-tested skills for OpenClaw agents. Drop them in, customize, ship. Built by real PA deployments.</p>
+  <p class="subtitle">Battle-tested skills for OpenClaw agents. Drop them in, customize, ship.</p>
   <div class="cta-row">
-    <a class="btn-primary" href="https://github.com/netanel-abergel/pa-skills" target="_blank">Browse Skills</a>
+    <a class="btn-primary" href="https://github.com/netanel-abergel/pa-skills" target="_blank">Browse on GitHub</a>
     <a class="btn-secondary" href="https://ocana.ai" target="_blank">Get an Agent</a>
   </div>
 </div>
 
 <div class="stats">
-  <div class="stat"><div class="stat-num">17+</div><div class="stat-label">Skills</div></div>
+  <div class="stat"><div class="stat-num">29</div><div class="stat-label">Skills</div></div>
   <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Model-agnostic</div></div>
   <div class="stat"><div class="stat-num">Open</div><div class="stat-label">Source</div></div>
   <div class="stat"><div class="stat-num">Live</div><div class="stat-label">In Production</div></div>
 </div>
 
 <div class="section">
-  <div class="section-title">Skills Library</div>
+  <div class="section-label">Skills Library</div>
   <div class="section-h2">Everything your PA needs</div>
-  <p class="section-sub">Each skill is a SKILL.md playbook — concise, executable instructions for any LLM.</p>
+  <p class="section-sub">Click any skill to learn more. Each is a SKILL.md playbook — concise, executable instructions for any LLM.</p>
 
-  <div class="grid">
-    <div class="card">
-      <div class="card-icon">📅</div>
-      <div class="card-title">Meeting Scheduler</div>
-      <div class="card-desc">PA-to-PA coordination to find free slots, book on Google Calendar, send invites automatically.</div>
-      <span class="card-tag">Calendar</span>
-    </div>
-    <div class="card">
-      <div class="card-icon">🧠</div>
-      <div class="card-title">Self Learning</div>
-      <div class="card-desc">Logs corrections and failures, detects patterns, drives durable behavioral improvement over time.</div>
-      <span class="card-tag">Memory</span>
-    </div>
-    <div class="card">
-      <div class="card-icon">💳</div>
-      <div class="card-title">Billing Monitor</div>
-      <div class="card-desc">Detects API billing errors, alerts owner immediately, switches to fallback model automatically.</div>
-      <span class="card-tag">Reliability</span>
-    </div>
-    <div class="card">
-      <div class="card-icon">🌐</div>
-      <div class="card-title">AI PA Network</div>
-      <div class="card-desc">Multi-agent coordination — contact peer PAs, delegate tasks, share context across the network.</div>
-      <span class="card-tag">Network</span>
-    </div>
-    <div class="card">
-      <div class="card-icon">📊</div>
-      <div class="card-title">monday.com</div>
-      <div class="card-desc">Read/write boards, create items, post updates, track projects via GraphQL or MCP server.</div>
-      <span class="card-tag">Integration</span>
-    </div>
-    <div class="card">
-      <div class="card-icon">📋</div>
-      <div class="card-title">Owner Briefing</div>
-      <div class="card-desc">Daily morning briefing: upcoming meetings, urgent emails, open tasks, what needs attention today.</div>
-      <span class="card-tag">Proactive</span>
-    </div>
-    <div class="card">
-      <div class="card-icon">🔍</div>
-      <div class="card-title">PA Status</div>
-      <div class="card-desc">Network health dashboard — checks all PAs are active, billing OK, calendars connected.</div>
-      <span class="card-tag">Monitoring</span>
-    </div>
-    <div class="card">
-      <div class="card-icon">💬</div>
-      <div class="card-title">WhatsApp Diagnostics</div>
-      <div class="card-desc">Diagnose and fix WhatsApp connectivity issues. Works for new setups and existing deployments.</div>
-      <span class="card-tag">Troubleshooting</span>
-    </div>
-    <div class="card">
-      <div class="card-icon">🚀</div>
-      <div class="card-title">Spawn Subagent</div>
-      <div class="card-desc">Offload long-running or complex tasks to isolated subagents without blocking the main session.</div>
-      <span class="card-tag">Execution</span>
+  <div class="grid" id="grid"></div>
+</div>
+
+<footer>
+  Built by the <a href="https://ocana.ai" target="_blank">Ocana</a> team · <a href="https://github.com/netanel-abergel/pa-skills" target="_blank">View on GitHub</a>
+</footer>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <span class="modal-close" onclick="closeModal()">✕</span>
+    <div class="modal-icon" id="m-icon"></div>
+    <div class="modal-title" id="m-title"></div>
+    <div class="modal-tag" id="m-tag"></div>
+    <div class="modal-desc" id="m-desc"></div>
+    <div class="modal-links">
+      <a id="m-gh" class="modal-btn modal-btn-primary" target="_blank">View on GitHub →</a>
+      <a class="modal-btn modal-btn-secondary" href="https://ocana.ai" target="_blank">Get an Agent</a>
     </div>
   </div>
 </div>
 
-<footer>
-  Built with ❤️ by the <a href="https://ocana.ai" target="_blank">Ocana</a> team · <a href="https://github.com/netanel-abergel/pa-skills" target="_blank">View on GitHub</a>
-</footer>
+<script>
+const SKILLS = [
+  {icon:'📅',title:'Meeting Scheduler',tag:'Calendar',desc:'PA-to-PA coordination to find free slots in both calendars, book on Google Calendar, and send invites automatically.',slug:'meeting-scheduler'},
+  {icon:'🧠',title:'Self Learning',tag:'Memory',desc:'Logs corrections and failures, detects patterns, and drives durable behavioral improvement over time.',slug:'self-learning'},
+  {icon:'💳',title:'Billing Monitor',tag:'Reliability',desc:'Detects API billing errors, alerts owner immediately, and switches to fallback model automatically.',slug:'billing-monitor'},
+  {icon:'🌐',title:'AI PA Network',tag:'Network',desc:'Multi-agent coordination — contact peer PAs, delegate tasks, share context across the network.',slug:'ai-pa'},
+  {icon:'📊',title:'monday.com',tag:'Integration',desc:'Read/write boards, create items, post updates, track projects via GraphQL or MCP server.',slug:'monday-for-agents'},
+  {icon:'📋',title:'Owner Briefing',tag:'Proactive',desc:'Daily morning briefing: upcoming meetings, urgent emails, open tasks, what needs attention today.',slug:'owner-briefing'},
+  {icon:'🔍',title:'PA Status',tag:'Monitoring',desc:'Network health dashboard — checks all PAs are active, billing OK, calendars connected.',slug:'pa-status'},
+  {icon:'💬',title:'WhatsApp Diagnostics',tag:'Troubleshooting',desc:'Diagnose and fix WhatsApp connectivity issues. Works for new setups and existing deployments.',slug:'whatsapp-diagnostics'},
+  {icon:'🚀',title:'Spawn Subagent',tag:'Execution',desc:'Offload long-running or complex tasks to isolated subagents without blocking the main session.',slug:'spawn-subagent'},
+  {icon:'📆',title:'Calendar Setup',tag:'Calendar',desc:'Step-by-step wizard to connect Google Calendar, including granting write permissions and troubleshooting.',slug:'calendar-setup'},
+  {icon:'🎓',title:'PA Onboarding',tag:'Setup',desc:'Complete guide for setting up a new AI Personal Assistant on OpenClaw from scratch.',slug:'pa-onboarding'},
+  {icon:'🔎',title:'Skill Scout',tag:'Discovery',desc:'Daily automated skill discovery — searches for new OpenClaw skills and AI agent capabilities.',slug:'skill-scout'},
+  {icon:'📡',title:'Supervisor',tag:'Monitoring',desc:'Central status dashboard: active tasks, open issues, pending follow-ups, system health in one report.',slug:'supervisor'},
+  {icon:'⚖️',title:'Eval',tag:'Quality',desc:'Evaluate everything the PA manages — tasks, skills, billing, calendar, memory quality.',slug:'eval'},
+  {icon:'💾',title:'Git Backup',tag:'Reliability',desc:'Backup agent workspace to GitHub. Handles token discovery, repo init, and push automatically.',slug:'git-backup'},
+  {icon:'🤖',title:'Self Monitor',tag:'Monitoring',desc:'Proactive self-monitoring of infrastructure: disk, memory, load, services, cron health.',slug:'self-monitor'},
+  {icon:'🗓️',title:'OpenClaw Auto Updater',tag:'Maintenance',desc:'Schedule automatic OpenClaw and skill updates with timezone-safe cron templates.',slug:'openclaw-auto-updater'},
+  {icon:'📝',title:'AI Meeting Notes',tag:'Productivity',desc:'Paste meeting notes or transcript, get summaries and action items with owners and deadlines.',slug:'ai-meeting-notes'},
+];
 
+const grid = document.getElementById('grid');
+SKILLS.forEach(s => {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `<div class="card-icon">${s.icon}</div><div class="card-title">${s.title}</div><div class="card-desc">${s.desc}</div><span class="card-tag">${s.tag}</span><div class="card-more">Click to learn more →</div>`;
+  card.onclick = () => openModal(s);
+  grid.appendChild(card);
+});
+
+function openModal(s) {
+  document.getElementById('m-icon').textContent = s.icon;
+  document.getElementById('m-title').textContent = s.title;
+  document.getElementById('m-tag').textContent = s.tag;
+  document.getElementById('m-desc').textContent = s.desc;
+  document.getElementById('m-gh').href = `https://github.com/netanel-abergel/pa-skills/tree/main/skills/${s.slug}`;
+  document.getElementById('overlay').classList.add('active');
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('overlay') || e.currentTarget.classList.contains('modal-close')) {
+    document.getElementById('overlay').classList.remove('active');
+  }
+}
+
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal({target:document.getElementById('overlay')}); });
+</script>
 </body>
 </html>
