@@ -750,6 +750,121 @@ footer .footer-links {
   .search-box { max-width: 100%; }
 }
 
+/* ── HELENI SECTION ── */
+.heleni-showcase {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.heleni-profile {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+}
+
+.heleni-avatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.heleni-name {
+  font-family: var(--sans);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 2px;
+}
+
+.heleni-role {
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.heleni-tagline {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+  font-style: italic;
+}
+
+.heleni-badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.heleni-badge {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  color: var(--accent);
+  background: var(--accent-dim);
+  border: 1px solid rgba(56,189,148,.15);
+}
+
+.heleni-terminal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.learnings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.learning-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  transition: all .25s;
+}
+
+.learning-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-1px);
+}
+
+.learning-icon { font-size: 20px; margin-bottom: 10px; }
+
+.learning-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 8px;
+}
+
+.learning-desc {
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.65;
+}
+
+@media (max-width: 640px) {
+  .heleni-showcase { grid-template-columns: 1fr; }
+  .heleni-profile { flex-direction: column; text-align: center; }
+  .heleni-badges { justify-content: center; }
+  .learnings-grid { grid-template-columns: 1fr; }
+}
+
 /* ── STAGGER CARDS ── */
 .skill-card { animation: fadeSlideUp .5s ease both; }
 </style>
@@ -763,6 +878,7 @@ footer .footer-links {
   </a>
   <div class="nav-links">
     <a class="nav-cmd hide-mobile" href="#skills"><span class="dollar">$</span>ls skills/</a>
+    <a class="nav-cmd hide-mobile" href="#heleni"><span class="dollar">$</span>whoami</a>
     <a class="nav-cmd hide-mobile" href="#install"><span class="dollar">$</span>install</a>
     <a class="nav-cmd hide-mobile" href="#faq"><span class="dollar">$</span>man faq</a>
     <a class="nav-cmd" href="https://github.com/netanel-abergel/pa-skills" target="_blank"><span class="dollar">$</span>git clone</a>
@@ -806,7 +922,6 @@ footer .footer-links {
   <div class="hero-actions">
     <a class="btn btn-primary" href="#skills">Browse Skills</a>
     <a class="btn btn-outline" href="https://github.com/netanel-abergel/pa-skills" target="_blank">View Source</a>
-    <a class="btn btn-outline" href="https://ocana.ai" target="_blank">Get an Agent</a>
   </div>
 </div>
 
@@ -852,6 +967,94 @@ footer .footer-links {
   </div>
 </div>
 
+<!-- MEET HELENI -->
+<div class="section" id="heleni">
+  <div class="section-header">
+    <div class="section-prompt">cat IDENTITY.md</div>
+    <div class="section-title">Meet Heleni</div>
+    <div class="section-sub">// the AI PA that battle-tested every skill in this repo</div>
+  </div>
+
+  <div class="heleni-showcase">
+    <div class="heleni-profile">
+      <img src="heleni.jpg" alt="Heleni — AI Personal Assistant" class="heleni-avatar">
+      <div class="heleni-info">
+        <div class="heleni-name">Heleni</div>
+        <div class="heleni-role">AI Personal Assistant</div>
+        <div class="heleni-tagline">Sharp, direct, execution-first.</div>
+        <div class="heleni-badges">
+          <span class="heleni-badge">OpenClaw</span>
+          <span class="heleni-badge">Model-Agnostic</span>
+          <span class="heleni-badge">Production PA</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="heleni-terminal">
+      <div class="terminal-bar">
+        <div class="terminal-dot r"></div>
+        <div class="terminal-dot y"></div>
+        <div class="terminal-dot g"></div>
+        <span class="terminal-title">SOUL.md</span>
+      </div>
+      <div class="terminal-body" style="font-size:13px;line-height:1.7">
+        <div class="comment">// core execution model</div>
+        <div style="margin-top:6px"><span class="keyword">const</span> principle = <span class="string">"execution agent, not chatbot"</span>;</div>
+        <div style="margin-top:4px"><span class="comment">// report results, never progress</span></div>
+        <div style="margin-top:4px"><span class="comment">// silence = correct behavior when no value to add</span></div>
+        <div style="margin-top:4px"><span class="comment">// proactive > reactive — surface what matters before asked</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:36px">
+    <div class="section-prompt">cat .learnings/LEARNINGS.md</div>
+    <div class="section-title" style="font-size:22px;margin-bottom:20px">Key Learnings from Production</div>
+    <div class="learnings-grid">
+      <div class="learning-card">
+        <div class="learning-icon">🎯</div>
+        <div class="learning-title">Execution > Conversation</div>
+        <div class="learning-desc">Execute first, report results only. Never share reasoning, intermediate steps, or "let me check" narration. Lead with one recommendation instead of listing options.</div>
+      </div>
+      <div class="learning-card">
+        <div class="learning-icon">🔒</div>
+        <div class="learning-title">Credential Exposure Protocol</div>
+        <div class="learning-desc">If credentials appear in chat, warn immediately on receipt — before any operations. Then proceed with task, and remind to revoke after completion.</div>
+      </div>
+      <div class="learning-card">
+        <div class="learning-icon">📡</div>
+        <div class="learning-title">Explicit Delivery Targets</div>
+        <div class="learning-desc">Cron jobs without explicit delivery targets fall back to last active session — can leak messages to wrong chats. Always pin the target explicitly.</div>
+      </div>
+      <div class="learning-card">
+        <div class="learning-icon">🧠</div>
+        <div class="learning-title">Memory Discipline</div>
+        <div class="learning-desc">Daily memory files should stay under 50 lines. Extract only durable facts: contacts, decisions, persistent rules, unresolved blockers. Not event logs.</div>
+      </div>
+      <div class="learning-card">
+        <div class="learning-icon">🔍</div>
+        <div class="learning-title">Runtime Identity Check</div>
+        <div class="learning-desc">Model identity must be checked via live session status, never assumed from context. Models can change mid-session without notice.</div>
+      </div>
+      <div class="learning-card">
+        <div class="learning-icon">💳</div>
+        <div class="learning-title">Proactive Billing Alerts</div>
+        <div class="learning-desc">Billing errors should trigger automatic fallback + notification, not reactive handling. Install billing-monitor with heartbeat integration for periodic health checks.</div>
+      </div>
+      <div class="learning-card">
+        <div class="learning-icon">📋</div>
+        <div class="learning-title">Config Deduplication</div>
+        <div class="learning-desc">SOUL.md, AGENTS.md, and MEMORY.md had 60% content overlap causing contradictions. Keep one source of truth per concern — facts vs behavior vs identity.</div>
+      </div>
+      <div class="learning-card">
+        <div class="learning-icon">📱</div>
+        <div class="learning-title">Connected != Working</div>
+        <div class="learning-desc">"Connected and listening" with Messages=0 means the ingest layer is broken, not the messaging platform. Escalate as platform issue, not user config.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- INSTALL -->
 <div class="install-section" id="install">
   <div class="section-header" style="text-align:center;margin-bottom:32px">
@@ -871,7 +1074,7 @@ footer .footer-links {
       <div class="cmd"><span class="arg">git clone</span> https://github.com/netanel-abergel/pa-skills</div>
       <br>
       <div class="comment"># Option 2: Copy a single skill</div>
-      <div class="cmd"><span class="arg">cp -r</span> skills/billing-monitor /opt/ocana/openclaw/workspace/skills/</div>
+      <div class="cmd"><span class="arg">cp -r</span> skills/billing-monitor ~/.openclaw/workspace/skills/</div>
       <br>
       <div class="comment"># Option 3: Reference in system prompt</div>
       <div class="cmd"><span class="arg">cat</span> skills/owner-briefing/SKILL.md >> system-prompt.md</div>
@@ -896,11 +1099,11 @@ footer .footer-links {
 <footer>
   <div class="footer-links">
     <a href="https://github.com/netanel-abergel/pa-skills" target="_blank">GitHub</a>
-    <a href="https://ocana.ai" target="_blank">Ocana</a>
+    <a href="#heleni">Heleni</a>
     <a href="#skills">Skills</a>
     <a href="#faq">FAQ</a>
   </div>
-  <div>Built by the <a href="https://ocana.ai" target="_blank">Ocana</a> team &middot; Open source under MIT</div>
+  <div>Built by <a href="https://github.com/netanel-abergel" target="_blank">Netanel Abergel</a> &middot; Open source under MIT</div>
   <div style="margin-top:6px;font-size:11px">$ echo "Made for the SKILL.md ecosystem"<span class="cursor-blink">|</span></div>
 </footer>
 
@@ -921,7 +1124,6 @@ footer .footer-links {
       </div>
       <div class="modal-actions">
         <a id="m-gh" class="btn btn-primary" target="_blank" style="font-size:12px;padding:10px 18px">View on GitHub &rarr;</a>
-        <a class="btn btn-outline" href="https://ocana.ai" target="_blank" style="font-size:12px;padding:10px 18px">Get Agent</a>
       </div>
     </div>
   </div>
@@ -1065,7 +1267,7 @@ function openModal(s) {
   const tagClass = 'tag-' + s.cat;
   document.getElementById('m-tag-row').innerHTML = `<span class="skill-tag ${tagClass}">${s.cat}</span>`;
   document.getElementById('m-desc').textContent = s.desc;
-  document.getElementById('m-install-cmd').textContent = `cp -r skills/${s.slug} /opt/ocana/openclaw/workspace/skills/`;
+  document.getElementById('m-install-cmd').textContent = `cp -r skills/${s.slug} ~/.openclaw/workspace/skills/`;
   document.getElementById('m-gh').href = `https://github.com/netanel-abergel/pa-skills/tree/main/skills/${s.slug}`;
   document.getElementById('overlay').classList.add('active');
   document.body.style.overflow = 'hidden';
@@ -1092,11 +1294,11 @@ function copyInstall() {
 // ── FAQ ──
 const FAQS = [
   { q: 'What are SKILL.md playbooks?', a: 'SKILL.md files are concise, executable instructions that guide any LLM through a specific task. Each skill contains a frontmatter with metadata (name, description, triggers) and step-by-step procedures. They\'re model-agnostic and work with any AI agent that reads markdown.' },
-  { q: 'How do I install a skill?', a: 'Copy the skill folder into your OpenClaw workspace at <code>/opt/ocana/openclaw/workspace/skills/</code>. You can also reference the SKILL.md directly in your agent\'s system prompt, or clone the entire repo for all skills at once.' },
+  { q: 'How do I install a skill?', a: 'Copy the skill folder into your OpenClaw workspace at <code>~/.openclaw/workspace/skills/</code>. You can also reference the SKILL.md directly in your agent\'s system prompt, or clone the entire repo for all skills at once.' },
   { q: 'Are these skills model-specific?', a: 'No. Every skill uses the open SKILL.md standard and works with any LLM — Anthropic Claude, OpenAI GPT, Google Gemini, Llama, Mistral, or others. Most skills note their minimum model requirements (usually "any model").' },
   { q: 'Can I use multiple skills together?', a: 'Yes. The <code>skill-master</code> skill acts as a router that helps your agent pick the right skill for each task. Skills are designed to compose — for example, <code>meetings</code> can trigger <code>calendar-setup</code> if the calendar isn\'t connected yet.' },
   { q: 'How do I contribute a skill?', a: 'Add your skill in <code>skills/&lt;skill-name&gt;/</code> with a <code>SKILL.md</code> file. Follow the frontmatter format (name, description) and include clear trigger phrases. Submit a PR to the repository.' },
-  { q: 'What is OpenClaw?', a: 'OpenClaw is an open-source platform for running AI Personal Assistants. It provides the runtime, gateway, and workspace infrastructure that skills plug into. Learn more at <a href="https://ocana.ai" target="_blank">ocana.ai</a>.' },
+  { q: 'What is OpenClaw?', a: 'OpenClaw is an open-source platform for running AI Personal Assistants. It provides the runtime, gateway, and workspace infrastructure that skills plug into.' },
   { q: 'Are these skills safe to use?', a: 'All skills are open source and can be reviewed before installation. They\'re procedural playbooks (markdown instructions), not executable code — your agent interprets them. Always review any skill before adding it to your workspace.' },
 ];
 
