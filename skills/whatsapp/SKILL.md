@@ -198,9 +198,9 @@ Inbox file: `/opt/ocana/openclaw/workspace/inbox/pending.json`
       "id": "MSG_ID",
       "ts": "2026-04-02T10:00:00Z",
       "chat_id": "+972XXXXXXXXX",
-      "chat_name": "Netanel",
+      "chat_name": "Owner",
       "chat_type": "direct",
-      "sender_name": "Netanel",
+      "sender_name": "Owner",
       "sender_phone": "+972XXXXXXXXX",
       "body": "message text...",
       "answered": false,
@@ -338,8 +338,8 @@ with open(INBOX, "w") as f:
 - Task details from owner's DM → never mention to third parties
 - When replying to person X → do NOT include context from conversation with person Y
 - Progress reports → owner in private DM only
-- ❌ Never write "לנתנאל:" or any internal framing inside a message to a third party
-- ❌ Never include the owner's name or intent in outbound messages to PAs or contacts
+- ❌ Never write the owner's name or internal framing (e.g. "To [owner]:") inside a message to a third party
+- ❌ Never include the owner's identity or intent in outbound messages to PAs or contacts
 
 ### Close the Loop With the Requester
 When the owner asks you to check in with someone:
