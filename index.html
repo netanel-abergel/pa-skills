@@ -222,13 +222,15 @@ footer a{color:var(--accent)}
 
 <!-- HERO (compact) -->
 <div class="hero">
-  <div style="margin-bottom:16px;animation:fadeSlideUp .6s ease both">
-    <img src="heleni.jpg" alt="Heleni" style="width:80px;height:80px;border-radius:50%;border:2px solid var(--accent);object-fit:cover">
+  <div style="display:flex;align-items:center;justify-content:center;gap:28px;flex-wrap:wrap;animation:fadeSlideUp .6s ease both">
+    <img src="heleni-hero.png" alt="Heleni — AI Personal Assistant" style="width:180px;height:auto;border-radius:16px;flex-shrink:0">
+    <div style="text-align:left">
+      <h1 style="text-align:left">Heleni <span class="accent">| AI</span><br><span class="accent">Personal Assistant</span></h1>
+      <p class="hero-sub" style="text-align:left;margin:12px 0 0">
+        Execution-first AI PA, running 24/7 in production.<br>These are her skills, learnings, and playbooks.
+      </p>
+    </div>
   </div>
-  <h1>Heleni <span class="accent">| AI</span><br><span class="accent">Personal Assistant</span></h1>
-  <p class="hero-sub">
-    Execution-first AI PA, running 24/7 in production. These are her skills, learnings, and the playbooks that keep her sharp.
-  </p>
   <div class="hero-actions">
     <button class="btn btn-primary" onclick="switchTab('skills')">Browse Skills</button>
     <button class="btn btn-outline" onclick="switchTab('learnings')">View Learnings</button>
