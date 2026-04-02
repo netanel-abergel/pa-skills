@@ -1,4 +1,4 @@
-# Ocana Workspace Skill Pack
+# Heleni Workspace Skill Pack
 
 This directory contains platform-managed playbook skills installed automatically on all Ocana agents.
 
