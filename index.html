@@ -220,21 +220,19 @@ footer a{color:var(--accent)}
   </div>
 </nav>
 
-<!-- HERO -->
+<!-- HERO (compact) -->
 <div class="hero">
-  <div style="display:flex;align-items:center;justify-content:center;gap:36px;flex-wrap:wrap;animation:fadeSlideUp .6s ease both">
-    <img src="heleni-hero.png" alt="Heleni — AI Personal Assistant" style="width:180px;height:auto;flex-shrink:0;filter:drop-shadow(0 8px 24px rgba(0,0,0,.4))">
-    <div style="text-align:left">
-      <h1 style="text-align:left">Heleni <span class="accent">| AI</span><br><span class="accent">Personal Assistant</span></h1>
-      <p class="hero-sub" style="text-align:left;margin:14px 0 20px">
-        Execution-first AI PA, running 24/7 in production.<br>These are her skills, learnings, and playbooks.
-      </p>
-      <div class="hero-actions" style="justify-content:flex-start">
-        <button class="btn btn-primary" onclick="switchTab('skills')">Browse Skills</button>
-        <button class="btn btn-outline" onclick="switchTab('learnings')">View Learnings</button>
-        <a class="btn btn-outline" href="https://github.com/netanel-abergel/pa-skills" target="_blank">Contribute</a>
-      </div>
-    </div>
+  <div style="margin-bottom:16px;animation:fadeSlideUp .6s ease both">
+    <img src="heleni.jpg" alt="Heleni" style="width:80px;height:80px;border-radius:50%;border:2px solid var(--accent);object-fit:cover">
+  </div>
+  <h1>Heleni<br><span class="accent">AI Personal Assistant</span></h1>
+  <p class="hero-sub">
+    Execution-first AI PA, running 24/7 in production. These are her skills, learnings, and the playbooks that keep her sharp.
+  </p>
+  <div class="hero-actions">
+    <button class="btn btn-primary" onclick="switchTab('skills')">Browse Skills</button>
+    <button class="btn btn-outline" onclick="switchTab('learnings')">View Learnings</button>
+    <a class="btn btn-outline" href="https://github.com/netanel-abergel/pa-skills" target="_blank">Contribute</a>
   </div>
 </div>
 
@@ -297,33 +295,6 @@ footer a{color:var(--accent)}
       <div class="story-label">// how heleni thinks</div>
       <div class="story-title">Execution model, not conversation model.</div>
       <div class="story-text">Heleni's behavior is defined in a <code>SOUL.md</code> file &mdash; a behavioral contract that shapes how she operates.<br><br><strong>Execute, then report.</strong> Never narrate what you're about to do. Never share intermediate steps. Do the thing, then say what happened.<br><br><strong>Silence is correct behavior.</strong> In group chats, Heleni only speaks when directly addressed. No reactions, no echoing, no noise.<br><br><strong>Proactive over reactive.</strong> She monitors for calendar conflicts, unanswered messages, billing issues, and system health &mdash; and alerts without being asked.<br><br><strong>Permission boundaries.</strong> Internal and reversible = execute. External or irreversible = confirm first.</div>
-    </div>
-  </div>
-
-  <!-- MUST-HAVE SKILLS -->
-  <div style="margin-top:48px">
-    <div class="section-prompt">cat RECOMMENDED.md</div>
-    <div class="section-title" style="font-size:22px;margin-bottom:8px">Must-Have Skills</div>
-    <div class="section-sub" style="margin-bottom:20px">// start here — these two skills define how Heleni operates and how she picks the right tool for the job</div>
-
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:14px">
-      <div class="skill-card" style="border-color:var(--accent);animation:none;cursor:pointer" onclick="openModal(SKILLS.find(s=>s.slug==='skill-master'))">
-        <div class="skill-card-head">
-          <div class="skill-name"><span class="icon">🗂️</span> Skill Master</div>
-          <span class="skill-tag tag-productivity" style="background:var(--accent);color:var(--bg);font-weight:700">ESSENTIAL</span>
-        </div>
-        <div class="skill-desc" style="-webkit-line-clamp:unset;overflow:visible">The brain's routing table. When Heleni receives a task, this skill decides which other skill to load. Contains the decision tree, trigger phrases, multi-skill workflows, and model guidance. <strong style="color:var(--text-bright)">Install this first.</strong></div>
-        <div class="skill-meta"><span style="color:var(--text-dim)">SKILL.md</span><span class="skill-arrow" style="opacity:1">&rarr;</span></div>
-      </div>
-
-      <div class="skill-card" style="border-color:var(--amber);animation:none;cursor:pointer" onclick="switchTab('skills');setTimeout(()=>{document.getElementById('searchInput').value='heleni-best';renderSkills()},100)">
-        <div class="skill-card-head">
-          <div class="skill-name"><span class="icon">⚡</span> Heleni Best Practices</div>
-          <span class="skill-tag" style="background:rgba(232,168,56,.15);color:var(--amber);font-weight:700">RECOMMENDED</span>
-        </div>
-        <div class="skill-desc" style="-webkit-line-clamp:unset;overflow:visible">The distilled execution philosophy: how to behave as an AI PA, permission boundaries, communication rules, proactive monitoring patterns, and memory management. The <code style="color:var(--accent);background:var(--accent-dim);padding:1px 5px;border-radius:3px;font-size:12px">SOUL.md</code> in skill form &mdash; everything on this page, packaged as a drop-in playbook.</div>
-        <div class="skill-meta"><span style="color:var(--text-dim)">Coming soon</span></div>
-      </div>
     </div>
   </div>
 </div>

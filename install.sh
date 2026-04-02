@@ -26,20 +26,25 @@ git clone --depth=1 --quiet "$REPO" "$TMPDIR_CLONE"
 
 # Skills to install
 SKILLS=(
-  unanswered-messages
-  proactive-pa
-  monday-for-agents
   ai-pa
-  pa-onboarding
-  owner-briefing
-  self-monitor
-  whatsapp-diagnostics
-  pa-status
-  meeting-scheduler
-  skill-master
-  git-backup
   billing-monitor
-  spawn-subagent
+  calendar-setup
+  eval
+  hebrew-nikud
+  heleni-best-practices
+  maintenance
+  meetings
+  memory-tiering
+  monday-for-agents
+  owner-briefing
+  pa-onboarding
+  self-learning
+  self-monitor
+  skill-master
+  skill-scout
+  supervisor
+  whatsapp
+  youtube-watcher
 )
 
 mkdir -p "$SKILLS_DIR"
