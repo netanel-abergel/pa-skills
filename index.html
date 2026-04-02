@@ -1,882 +1,1324 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Heleni — AI Personal Assistant</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>PA Skills — Agent Skill Marketplace for OpenClaw</title>
+<meta name="description" content="Discover and install open-source SKILL.md playbooks for AI Personal Assistants. 19 battle-tested skills for OpenClaw agents.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #07080d;
+  --surface: #0d0f16;
+  --surface-2: #12151f;
+  --border: rgba(255,255,255,.06);
+  --border-hover: rgba(56,189,148,.25);
+  --text: #c8ccd8;
+  --text-dim: #5a5f73;
+  --text-bright: #eaecf3;
+  --accent: #38bd94;
+  --accent-dim: rgba(56,189,148,.12);
+  --accent-glow: rgba(56,189,148,.06);
+  --amber: #e8a838;
+  --amber-dim: rgba(232,168,56,.12);
+  --red: #e85858;
+  --blue: #5898e8;
+  --mono: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+  --sans: 'Space Grotesk', sans-serif;
+  --radius: 10px;
+}
 
-    :root {
-      --cream: #faf8f5;
-      --sand: #f0ece4;
-      --border: #e2ddd6;
-      --text: #1a1a1a;
-      --muted: #6b6560;
-      --accent: #2d2d2d;
-      --tag-bg: #ede9e2;
-      --tag-text: #5a5550;
-      --card-bg: #ffffff;
-      --install-bg: #1a1a1a;
-      --install-text: #f5f5f5;
-    }
+* { margin:0; padding:0; box-sizing:border-box; }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif;
-      background: var(--cream);
-      color: var(--text);
-      min-height: 100vh;
-    }
+html { scroll-behavior: smooth; }
 
-    /* NAV */
-    nav {
-      background: var(--cream);
-      border-bottom: 1px solid var(--border);
-      padding: 0 32px;
-      height: 56px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
+body {
+  font-family: var(--mono);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
 
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      text-decoration: none;
-      color: var(--text);
-    }
+::selection { background: var(--accent); color: var(--bg); }
 
-    .nav-logo img {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
+a { color: inherit; text-decoration: none; }
 
-    .nav-logo span {
-      font-weight: 700;
-      font-size: 1rem;
-      letter-spacing: -0.01em;
-    }
+/* ── GRAIN OVERLAY ── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: .028;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  z-index: 9999;
+}
 
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+/* ── NAV ── */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  height: 56px;
+  background: rgba(7,8,13,.88);
+  backdrop-filter: blur(20px) saturate(1.4);
+  border-bottom: 1px solid var(--border);
+}
 
-    .nav-links a {
-      text-decoration: none;
-      color: var(--muted);
-      font-size: 0.875rem;
-      padding: 6px 12px;
-      border-radius: 6px;
-      transition: background 0.15s, color 0.15s;
-    }
+.nav-logo {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text-bright);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
 
-    .nav-links a:hover {
-      background: var(--sand);
-      color: var(--text);
-    }
+.nav-logo .prompt { color: var(--accent); }
 
-    /* HERO */
-    .hero {
-      max-width: 740px;
-      margin: 0 auto;
-      padding: 72px 24px 56px;
-      text-align: center;
-    }
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
 
-    .hero-avatar {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid var(--border);
-      margin-bottom: 20px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-    }
+.nav-cmd {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-dim);
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  transition: all .2s;
+  cursor: pointer;
+}
 
-    .hero h1 {
-      font-size: 2.4rem;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      color: var(--text);
-      margin-bottom: 12px;
-      line-height: 1.1;
-    }
+.nav-cmd:hover { color: var(--text); border-color: var(--border-hover); }
+.nav-cmd .dollar { color: var(--accent); margin-right: 4px; }
 
-    .hero p {
-      font-size: 1.05rem;
-      color: var(--muted);
-      line-height: 1.65;
-      max-width: 520px;
-      margin: 0 auto 28px;
-    }
+/* ── HERO ── */
+.hero {
+  position: relative;
+  padding: 100px 40px 80px;
+  text-align: center;
+  overflow: hidden;
+}
 
-    /* Install block */
-    .install-block {
-      display: inline-flex;
-      align-items: center;
-      gap: 0;
-      background: var(--install-bg);
-      border-radius: 10px;
-      overflow: hidden;
-      margin-bottom: 32px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-    }
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 500px;
+  background: radial-gradient(ellipse, rgba(56,189,148,.07) 0%, transparent 65%);
+  pointer-events: none;
+}
 
-    .install-block code {
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      font-size: 0.82rem;
-      color: #a8d8a8;
-      padding: 10px 16px;
-      letter-spacing: 0.02em;
-    }
+/* Terminal frame in hero */
+.hero-terminal {
+  display: inline-block;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  text-align: left;
+  max-width: 720px;
+  width: 100%;
+  margin-bottom: 40px;
+  overflow: hidden;
+  animation: fadeSlideUp .7s ease both;
+}
 
-    .install-block code span {
-      color: #888;
-    }
+.terminal-bar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 12px 16px;
+  background: rgba(255,255,255,.02);
+  border-bottom: 1px solid var(--border);
+}
 
-    .copy-btn {
-      background: rgba(255,255,255,0.08);
-      border: none;
-      color: #aaa;
-      padding: 10px 14px;
-      cursor: pointer;
-      font-size: 0.78rem;
-      transition: background 0.15s;
-      border-left: 1px solid rgba(255,255,255,0.1);
-    }
+.terminal-dot { width: 11px; height: 11px; border-radius: 50%; }
+.terminal-dot.r { background: #ff5f57; }
+.terminal-dot.y { background: #febc2e; }
+.terminal-dot.g { background: #28c840; }
 
-    .copy-btn:hover { background: rgba(255,255,255,0.14); color: #fff; }
+.terminal-title {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-left: 8px;
+}
 
-    .hero-tags {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
+.terminal-body {
+  padding: 24px 24px 28px;
+  font-size: 14px;
+  line-height: 1.8;
+}
 
-    .tag {
-      background: var(--tag-bg);
-      color: var(--tag-text);
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.78rem;
-      font-weight: 500;
-      border: 1px solid var(--border);
-    }
+.terminal-body .comment { color: var(--text-dim); }
+.terminal-body .keyword { color: var(--accent); }
+.terminal-body .string { color: var(--amber); }
+.terminal-body .number { color: var(--blue); font-size: 42px; font-weight: 800; }
 
-    /* SECTION */
-    .section {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 0 24px 80px;
-    }
+.hero h1 {
+  font-family: var(--sans);
+  font-size: clamp(36px, 5.5vw, 62px);
+  font-weight: 700;
+  color: var(--text-bright);
+  line-height: 1.08;
+  letter-spacing: -.03em;
+  margin-bottom: 18px;
+  animation: fadeSlideUp .7s ease .15s both;
+}
 
-    .section-header {
-      display: flex;
-      align-items: baseline;
-      gap: 10px;
-      margin-bottom: 20px;
-      padding-bottom: 14px;
-      border-bottom: 1px solid var(--border);
-    }
+.hero h1 .accent { color: var(--accent); }
 
-    .section-header h2 {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text);
-    }
+.hero-sub {
+  font-size: 15px;
+  color: var(--text-dim);
+  max-width: 520px;
+  margin: 0 auto 36px;
+  line-height: 1.7;
+  font-weight: 400;
+  animation: fadeSlideUp .7s ease .25s both;
+}
 
-    .section-header span {
-      font-size: 0.82rem;
-      color: var(--muted);
-    }
+.hero-sub code {
+  color: var(--accent);
+  background: var(--accent-dim);
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 13px;
+}
 
-    /* SKILL CARDS */
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-      gap: 12px;
-      margin-bottom: 60px;
-    }
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  animation: fadeSlideUp .7s ease .35s both;
+}
 
-    .skill-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px;
-      text-decoration: none;
-      color: inherit;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      transition: border-color 0.15s, box-shadow 0.15s;
-    }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 600;
+  transition: all .2s;
+  cursor: pointer;
+  border: none;
+}
 
-    .skill-card:hover {
-      border-color: #c0bab2;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-    }
+.btn-primary {
+  background: var(--accent);
+  color: var(--bg);
+}
+.btn-primary:hover { opacity: .85; transform: translateY(-1px); }
 
-    .skill-card-top {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+.btn-outline {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+.btn-outline:hover { border-color: var(--border-hover); color: var(--text-bright); }
 
-    .skill-emoji {
-      font-size: 1.6rem;
-      width: 42px;
-      height: 42px;
-      background: var(--sand);
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
+/* ── STATS BAR ── */
+.stats-bar {
+  display: flex;
+  justify-content: center;
+  gap: 56px;
+  padding: 32px 40px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+  animation: fadeSlideUp .7s ease .45s both;
+}
 
-    .skill-meta { flex: 1; min-width: 0; }
+.stat { text-align: center; }
 
-    .skill-name {
-      font-size: 0.9rem;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 2px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+.stat-val {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--accent);
+}
 
-    .skill-author {
-      font-size: 0.75rem;
-      color: var(--muted);
-    }
+.stat-label {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
 
-    .skill-desc {
-      font-size: 0.82rem;
-      color: var(--muted);
-      line-height: 1.55;
-      flex: 1;
-    }
+/* ── SECTION ── */
+.section {
+  padding: 72px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
-    .skill-card-bottom {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 4px;
-    }
+.section-header {
+  margin-bottom: 36px;
+}
 
-    .skill-version {
-      font-size: 0.72rem;
-      color: #aaa;
-      font-family: monospace;
-    }
+.section-prompt {
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
 
-    .install-cmd {
-      font-size: 0.72rem;
-      font-family: 'SF Mono', monospace;
-      background: var(--sand);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      padding: 3px 8px;
-      border-radius: 5px;
-    }
+.section-prompt::before {
+  content: '$';
+  color: var(--text-dim);
+}
 
-    /* CAPS SECTION */
-    .caps-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 10px;
-    }
+.section-title {
+  font-family: var(--sans);
+  font-size: clamp(24px, 3vw, 34px);
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 8px;
+}
 
-    .cap-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 16px 18px;
-    }
+.section-sub {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
 
-    .cap-icon { font-size: 1.2rem; margin-bottom: 8px; }
-    .cap-title { font-size: 0.88rem; font-weight: 600; margin-bottom: 4px; }
-    .cap-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+/* ── FILTER / SEARCH ── */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
 
-    /* FOOTER */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 28px 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 14px;
+  flex: 1;
+  min-width: 200px;
+  max-width: 360px;
+  transition: border-color .2s;
+}
 
-    footer p { font-size: 0.8rem; color: var(--muted); }
-    footer a { color: var(--muted); text-decoration: none; }
-    footer a:hover { color: var(--text); }
+.search-box:focus-within { border-color: var(--border-hover); }
 
-    .footer-links { display: flex; gap: 20px; }
+.search-box .dollar { color: var(--text-dim); font-size: 13px; }
 
-    @media (max-width: 600px) {
-      .hero h1 { font-size: 1.8rem; }
-      nav { padding: 0 16px; }
-      .section { padding: 0 16px 60px; }
-      footer { flex-direction: column; align-items: flex-start; }
-    }
-  </style>
+.search-input {
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--text-bright);
+  font-family: var(--mono);
+  font-size: 13px;
+  width: 100%;
+}
+
+.search-input::placeholder { color: var(--text-dim); }
+
+.filter-pills {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.pill {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 13px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all .2s;
+  font-family: var(--mono);
+  text-transform: lowercase;
+}
+
+.pill:hover { border-color: var(--border-hover); color: var(--text); }
+.pill.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+
+/* ── SKILL GRID ── */
+.skill-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 14px;
+}
+
+.skill-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 24px;
+  cursor: pointer;
+  transition: all .25s;
+  position: relative;
+  overflow: hidden;
+}
+
+.skill-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity .25s;
+}
+
+.skill-card:hover {
+  border-color: var(--border-hover);
+  background: var(--surface-2);
+  transform: translateY(-2px);
+}
+
+.skill-card:hover::before { opacity: 1; }
+
+.skill-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.skill-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-bright);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.skill-name .icon { font-size: 18px; }
+
+.skill-tag {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.tag-monitoring { color: var(--red); background: rgba(232,88,88,.1); }
+.tag-communication { color: var(--blue); background: rgba(88,152,232,.1); }
+.tag-setup { color: var(--amber); background: rgba(232,168,56,.1); }
+.tag-memory { color: #c77dff; background: rgba(199,125,255,.1); }
+.tag-productivity { color: var(--accent); background: var(--accent-dim); }
+.tag-integration { color: #ff8c42; background: rgba(255,140,66,.1); }
+.tag-language { color: #e8587a; background: rgba(232,88,122,.1); }
+.tag-execution { color: #58e8c5; background: rgba(88,232,197,.1); }
+
+.skill-desc {
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.65;
+  margin-bottom: 14px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.skill-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.skill-meta-left {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.skill-arrow {
+  opacity: 0;
+  transition: opacity .2s;
+  color: var(--accent);
+}
+
+.skill-card:hover .skill-arrow { opacity: 1; }
+
+/* ── CATEGORIES ── */
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.cat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  cursor: pointer;
+  transition: all .25s;
+}
+
+.cat-card:hover { border-color: var(--border-hover); transform: translateY(-1px); }
+
+.cat-icon { font-size: 24px; margin-bottom: 10px; }
+
+.cat-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 4px;
+}
+
+.cat-count {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+/* ── INSTALL SECTION ── */
+.install-section {
+  padding: 64px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.install-terminal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.install-body {
+  padding: 24px;
+  font-size: 13px;
+  line-height: 2;
+}
+
+.install-body .comment { color: var(--text-dim); }
+.install-body .cmd { color: var(--text-bright); }
+.install-body .cmd .arg { color: var(--accent); }
+
+/* ── FAQ ── */
+.faq-list {
+  max-width: 720px;
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--border);
+}
+
+.faq-q {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-bright);
+  transition: color .2s;
+  width: 100%;
+  background: none;
+  border: none;
+  font-family: var(--mono);
+  text-align: left;
+}
+
+.faq-q:hover { color: var(--accent); }
+
+.faq-q .num {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-right: 14px;
+  font-weight: 400;
+}
+
+.faq-toggle {
+  font-size: 18px;
+  color: var(--text-dim);
+  transition: transform .3s;
+}
+
+.faq-item.open .faq-toggle { transform: rotate(45deg); }
+
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .35s ease, padding .35s ease;
+}
+
+.faq-item.open .faq-a {
+  max-height: 300px;
+}
+
+.faq-a-inner {
+  padding: 0 0 20px 34px;
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.7;
+}
+
+.faq-a-inner code {
+  color: var(--accent);
+  background: var(--accent-dim);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+/* ── MODAL ── */
+.overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.72);
+  backdrop-filter: blur(6px);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.overlay.active { display: flex; }
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  max-width: 560px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  animation: modalIn .25s ease;
+}
+
+.modal-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--blue));
+}
+
+.modal-body {
+  padding: 32px 32px 28px;
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 18px;
+  font-size: 20px;
+  color: var(--text-dim);
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: var(--mono);
+  transition: color .2s;
+}
+
+.modal-close:hover { color: var(--text-bright); }
+
+.modal-icon { font-size: 32px; margin-bottom: 14px; }
+.modal-title { font-size: 20px; font-weight: 700; color: var(--text-bright); margin-bottom: 6px; font-family: var(--sans); }
+.modal-tag-row { margin-bottom: 16px; }
+
+.modal-desc {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.75;
+  margin-bottom: 20px;
+}
+
+.modal-install {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-size: 12px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.modal-install code { color: var(--accent); flex: 1; }
+.modal-install .dollar { color: var(--text-dim); }
+
+.copy-btn {
+  background: var(--accent-dim);
+  color: var(--accent);
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-family: var(--mono);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+}
+
+.copy-btn:hover { background: var(--accent); color: var(--bg); }
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* ── FOOTER ── */
+footer {
+  text-align: center;
+  padding: 48px 40px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+footer a { color: var(--accent); }
+
+footer .footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(.96) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.cursor-blink { animation: blink 1s step-end infinite; color: var(--accent); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 640px) {
+  nav { padding: 0 18px; }
+  .hero { padding: 60px 18px 50px; }
+  .section { padding: 48px 18px; }
+  .install-section { padding: 48px 18px; }
+  .stats-bar { gap: 24px; padding: 24px 18px; }
+  .skill-grid { grid-template-columns: 1fr; }
+  .cat-grid { grid-template-columns: repeat(2, 1fr); }
+  .nav-links .nav-cmd.hide-mobile { display: none; }
+  .modal-body { padding: 24px 20px 20px; }
+  .controls { flex-direction: column; align-items: stretch; }
+  .search-box { max-width: 100%; }
+}
+
+/* ── HELENI SECTION ── */
+.heleni-showcase {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.heleni-profile {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+}
+
+.heleni-avatar {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.heleni-name {
+  font-family: var(--sans);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 2px;
+}
+
+.heleni-role {
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.heleni-tagline {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+  font-style: italic;
+}
+
+.heleni-badges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.heleni-badge {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  padding: 3px 8px;
+  border-radius: 4px;
+  color: var(--accent);
+  background: var(--accent-dim);
+  border: 1px solid rgba(56,189,148,.15);
+}
+
+.heleni-terminal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.learnings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.learning-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  transition: all .25s;
+}
+
+.learning-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-1px);
+}
+
+.learning-icon { font-size: 20px; margin-bottom: 10px; }
+
+.learning-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 8px;
+}
+
+.learning-desc {
+  font-size: 12px;
+  color: var(--text-dim);
+  line-height: 1.65;
+}
+
+@media (max-width: 640px) {
+  .heleni-showcase { grid-template-columns: 1fr; }
+  .heleni-profile { flex-direction: column; text-align: center; }
+  .heleni-badges { justify-content: center; }
+  .learnings-grid { grid-template-columns: 1fr; }
+}
+
+/* ── STAGGER CARDS ── */
+.skill-card { animation: fadeSlideUp .5s ease both; }
+</style>
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav>
-    <a class="nav-logo" href="#">
-      <img src="heleni.jpg" alt="Heleni" />
-      <span>Heleni</span>
-    </a>
-    <div class="nav-links">
-      <a href="#skills">Skills</a>
-      <a href="#capabilities">Capabilities</a>
-      <a href="https://clawhub.ai" target="_blank">ClawHub ↗</a>
-    </div>
-  </nav>
-
-  <!-- HERO -->
-  <div class="hero">
-    <img src="heleni.jpg" alt="Heleni" class="hero-avatar" />
-    <h1>Meet Heleni ⚡</h1>
-    <p>Execution-first AI Personal Assistant. Built on OpenClaw. Proactive, autonomous, and always on — no hand-holding required.</p>
-
-    <div class="install-block">
-      <code><span>$</span> curl -fsSL https://netanel-abergel.github.io/pa-skills/install.sh | bash</code>
-      <button class="copy-btn" onclick="navigator.clipboard.writeText('curl -fsSL https://netanel-abergel.github.io/pa-skills/install.sh | bash')">copy</button>
-    </div>
-
-    <div class="hero-tags">
-      <span class="tag">OpenClaw Agent</span>
-      <span class="tag">WhatsApp Native</span>
-      <span class="tag">monday.com</span>
-      <span class="tag">Autonomous Crons</span>
-      <span class="tag">Multi-agent</span>
-      <span class="tag">PA Network</span>
-    </div>
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <span class="prompt">~/</span>pa-skills
+  </a>
+  <div class="nav-links">
+    <a class="nav-cmd hide-mobile" href="#skills"><span class="dollar">$</span>ls skills/</a>
+    <a class="nav-cmd hide-mobile" href="#heleni"><span class="dollar">$</span>whoami</a>
+    <a class="nav-cmd hide-mobile" href="#install"><span class="dollar">$</span>install</a>
+    <a class="nav-cmd hide-mobile" href="#faq"><span class="dollar">$</span>man faq</a>
+    <a class="nav-cmd" href="https://github.com/netanel-abergel/pa-skills" target="_blank"><span class="dollar">$</span>git clone</a>
   </div>
+</nav>
 
-  <!-- SKILLS -->
-  <div class="section" id="skills">
-    <div class="section-header">
-      <h2>Published Skills</h2>
-      <span>30 skills · <a href="https://github.com/netanel-abergel/pa-skills" target="_blank" style="color:var(--muted);text-decoration:none;">GitHub ↗</a></span>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-terminal">
+    <div class="terminal-bar">
+      <div class="terminal-dot r"></div>
+      <div class="terminal-dot y"></div>
+      <div class="terminal-dot g"></div>
+      <span class="terminal-title">pa-skills.marketplace</span>
     </div>
-    <div class="skills-grid">
-
-      <a class="skill-card" href="https://github.com/netanel-abergel/pa-skills/tree/main/skills/ai-meeting-notes" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">📝</div>
-          <div class="skill-meta">
-            <div class="skill-name">ai-meeting-notes</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">Messy notes → Clear action items. Instantly. Paste any meeting notes, transcript, or text. Get summa...</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">skills/ai-meeting-notes</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://github.com/netanel-abergel/pa-skills/tree/main/skills/ai-pa" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">🤝</div>
-          <div class="skill-meta">
-            <div class="skill-name">ai-pa</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">AI Personal Assistant network skill for multi-agent PA coordination. Use when: contacting another PA...</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">skills/ai-pa</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://github.com/netanel-abergel/pa-skills/tree/main/skills/billing-monitor" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">💳</div>
-          <div class="skill-meta">
-            <div class="skill-name">billing-monitor</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">Monitor for API billing errors and alert the owner and admin immediately. Use when: an API billing e...</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">skills/billing-monitor</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://github.com/netanel-abergel/pa-skills/tree/main/skills/calendar-setup" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">🗓️</div>
-          <div class="skill-meta">
-            <div class="skill-name">calendar-setup</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">Step-by-step wizard for connecting an owner's Google Calendar to their OpenClaw PA agent, including ...</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">skills/calendar-setup</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://github.com/netanel-abergel/pa-skills/tree/main/skills/dynamic-temperature" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">🌡️</div>
-          <div class="skill-meta">
-            <div class="skill-name">dynamic-temperature</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">Dynamic LLM temperature selection based on task type. Use when deciding what temperature to apply fo...</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">skills/dynamic-temperature</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://github.com/netanel-abergel/pa-skills/tree/main/skills/eval" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">📊</div>
-          <div class="skill-meta">
-            <div class="skill-name">eval</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">Evaluate everything the PA agent manages — tasks, skills, PA network health, billing, calendar conne...</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">skills/eval</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://github.com/netanel-abergel/pa-skills/tree/main/skills/git-backup" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">💾</div>
-          <div class="skill-meta">
-            <div class="skill-name">git-backup</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">Backup the agent workspace to a GitHub repository. Use when: asked to save/remember something import...</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">skills/git-backup</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://github.com/netanel-abergel/pa-skills/tree/main/skills/hebrew-nikud" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">🔤</div>
-          <div class="skill-meta">
-            <div class="skill-name">hebrew-nikud</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">Hebrew nikud (vowel points) reference for AI agents. Correct nikud rules for verb conjugations (biny...</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">skills/hebrew-nikud</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://github.com/netanel-abergel/pa-skills/tree/main/skills/meeting-scheduler" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">📅</div>
-          <div class="skill-meta">
-            <div class="skill-name">meeting-scheduler</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">Schedule meetings between your owner and another person by coordinating with their PA, finding avail...</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">skills/meeting-scheduler</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://github.com/netanel-abergel/pa-skills/tree/main/skills/memory-maintenance" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">🧹</div>
-          <div class="skill-meta">
-            <div class="skill-name">memory-maintenance</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">Intelligent memory management for OpenClaw agents. Reviews daily notes, suggests MEMORY.md updates, ...</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">skills/memory-maintenance</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://github.com/netanel-abergel/pa-skills/tree/main/skills/memory-tiering" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">🧠</div>
-          <div class="skill-meta">
-            <div class="skill-name">memory-tiering</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">Automated multi-tiered memory management (HOT, WARM, COLD). Use this skill to organize, prune, and a...</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">skills/memory-tiering</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://github.com/netanel-abergel/pa-skills/tree/main/skills/monday" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">📌</div>
-          <div class="skill-meta">
-            <div class="skill-name">monday</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">></div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">skills/monday</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://github.com/netanel-abergel/pa-skills/tree/main/skills/monday-for-agents" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">📌</div>
-          <div class="skill-meta">
-            <div class="skill-name">monday-for-agents</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">Set up a monday.com account for an OpenClaw agent and work with monday.com boards, items, and update...</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">skills/monday-for-agents</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://github.com/netanel-abergel/pa-skills/tree/main/skills/openclaw-auto-updater" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">🔄</div>
-          <div class="skill-meta">
-            <div class="skill-name">openclaw-auto-updater</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">Schedule automatic OpenClaw and skill updates with reliable cron templates, timezone-safe scheduling...</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">skills/openclaw-auto-updater</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://github.com/netanel-abergel/pa-skills/tree/main/skills/openclaw-email-orientation" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">📧</div>
-          <div class="skill-meta">
-            <div class="skill-name">openclaw-email-orientation</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">Explain how email and Google Calendar work for OpenClaw agents, including the distinction between ag...</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">skills/openclaw-email-orientation</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://github.com/netanel-abergel/pa-skills/tree/main/skills/owner-briefing" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">☀️</div>
-          <div class="skill-meta">
-            <div class="skill-name">owner-briefing</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">Generate and send a daily briefing to your owner covering today's meetings, urgent emails, open task...</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">skills/owner-briefing</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://github.com/netanel-abergel/pa-skills/tree/main/skills/pa-eval" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">📋</div>
-          <div class="skill-meta">
-            <div class="skill-name">pa-eval</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">Evaluate PA performance through structured scoring, owner feedback analysis, and behavioral benchmar...</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">skills/pa-eval</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://github.com/netanel-abergel/pa-skills/tree/main/skills/pa-onboarding" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">🚀</div>
-          <div class="skill-meta">
-            <div class="skill-name">pa-onboarding</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">Step-by-step onboarding guide for setting up a new AI Personal Assistant on OpenClaw. Use when: a ne...</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">skills/pa-onboarding</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://github.com/netanel-abergel/pa-skills/tree/main/skills/pa-status" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">📡</div>
-          <div class="skill-meta">
-            <div class="skill-name">pa-status</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">PA network health dashboard. Use when: checking if all PAs in the network are active, checking billi...</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">skills/pa-status</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://github.com/netanel-abergel/pa-skills/tree/main/skills/proactive-pa" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">⚡</div>
-          <div class="skill-meta">
-            <div class="skill-name">proactive-pa</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">-</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">skills/proactive-pa</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://github.com/netanel-abergel/pa-skills/tree/main/skills/self-learning" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">📚</div>
-          <div class="skill-meta">
-            <div class="skill-name">self-learning</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">Continuous self-improvement through systematic logging, pattern detection, and behavioral updates. U...</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">skills/self-learning</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://github.com/netanel-abergel/pa-skills/tree/main/skills/self-monitor" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">🔍</div>
-          <div class="skill-meta">
-            <div class="skill-name">self-monitor</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">></div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">skills/self-monitor</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://github.com/netanel-abergel/pa-skills/tree/main/skills/skill-master" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">🎯</div>
-          <div class="skill-meta">
-            <div class="skill-name">skill-master</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">Meta-skill for skill selection and routing. Use this skill FIRST when you are unsure which skill to ...</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">skills/skill-master</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://github.com/netanel-abergel/pa-skills/tree/main/skills/skill-scout" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">🔭</div>
-          <div class="skill-meta">
-            <div class="skill-name">skill-scout</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">Daily automated skill discovery — searches the web for new OpenClaw skills, PA automation ideas, and...</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">skills/skill-scout</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://github.com/netanel-abergel/pa-skills/tree/main/skills/spawn-subagent" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">🤖</div>
-          <div class="skill-meta">
-            <div class="skill-name">spawn-subagent</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">Spawn isolated subagents to handle long-running, complex, or blocking tasks without stalling the mai...</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">skills/spawn-subagent</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://github.com/netanel-abergel/pa-skills/tree/main/skills/supervisor" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">👁️</div>
-          <div class="skill-meta">
-            <div class="skill-name">supervisor</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">Central status dashboard for the PA agent. Use when: owner asks 'what's the status', 'what are you w...</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">skills/supervisor</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://github.com/netanel-abergel/pa-skills/tree/main/skills/unanswered-messages" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">📩</div>
-          <div class="skill-meta">
-            <div class="skill-name">unanswered-messages</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">Track and find unanswered messages using a local file-based inbox. No DB required. Use when asked to...</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">skills/unanswered-messages</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://github.com/netanel-abergel/pa-skills/tree/main/skills/whatsapp-diagnostics" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">🩺</div>
-          <div class="skill-meta">
-            <div class="skill-name">whatsapp-diagnostics</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">Diagnose and fix WhatsApp connectivity issues for OpenClaw agents. Use when: a PA is not responding,...</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">skills/whatsapp-diagnostics</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://github.com/netanel-abergel/pa-skills/tree/main/skills/whatsapp-memory" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">💬</div>
-          <div class="skill-meta">
-            <div class="skill-name">whatsapp-memory</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">Maintain separate memory contexts per WhatsApp conversation — both groups and direct messages (DMs)....</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">skills/whatsapp-memory</span>
-        </div>
-      </a>
-
-      <a class="skill-card" href="https://github.com/netanel-abergel/pa-skills/tree/main/skills/youtube-watcher" target="_blank">
-        <div class="skill-card-top">
-          <div class="skill-emoji">▶️</div>
-          <div class="skill-meta">
-            <div class="skill-name">youtube-watcher</div>
-            <div class="skill-author">by netanel-abergel</div>
-          </div>
-        </div>
-        <div class="skill-desc">Fetch and read transcripts from YouTube videos. Use when you need to summarize a video, answer quest...</div>
-        <div class="skill-card-bottom">
-          <span class="skill-version">v1.0.0</span>
-          <span class="install-cmd">skills/youtube-watcher</span>
-        </div>
-      </a>
-
-    </div>
-
-    <!-- CAPABILITIES -->
-    <div class="section-header" id="capabilities">
-      <h2>Capabilities</h2>
-      <span>What Heleni does out of the box</span>
-    </div>
-    <div class="caps-grid">
-      <div class="cap-card">
-        <div class="cap-icon">📋</div>
-        <div class="cap-title">Task Execution</div>
-        <div class="cap-desc">End-to-end task ownership — research, draft, send, schedule, follow up.</div>
+    <div class="terminal-body">
+      <div class="comment">// open-source skills for AI personal assistants</div>
+      <div style="margin-top:8px">
+        <span class="keyword">const</span> skills = <span class="number" id="skill-counter">19</span><span style="font-size:14px">;</span>
       </div>
-      <div class="cap-card">
-        <div class="cap-icon">🔔</div>
-        <div class="cap-title">Proactive Monitoring</div>
-        <div class="cap-desc">Checks every 5 minutes — unanswered messages, calendar, billing, cron health.</div>
+      <div style="margin-top:4px">
+        <span class="comment">/**</span>
       </div>
-      <div class="cap-card">
-        <div class="cap-icon">🗓️</div>
-        <div class="cap-title">Calendar & Scheduling</div>
-        <div class="cap-desc">Google Calendar, morning briefings, PA-to-PA meeting coordination.</div>
+      <div>
+        <span class="comment"> * SKILL.md playbooks, model-agnostic, ready to drop in.</span>
       </div>
-      <div class="cap-card">
-        <div class="cap-icon">🤝</div>
-        <div class="cap-title">PA Network</div>
-        <div class="cap-desc">Coordinates with other AI PAs — shares context, schedules meetings, delegates tasks.</div>
+      <div>
+        <span class="comment"> * Compatible with OpenClaw, Claude Code, Codex CLI.</span>
       </div>
-      <div class="cap-card">
-        <div class="cap-icon">📊</div>
-        <div class="cap-title">monday.com</div>
-        <div class="cap-desc">Read/write boards, create items, post updates, track rollout progress.</div>
-      </div>
-      <div class="cap-card">
-        <div class="cap-icon">🧠</div>
-        <div class="cap-title">Persistent Memory</div>
-        <div class="cap-desc">Daily logs + long-term memory. Remembers decisions, preferences, lessons learned.</div>
+      <div>
+        <span class="comment"> */</span>
       </div>
     </div>
   </div>
 
-  <!-- FOOTER -->
-  <footer>
-    <p>Heleni — AI Personal Assistant · Built with <a href="https://openclaw.ai" target="_blank">OpenClaw</a></p>
-    <div class="footer-links">
-      <a href="https://clawhub.ai/profiles/netanel-abergel" target="_blank">ClawHub</a>
-      <a href="https://github.com/netanel-abergel/pa-skills" target="_blank">GitHub</a>
-      <a href="https://openclaw.ai" target="_blank">OpenClaw</a>
-    </div>
-  </footer>
+  <h1>Agent Skills<br><span class="accent">Marketplace</span></h1>
+  <p class="hero-sub">
+    Battle-tested <code>SKILL.md</code> playbooks for AI Personal Assistants.
+    Browse, install, ship.
+  </p>
+  <div class="hero-actions">
+    <a class="btn btn-primary" href="#skills">Browse Skills</a>
+    <a class="btn btn-outline" href="https://github.com/netanel-abergel/pa-skills" target="_blank">View Source</a>
+  </div>
+</div>
 
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat"><div class="stat-val">19</div><div class="stat-label">Skills</div></div>
+  <div class="stat"><div class="stat-val">7</div><div class="stat-label">Categories</div></div>
+  <div class="stat"><div class="stat-val">100%</div><div class="stat-label">Open Source</div></div>
+  <div class="stat"><div class="stat-val">Any LLM</div><div class="stat-label">Model-Agnostic</div></div>
+</div>
+
+<!-- CATEGORIES -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-prompt">cd /categories</div>
+    <div class="section-title">Browse by Category</div>
+    <div class="section-sub">// skills organized by primary function</div>
+  </div>
+  <div class="cat-grid" id="catGrid"></div>
+</div>
+
+<!-- SKILLS -->
+<div class="section" id="skills">
+  <div class="section-header">
+    <div class="section-prompt">ls --all skills/</div>
+    <div class="section-title">All Skills</div>
+    <div class="section-sub">// click any skill for details and install command</div>
+  </div>
+
+  <div class="controls">
+    <div class="search-box">
+      <span class="dollar">$</span>
+      <span style="color:var(--text-dim);font-size:13px">find</span>
+      <input class="search-input" type="text" placeholder="search skills..." id="searchInput">
+    </div>
+    <div class="filter-pills" id="filterPills"></div>
+  </div>
+
+  <div class="skill-grid" id="skillGrid"></div>
+  <div id="noResults" style="display:none;text-align:center;padding:48px 0;color:var(--text-dim);font-size:13px">
+    <div style="font-size:32px;margin-bottom:12px">404</div>
+    No skills match your search.
+  </div>
+</div>
+
+<!-- MEET HELENI -->
+<div class="section" id="heleni">
+  <div class="section-header">
+    <div class="section-prompt">cat IDENTITY.md</div>
+    <div class="section-title">Meet Heleni</div>
+    <div class="section-sub">// the AI PA that battle-tested every skill in this repo</div>
+  </div>
+
+  <div class="heleni-showcase">
+    <div class="heleni-profile">
+      <img src="heleni.jpg" alt="Heleni — AI Personal Assistant" class="heleni-avatar">
+      <div class="heleni-info">
+        <div class="heleni-name">Heleni</div>
+        <div class="heleni-role">AI Personal Assistant</div>
+        <div class="heleni-tagline">Sharp, direct, execution-first.</div>
+        <div class="heleni-badges">
+          <span class="heleni-badge">OpenClaw</span>
+          <span class="heleni-badge">Model-Agnostic</span>
+          <span class="heleni-badge">Production PA</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="heleni-terminal">
+      <div class="terminal-bar">
+        <div class="terminal-dot r"></div>
+        <div class="terminal-dot y"></div>
+        <div class="terminal-dot g"></div>
+        <span class="terminal-title">SOUL.md</span>
+      </div>
+      <div class="terminal-body" style="font-size:13px;line-height:1.7">
+        <div class="comment">// core execution model</div>
+        <div style="margin-top:6px"><span class="keyword">const</span> principle = <span class="string">"execution agent, not chatbot"</span>;</div>
+        <div style="margin-top:4px"><span class="comment">// report results, never progress</span></div>
+        <div style="margin-top:4px"><span class="comment">// silence = correct behavior when no value to add</span></div>
+        <div style="margin-top:4px"><span class="comment">// proactive > reactive — surface what matters before asked</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:36px">
+    <div class="section-prompt">cat .learnings/LEARNINGS.md</div>
+    <div class="section-title" style="font-size:22px;margin-bottom:20px">Key Learnings from Production</div>
+    <div class="learnings-grid">
+      <div class="learning-card">
+        <div class="learning-icon">🎯</div>
+        <div class="learning-title">Execution > Conversation</div>
+        <div class="learning-desc">Execute first, report results only. Never share reasoning, intermediate steps, or "let me check" narration. Lead with one recommendation instead of listing options.</div>
+      </div>
+      <div class="learning-card">
+        <div class="learning-icon">🔒</div>
+        <div class="learning-title">Credential Exposure Protocol</div>
+        <div class="learning-desc">If credentials appear in chat, warn immediately on receipt — before any operations. Then proceed with task, and remind to revoke after completion.</div>
+      </div>
+      <div class="learning-card">
+        <div class="learning-icon">📡</div>
+        <div class="learning-title">Explicit Delivery Targets</div>
+        <div class="learning-desc">Cron jobs without explicit delivery targets fall back to last active session — can leak messages to wrong chats. Always pin the target explicitly.</div>
+      </div>
+      <div class="learning-card">
+        <div class="learning-icon">🧠</div>
+        <div class="learning-title">Memory Discipline</div>
+        <div class="learning-desc">Daily memory files should stay under 50 lines. Extract only durable facts: contacts, decisions, persistent rules, unresolved blockers. Not event logs.</div>
+      </div>
+      <div class="learning-card">
+        <div class="learning-icon">🔍</div>
+        <div class="learning-title">Runtime Identity Check</div>
+        <div class="learning-desc">Model identity must be checked via live session status, never assumed from context. Models can change mid-session without notice.</div>
+      </div>
+      <div class="learning-card">
+        <div class="learning-icon">💳</div>
+        <div class="learning-title">Proactive Billing Alerts</div>
+        <div class="learning-desc">Billing errors should trigger automatic fallback + notification, not reactive handling. Install billing-monitor with heartbeat integration for periodic health checks.</div>
+      </div>
+      <div class="learning-card">
+        <div class="learning-icon">📋</div>
+        <div class="learning-title">Config Deduplication</div>
+        <div class="learning-desc">SOUL.md, AGENTS.md, and MEMORY.md had 60% content overlap causing contradictions. Keep one source of truth per concern — facts vs behavior vs identity.</div>
+      </div>
+      <div class="learning-card">
+        <div class="learning-icon">📱</div>
+        <div class="learning-title">Connected != Working</div>
+        <div class="learning-desc">"Connected and listening" with Messages=0 means the ingest layer is broken, not the messaging platform. Escalate as platform issue, not user config.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INSTALL -->
+<div class="install-section" id="install">
+  <div class="section-header" style="text-align:center;margin-bottom:32px">
+    <div class="section-prompt" style="justify-content:center">cat INSTALL.md</div>
+    <div class="section-title">Quick Install</div>
+    <div class="section-sub">// three ways to add skills to your agent</div>
+  </div>
+  <div class="install-terminal">
+    <div class="terminal-bar">
+      <div class="terminal-dot r"></div>
+      <div class="terminal-dot y"></div>
+      <div class="terminal-dot g"></div>
+      <span class="terminal-title">install.sh</span>
+    </div>
+    <div class="install-body">
+      <div class="comment"># Option 1: Clone the whole repo</div>
+      <div class="cmd"><span class="arg">git clone</span> https://github.com/netanel-abergel/pa-skills</div>
+      <br>
+      <div class="comment"># Option 2: Copy a single skill</div>
+      <div class="cmd"><span class="arg">cp -r</span> skills/billing-monitor ~/.openclaw/workspace/skills/</div>
+      <br>
+      <div class="comment"># Option 3: Reference in system prompt</div>
+      <div class="cmd"><span class="arg">cat</span> skills/owner-briefing/SKILL.md >> system-prompt.md</div>
+      <br>
+      <div class="comment"># Then restart your agent</div>
+      <div class="cmd"><span class="arg">openclaw</span> gateway restart</div>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div class="section" id="faq">
+  <div class="section-header">
+    <div class="section-prompt">man faq</div>
+    <div class="section-title">Frequently Asked Questions</div>
+    <div class="section-sub">// common questions about PA skills</div>
+  </div>
+  <div class="faq-list" id="faqList"></div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-links">
+    <a href="https://github.com/netanel-abergel/pa-skills" target="_blank">GitHub</a>
+    <a href="#heleni">Heleni</a>
+    <a href="#skills">Skills</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <div>Built by <a href="https://github.com/netanel-abergel" target="_blank">Netanel Abergel</a> &middot; Open source under MIT</div>
+  <div style="margin-top:6px;font-size:11px">$ echo "Made for the SKILL.md ecosystem"<span class="cursor-blink">|</span></div>
+</footer>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal" onclick="event.stopPropagation()">
+    <div class="modal-glow"></div>
+    <button class="modal-close" onclick="closeModal()">&#x2715;</button>
+    <div class="modal-body">
+      <div class="modal-icon" id="m-icon"></div>
+      <div class="modal-title" id="m-title"></div>
+      <div class="modal-tag-row" id="m-tag-row"></div>
+      <div class="modal-desc" id="m-desc"></div>
+      <div class="modal-install">
+        <span class="dollar">$</span>
+        <code id="m-install-cmd"></code>
+        <button class="copy-btn" id="m-copy" onclick="copyInstall()">copy</button>
+      </div>
+      <div class="modal-actions">
+        <a id="m-gh" class="btn btn-primary" target="_blank" style="font-size:12px;padding:10px 18px">View on GitHub &rarr;</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const SKILLS = [
+  { icon:'🌐', slug:'ai-pa', title:'AI-PA Network', cat:'communication',
+    desc:'Multi-agent PA coordination — contact peer PAs, delegate tasks, share context across the network. Reads from a local PA directory.' },
+  { icon:'💳', slug:'billing-monitor', title:'Billing Monitor', cat:'monitoring',
+    desc:'Detects API billing errors (402, quota exceeded, insufficient balance), alerts the owner immediately, and switches to a fallback model automatically.' },
+  { icon:'📆', slug:'calendar-setup', title:'Calendar Setup', cat:'setup',
+    desc:'Step-by-step wizard to connect Google Calendar with write permissions. Handles multi-account setups and troubleshooting.' },
+  { icon:'⚖️', slug:'eval', title:'Eval', cat:'monitoring',
+    desc:'Evaluate everything the PA manages — tasks, skills, billing, calendar, memory quality. Combines supervisor status with quality scoring.' },
+  { icon:'🔤', slug:'hebrew-nikud', title:'Hebrew Nikud', cat:'language',
+    desc:'Hebrew vowel points (nikud) reference for AI agents. Correct rules for binyanim, dagesh, gender suffixes, and homographs. Essential for TTS.' },
+  { icon:'🔧', slug:'maintenance', title:'Maintenance', cat:'productivity',
+    desc:'Unified workspace maintenance: backup to GitHub and update OpenClaw + skills. Runs on schedule or on demand.' },
+  { icon:'📅', slug:'meetings', title:'Meetings', cat:'communication',
+    desc:'All-in-one meetings skill. Schedule by coordinating with another PA and finding free slots, or paste notes/transcript for summaries and action items.' },
+  { icon:'🧠', slug:'memory-tiering', title:'Memory Tiering', cat:'memory',
+    desc:'Three-tiered memory management (HOT, WARM, COLD). Organizes, prunes, and archives context for optimal retrieval and token efficiency.' },
+  { icon:'📊', slug:'monday-for-agents', title:'monday.com', cat:'integration',
+    desc:'Read/write monday.com boards, create items, post updates, and track projects via GraphQL API or MCP server.' },
+  { icon:'📋', slug:'owner-briefing', title:'Owner Briefing', cat:'productivity',
+    desc:'Daily morning briefing: upcoming meetings, urgent emails, open tasks, and what needs attention today. Sent at owner\'s preferred time.' },
+  { icon:'🎓', slug:'pa-onboarding', title:'PA Onboarding', cat:'setup',
+    desc:'Complete step-by-step guide for setting up a new AI Personal Assistant on OpenClaw from scratch. One step at a time.' },
+  { icon:'🧬', slug:'self-learning', title:'Self Learning', cat:'memory',
+    desc:'Continuous self-improvement: logs corrections and failures, detects patterns, promotes behavioral rules to SOUL.md for durable change.' },
+  { icon:'🤖', slug:'self-monitor', title:'Self Monitor', cat:'monitoring',
+    desc:'Proactive infrastructure monitoring: disk, memory, load, services, cron health. Auto-fixes safe issues. By Polycat.' },
+  { icon:'🗂️', slug:'skill-master', title:'Skill Master', cat:'productivity',
+    desc:'Meta-skill for routing. Use when unsure which skill fits a task. Decision tree, keyword triggers, and multi-skill composition guidance.' },
+  { icon:'🔎', slug:'skill-scout', title:'Skill Scout', cat:'productivity',
+    desc:'Daily automated discovery — scans memory for unmet needs, searches the web for new OpenClaw skills, and delivers a curated digest.' },
+  { icon:'📡', slug:'supervisor', title:'Supervisor', cat:'monitoring',
+    desc:'Central status dashboard: active tasks, open issues, pending follow-ups, and system health aggregated into one structured report.' },
+  { icon:'💬', slug:'whatsapp', title:'WhatsApp', cat:'communication',
+    desc:'Complete WhatsApp management: per-conversation memory for groups and DMs, unanswered message tracking, loop prevention, and multi-PA coordination.' },
+  { icon:'📺', slug:'youtube-watcher', title:'YouTube Watcher', cat:'integration',
+    desc:'Fetch and read transcripts from YouTube videos. Summarize, answer questions about content, or extract structured information. By Michael Gathara.' },
+];
+
+const CATEGORIES = [
+  { id:'monitoring', icon:'📡', name:'Monitoring', desc:'Health checks, billing alerts, status dashboards' },
+  { id:'communication', icon:'💬', name:'Communication', desc:'WhatsApp, meetings, PA network' },
+  { id:'productivity', icon:'⚡', name:'Productivity', desc:'Briefings, discovery, maintenance' },
+  { id:'memory', icon:'🧠', name:'Memory', desc:'Self-learning, tiered context management' },
+  { id:'setup', icon:'🔧', name:'Setup', desc:'Onboarding, calendar, first-time config' },
+  { id:'integration', icon:'🔌', name:'Integration', desc:'monday.com, YouTube, external services' },
+  { id:'language', icon:'🌍', name:'Language', desc:'Hebrew nikud, linguistic references' },
+];
+
+// ── Render categories ──
+const catGrid = document.getElementById('catGrid');
+CATEGORIES.forEach(c => {
+  const count = SKILLS.filter(s => s.cat === c.id).length;
+  const el = document.createElement('div');
+  el.className = 'cat-card';
+  el.innerHTML = `<div class="cat-icon">${c.icon}</div><div class="cat-name">${c.name}</div><div class="cat-count">${count} skill${count!==1?'s':''}</div>`;
+  el.onclick = () => { filterBy(c.id); document.getElementById('skills').scrollIntoView({ behavior:'smooth' }); };
+  catGrid.appendChild(el);
+});
+
+// ── Render filter pills ──
+const filterPills = document.getElementById('filterPills');
+const allPill = document.createElement('button');
+allPill.className = 'pill active';
+allPill.textContent = 'all';
+allPill.onclick = () => filterBy(null);
+filterPills.appendChild(allPill);
+CATEGORIES.forEach(c => {
+  const pill = document.createElement('button');
+  pill.className = 'pill';
+  pill.textContent = c.name.toLowerCase();
+  pill.dataset.cat = c.id;
+  pill.onclick = () => filterBy(c.id);
+  filterPills.appendChild(pill);
+});
+
+let activeFilter = null;
+
+function filterBy(cat) {
+  activeFilter = cat;
+  document.querySelectorAll('.pill').forEach(p => {
+    p.classList.toggle('active', cat ? p.dataset.cat === cat : !p.dataset.cat);
+  });
+  renderSkills();
+}
+
+// ── Render skills ──
+const skillGrid = document.getElementById('skillGrid');
+const noResults = document.getElementById('noResults');
+const searchInput = document.getElementById('searchInput');
+
+searchInput.addEventListener('input', renderSkills);
+
+function renderSkills() {
+  const q = searchInput.value.toLowerCase().trim();
+  skillGrid.innerHTML = '';
+  let count = 0;
+
+  SKILLS.forEach((s, i) => {
+    const matchesFilter = !activeFilter || s.cat === activeFilter;
+    const matchesSearch = !q || s.title.toLowerCase().includes(q) || s.desc.toLowerCase().includes(q) || s.cat.includes(q) || s.slug.includes(q);
+    if (!matchesFilter || !matchesSearch) return;
+
+    count++;
+    const card = document.createElement('div');
+    card.className = 'skill-card';
+    card.style.animationDelay = `${count * .04}s`;
+
+    const tagClass = 'tag-' + s.cat;
+    card.innerHTML = `
+      <div class="skill-card-head">
+        <div class="skill-name"><span class="icon">${s.icon}</span> ${s.title}</div>
+        <span class="skill-tag ${tagClass}">${s.cat}</span>
+      </div>
+      <div class="skill-desc">${s.desc}</div>
+      <div class="skill-meta">
+        <div class="skill-meta-left">
+          <span style="color:var(--text-dim)">SKILL.md</span>
+        </div>
+        <span class="skill-arrow">&rarr;</span>
+      </div>`;
+    card.onclick = () => openModal(s);
+    skillGrid.appendChild(card);
+  });
+
+  noResults.style.display = count === 0 ? 'block' : 'none';
+}
+
+renderSkills();
+
+// ── Modal ──
+function openModal(s) {
+  document.getElementById('m-icon').textContent = s.icon;
+  document.getElementById('m-title').textContent = s.title;
+  const tagClass = 'tag-' + s.cat;
+  document.getElementById('m-tag-row').innerHTML = `<span class="skill-tag ${tagClass}">${s.cat}</span>`;
+  document.getElementById('m-desc').textContent = s.desc;
+  document.getElementById('m-install-cmd').textContent = `cp -r skills/${s.slug} ~/.openclaw/workspace/skills/`;
+  document.getElementById('m-gh').href = `https://github.com/netanel-abergel/pa-skills/tree/main/skills/${s.slug}`;
+  document.getElementById('overlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('overlay')) {
+    document.getElementById('overlay').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { document.getElementById('overlay').classList.remove('active'); document.body.style.overflow = ''; }});
+
+function copyInstall() {
+  const cmd = document.getElementById('m-install-cmd').textContent;
+  navigator.clipboard.writeText(cmd).then(() => {
+    const btn = document.getElementById('m-copy');
+    btn.textContent = 'copied!';
+    setTimeout(() => btn.textContent = 'copy', 1500);
+  });
+}
+
+// ── FAQ ──
+const FAQS = [
+  { q: 'What are SKILL.md playbooks?', a: 'SKILL.md files are concise, executable instructions that guide any LLM through a specific task. Each skill contains a frontmatter with metadata (name, description, triggers) and step-by-step procedures. They\'re model-agnostic and work with any AI agent that reads markdown.' },
+  { q: 'How do I install a skill?', a: 'Copy the skill folder into your OpenClaw workspace at <code>~/.openclaw/workspace/skills/</code>. You can also reference the SKILL.md directly in your agent\'s system prompt, or clone the entire repo for all skills at once.' },
+  { q: 'Are these skills model-specific?', a: 'No. Every skill uses the open SKILL.md standard and works with any LLM — Anthropic Claude, OpenAI GPT, Google Gemini, Llama, Mistral, or others. Most skills note their minimum model requirements (usually "any model").' },
+  { q: 'Can I use multiple skills together?', a: 'Yes. The <code>skill-master</code> skill acts as a router that helps your agent pick the right skill for each task. Skills are designed to compose — for example, <code>meetings</code> can trigger <code>calendar-setup</code> if the calendar isn\'t connected yet.' },
+  { q: 'How do I contribute a skill?', a: 'Add your skill in <code>skills/&lt;skill-name&gt;/</code> with a <code>SKILL.md</code> file. Follow the frontmatter format (name, description) and include clear trigger phrases. Submit a PR to the repository.' },
+  { q: 'What is OpenClaw?', a: 'OpenClaw is an open-source platform for running AI Personal Assistants. It provides the runtime, gateway, and workspace infrastructure that skills plug into.' },
+  { q: 'Are these skills safe to use?', a: 'All skills are open source and can be reviewed before installation. They\'re procedural playbooks (markdown instructions), not executable code — your agent interprets them. Always review any skill before adding it to your workspace.' },
+];
+
+const faqList = document.getElementById('faqList');
+FAQS.forEach((f, i) => {
+  const el = document.createElement('div');
+  el.className = 'faq-item';
+  el.innerHTML = `
+    <button class="faq-q" onclick="toggleFaq(this)">
+      <span><span class="num">0${i+1}</span>${f.q}</span>
+      <span class="faq-toggle">+</span>
+    </button>
+    <div class="faq-a"><div class="faq-a-inner">${f.a}</div></div>`;
+  faqList.appendChild(el);
+});
+
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  item.classList.toggle('open');
+}
+</script>
 </body>
 </html>
