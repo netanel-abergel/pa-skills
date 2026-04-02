@@ -254,16 +254,31 @@ footer a{color:var(--accent)}
   <div class="section-sub">// the AI PA that battle-tested every skill in this repo</div>
 
   <div class="heleni-showcase">
-    <div class="heleni-profile">
-      <img src="heleni-hero.png" alt="Heleni" style="width:100px;height:100px;border-radius:50%;border:3px solid var(--accent);object-fit:cover;object-position:top;background:var(--bg);flex-shrink:0">
-      <div>
-        <div class="heleni-name">Heleni</div>
-        <div class="heleni-role">AI Personal Assistant</div>
-        <div class="heleni-tagline">Sharp, direct, execution-first.</div>
-        <div class="heleni-badges">
-          <span class="heleni-badge">OpenClaw</span>
-          <span class="heleni-badge">Model-Agnostic</span>
-          <span class="heleni-badge">Production PA</span>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <!-- Quick stats -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center">
+          <div style="font-size:24px;font-weight:800;color:var(--accent)">19</div>
+          <div style="font-size:11px;color:var(--text-dim);margin-top:2px">Skills</div>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center">
+          <div style="font-size:24px;font-weight:800;color:var(--accent)">24/7</div>
+          <div style="font-size:11px;color:var(--text-dim);margin-top:2px">Uptime</div>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center">
+          <div style="font-size:24px;font-weight:800;color:var(--accent)">15+</div>
+          <div style="font-size:11px;color:var(--text-dim);margin-top:2px">Peer PAs</div>
+        </div>
+      </div>
+      <!-- Integrations -->
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px">
+        <div style="font-size:11px;color:var(--accent);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Connected Services</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--text-dim)">
+          <span style="background:var(--bg);padding:5px 10px;border-radius:6px;border:1px solid var(--border)">WhatsApp</span>
+          <span style="background:var(--bg);padding:5px 10px;border-radius:6px;border:1px solid var(--border)">Google Calendar</span>
+          <span style="background:var(--bg);padding:5px 10px;border-radius:6px;border:1px solid var(--border)">monday.com</span>
+          <span style="background:var(--bg);padding:5px 10px;border-radius:6px;border:1px solid var(--border)">GitHub</span>
+          <span style="background:var(--bg);padding:5px 10px;border-radius:6px;border:1px solid var(--border)">Gmail</span>
         </div>
       </div>
     </div>
