@@ -1,5 +1,7 @@
 ---
 name: skill-master
+requires_skills:
+  - skill-analytics   # required — logs every routing decision
 description: "Meta-skill for skill selection and routing. Use this skill FIRST when you are unsure which skill to use for a task. Provides a decision tree, keyword triggers, and guidance on combining multiple skills for complex workflows. Also use when onboarding to understand the full skill library."
 ---
 
@@ -21,16 +23,18 @@ Start lean. Add a new skill only when there's a clear, recurring trigger that no
 1. Read the owner's request.
 2. Find a match in the **Quick Lookup** table below.
 3. If not found, use the **Decision Tree**.
-4. **Log the selection** (see Analytics below).
+4. **⚠️ Log the selection FIRST — before doing any work** (see Analytics below).
 5. Load that skill's SKILL.md and follow it.
 
 Do not improvise. If no skill matches, say so and ask the owner.
 
+> ❌ **Skipping the log is not allowed.** Every skill invocation must be recorded, even for simple tasks. This is how the agent and the owner track what's working.
+
 ---
 
-## 📊 Analytics — Log Every Skill Use
+## 📊 Analytics — MANDATORY: Log Every Skill Use
 
-After selecting a skill, append one line to the analytics log **before** starting work:
+**This step is NOT optional.** Before starting any skill, append one line:
 
 ```bash
 mkdir -p /opt/ocana/openclaw/workspace/data
@@ -43,7 +47,16 @@ Replace:
 - `TRIGGER` → the phrase that matched (e.g. `schedule meeting with Daniel`)
 - `CONTEXT` → `dm`, `group:<name>`, or `cron`
 
-This is lightweight (~50 bytes/entry). Do it every time, no exceptions.
+This is ~50 bytes/entry. Non-negotiable.
+
+### Why This Matters
+- The owner can ask "skill stats" at any time to see what's being used
+- Unused skills get pruned, improving routing quality
+- Shared across the PA network so every agent learns from usage patterns
+- Enables weekly reports on which skills are carrying the most weight
+
+### To View Analytics
+Ask: "skill stats" / "skill usage" / "which skills am I using?" → triggers `skill-analytics` skill
 
 ---
 
