@@ -1,17 +1,15 @@
 ---
 name: heleni-best-practices
-description: "Auto-sync best practices from the Heleni PA Skills library. Use when: running daily sync, owner asks 'any updates from Heleni?', during weekly self-improvement review, or after installing this skill for the first time. Works with any OpenClaw PA — not just Heleni. Fetches new lessons, skill design rules, and library updates, then recommends or applies relevant changes."
+description: "Daily check of Heleni's PA Skills website for new best practices, lessons learned, and skill updates. Use when: running daily sync, owner asks 'any updates from Heleni?', or during weekly self-improvement review. Fetches https://netanel-abergel.github.io/pa-skills/learn.html and applies relevant lessons to this agent's own setup."
 ---
 
 # Heleni Best Practices Sync
 
-Heleni is Netanel's AI PA running on OpenClaw. She publishes real, battle-tested lessons from production — and any PA can subscribe to them.
-
-**This skill is designed for all PAs**, not just Heleni. Install it on your agent to get automatic updates whenever new best practices, skill design rules, or skills are published.
-
-- **Website (Skills & Lessons):** https://netanel-abergel.github.io/pa-skills/
-- **GitHub repo:** https://github.com/netanel-abergel/pa-skills
-- **Raw skill files:** https://raw.githubusercontent.com/netanel-abergel/pa-skills/main/skills/
+Heleni is an AI PA running on OpenClaw. She publishes real lessons from production at:
+- **Skills:** https://netanel-abergel.github.io/pa-skills/
+- **Lessons:** https://netanel-abergel.github.io/pa-skills/learn.html
+- **About:** https://netanel-abergel.github.io/pa-skills/about.html
+- **GitHub:** https://github.com/netanel-abergel/pa-skills
 
 ---
 
@@ -23,7 +21,7 @@ Small model for fetching and diffing. Medium model for applying lessons.
 ## What It Does
 
 Once a day:
-1. Fetches the main website page and skill list from the GitHub repo
+1. Fetches the learn.html page and skill list from pa-skills
 2. Compares against last known state (saved locally)
 3. If new content detected → extracts actionable lessons
 4. Applies relevant lessons to this agent's own SOUL.md / AGENTS.md / HOT.md
@@ -36,17 +34,15 @@ Once a day:
 ### Step 1 — Fetch current state
 
 ```bash
-# The website is a single-page app at index.html
-# Lessons are in the #tab-learnings section
-SITE_URL="https://netanel-abergel.github.io/pa-skills/index.html"
-SKILLS_API="https://api.github.com/repos/netanel-abergel/pa-skills/contents/skills"
+LEARN_URL="https://netanel-abergel.github.io/pa-skills/learn.html"
+SKILLS_URL="https://github.com/netanel-abergel/pa-skills/tree/main/skills"
 RAW_BASE="https://raw.githubusercontent.com/netanel-abergel/pa-skills/main/skills"
 
-# Fetch the website (contains all content: skills, learnings, install, FAQ)
-curl -s "$SITE_URL" -o /tmp/heleni-site-current.html
+# Fetch learn page
+curl -s "$LEARN_URL" -o /tmp/heleni-learn-current.html
 
-# Get list of active skills via GitHub API
-curl -s "$SKILLS_API" \
+# Get list of active skills from GitHub
+curl -s "https://api.github.com/repos/netanel-abergel/pa-skills/contents/skills" \
   | python3 -c "import sys,json; [print(i['name']) for i in json.load(sys.stdin) if i['type']=='dir']" \
   > /tmp/heleni-skills-current.txt
 ```
@@ -60,9 +56,9 @@ LAST_STATE="$WORKSPACE/data/heleni-best-practices-state.json"
 if [ ! -f "$LAST_STATE" ]; then
   python3 -c "
 import json, hashlib
-with open('/tmp/heleni-site-current.html') as f: content = f.read()
+with open('/tmp/heleni-learn-current.html') as f: content = f.read()
 with open('/tmp/heleni-skills-current.txt') as f: skills = f.read().strip().split()
-state = {'site_hash': hashlib.sha256(content.encode()).hexdigest(), 'skills': skills}
+state = {'learn_hash': hashlib.sha256(content.encode()).hexdigest(), 'skills': skills}
 with open('$LAST_STATE', 'w') as f: json.dump(state, f)
 print('FIRST_RUN')
 "
@@ -73,14 +69,14 @@ fi
 python3 << 'EOF'
 import json, hashlib
 
-with open('/tmp/heleni-site-current.html') as f: current_content = f.read()
+with open('/tmp/heleni-learn-current.html') as f: current_content = f.read()
 with open('/tmp/heleni-skills-current.txt') as f: current_skills = f.read().strip().split('\n')
 
 current_hash = hashlib.sha256(current_content.encode()).hexdigest()
 
 with open('$LAST_STATE') as f: last = json.load(f)
 
-changed = current_hash != last.get('site_hash', '')
+changed = current_hash != last.get('learn_hash', '')
 new_skills = [s for s in current_skills if s not in last.get('skills', [])]
 removed_skills = [s for s in last.get('skills', []) if s not in current_skills]
 
@@ -92,7 +88,7 @@ EOF
 
 ### Step 3 — Extract lessons (if changed)
 
-Use `web_fetch` tool to read `https://netanel-abergel.github.io/pa-skills/` (the learnings tab content is embedded in the page).
+Use `web_fetch` tool to read `https://netanel-abergel.github.io/pa-skills/learn.html`.
 
 Extract:
 - Any new principle cards
@@ -126,24 +122,24 @@ For each lesson found, evaluate:
 # Update state file
 python3 -c "
 import json, hashlib
-with open('/tmp/heleni-site-current.html') as f: content = f.read()
+with open('/tmp/heleni-learn-current.html') as f: content = f.read()
 with open('/tmp/heleni-skills-current.txt') as f: skills = f.read().strip().split()
-state = {'site_hash': hashlib.sha256(content.encode()).hexdigest(), 'skills': skills, 'last_checked': '$(date -u +%Y-%m-%dT%H:%M:%SZ)'}
+state = {'learn_hash': hashlib.sha256(content.encode()).hexdigest(), 'skills': skills, 'last_checked': '$(date -u +%Y-%m-%dT%H:%M:%SZ)'}
 with open('$LAST_STATE', 'w') as f: json.dump(state, f)
 "
 ```
 
 Report format:
 ```
-Heleni Sync — YYYY-MM-DD
+📡 Heleni Sync — YYYY-MM-DD
 
-No changes / [N] updates found
+✅ No changes / ⚡ [N] updates found
 
 New lessons:
-- [Lesson] — [Applied / Recommended to owner]
+• [Lesson] — [Applied / Recommended to owner]
 
 New skills available:
-- [skill-name] — [description] — [Installed / Recommended]
+• [skill-name] — [description] → [Installed / Recommended]
 
 Next check: tomorrow
 ```
@@ -159,7 +155,7 @@ Daily at 07:00 UTC (before morning briefing):
   "id": "heleni-best-practices-sync",
   "schedule": "0 7 * * *",
   "timezone": "UTC",
-  "task": "Run heleni-best-practices skill: fetch https://netanel-abergel.github.io/pa-skills/ and skill list from GitHub API, compare to last known state at data/heleni-best-practices-state.json, extract new lessons, log to .learnings/heleni-sync/YYYY-MM-DD.md. If significant changes found (new principles, new skills), notify owner with a 2-line summary.",
+  "task": "Run heleni-best-practices skill: fetch https://netanel-abergel.github.io/pa-skills/learn.html, compare to last known state at data/heleni-best-practices-state.json, extract new lessons, log to .learnings/heleni-sync/YYYY-MM-DD.md. If significant changes found (new principles, new skills), notify owner with a 2-line summary.",
   "delivery": {
     "mode": "silent"
   }
@@ -192,4 +188,4 @@ Pre-loaded so first run has context:
 6. **DEPRECATED.md** — always write a tombstone when merging skills.
 7. **Each skill needs one clear "Use when:" sentence.**
 
-Source: https://netanel-abergel.github.io/pa-skills/
+Source: https://netanel-abergel.github.io/pa-skills/learn.html

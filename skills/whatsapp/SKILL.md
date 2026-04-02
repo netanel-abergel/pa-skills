@@ -23,7 +23,7 @@ Use a medium+ model only when deciding *what* is worth logging.
 memory/
   whatsapp/
     groups/
-      120363408613668489-g-us/    ← sanitized JID
+      YOUR_GROUP_JID-sanitized/    ← sanitized JID
         meta.json                 ← group name, JID, participants
         context.md                ← running conversation context
         decisions.md              ← key decisions
@@ -72,7 +72,7 @@ EOF
 }
 
 # Examples:
-# init_whatsapp_memory "group" "120363422865795623@g.us" "PA Team"
+# init_whatsapp_memory "group" "YOUR_GROUP_JID@g.us" "PA Team"
 # init_whatsapp_memory "dm" "+PHONE_NUMBER" "Contact Name"
 ```
 
@@ -338,8 +338,8 @@ with open(INBOX, "w") as f:
 - Task details from owner's DM → never mention to third parties
 - When replying to person X → do NOT include context from conversation with person Y
 - Progress reports → owner in private DM only
-- ❌ Never write the owner's name or internal framing (e.g. "To [owner]:") inside a message to a third party
-- ❌ Never include the owner's identity or intent in outbound messages to PAs or contacts
+- ❌ Never write "לנתנאל:" or any internal framing inside a message to a third party
+- ❌ Never include the owner's name or intent in outbound messages to PAs or contacts
 
 ### Close the Loop With the Requester
 When the owner asks you to check in with someone:
