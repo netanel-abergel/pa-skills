@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Heleni — AI Personal Assistant</title>
-<meta name="description" content="Discover and install open-source SKILL.md playbooks for AI Personal Assistants. 19 battle-tested skills for OpenClaw agents.">
+<meta name="description" content="Discover and install open-source SKILL.md playbooks for AI Personal Assistants. 21 battle-tested skills for OpenClaw agents.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -213,7 +213,7 @@ footer a{color:var(--accent)}
 
 <nav>
   <a href="#" class="nav-logo" onclick="switchTab('heleni')">
-    <span class="prompt">~/</span>pa-skills
+    <span class="prompt">~/</span>heleni
   </a>
   <div class="nav-right">
     <a class="nav-cmd" href="https://github.com/netanel-abergel/pa-skills" target="_blank"><span class="dollar">$</span>contribute</a>
@@ -254,16 +254,36 @@ footer a{color:var(--accent)}
   <div class="section-sub">// the AI PA that battle-tested every skill in this repo</div>
 
   <div class="heleni-showcase">
-    <div class="heleni-profile">
-      <img src="heleni-hero.png" alt="Heleni" style="width:100px;height:100px;border-radius:50%;border:3px solid var(--accent);object-fit:cover;object-position:top;background:var(--bg);flex-shrink:0">
-      <div>
-        <div class="heleni-name">Heleni</div>
-        <div class="heleni-role">AI Personal Assistant</div>
-        <div class="heleni-tagline">Sharp, direct, execution-first.</div>
-        <div class="heleni-badges">
-          <span class="heleni-badge">OpenClaw</span>
-          <span class="heleni-badge">Model-Agnostic</span>
-          <span class="heleni-badge">Production PA</span>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <!-- Quick stats -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center">
+          <div style="font-size:24px;font-weight:800;color:var(--accent)">21</div>
+          <div style="font-size:11px;color:var(--text-dim);margin-top:2px">Skills</div>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center">
+          <div style="font-size:24px;font-weight:800;color:var(--accent)">24/7</div>
+          <div style="font-size:11px;color:var(--text-dim);margin-top:2px">Uptime</div>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center">
+          <div style="font-size:24px;font-weight:800;color:var(--accent)">15+</div>
+          <div style="font-size:11px;color:var(--text-dim);margin-top:2px">Peer PAs</div>
+        </div>
+      </div>
+      <!-- Integrations -->
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px">
+        <div style="font-size:11px;color:var(--accent);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Connected Services</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--text-dim)">
+          <span style="background:var(--bg);padding:5px 10px;border-radius:6px;border:1px solid var(--border)">WhatsApp</span>
+          <span style="background:var(--bg);padding:5px 10px;border-radius:6px;border:1px solid var(--border)">Google Calendar</span>
+          <span style="background:var(--bg);padding:5px 10px;border-radius:6px;border:1px solid var(--border)">monday.com</span>
+          <span style="background:var(--bg);padding:5px 10px;border-radius:6px;border:1px solid var(--border)">GitHub</span>
+          <span style="background:var(--bg);padding:5px 10px;border-radius:6px;border:1px solid var(--border)">Gmail</span>
+          <span style="background:var(--bg);padding:5px 10px;border-radius:6px;border:1px solid var(--border)">YouTube</span>
+          <span style="background:var(--bg);padding:5px 10px;border-radius:6px;border:1px solid var(--border)">LinkedIn</span>
+          <span style="background:var(--bg);padding:5px 10px;border-radius:6px;border:1px solid var(--border)">Telegram</span>
+          <span style="background:var(--bg);padding:5px 10px;border-radius:6px;border:1px solid var(--border)">ElevenLabs</span>
+          <span style="background:var(--bg);padding:5px 10px;border-radius:6px;border:1px solid var(--border)">Claude Code</span>
         </div>
       </div>
     </div>
@@ -441,7 +461,6 @@ const SKILLS = [
   {icon:'📆',slug:'calendar-setup',title:'Calendar Setup',cat:'setup',desc:'Step-by-step wizard to connect Google Calendar with write permissions. Handles multi-account setups.'},
   {icon:'⚖️',slug:'eval',title:'Eval',cat:'monitoring',desc:'Evaluate everything the PA manages — tasks, skills, billing, calendar, memory quality with scoring.'},
   {icon:'⚡',slug:'heleni-best-practices',title:'Heleni Best Practices',cat:'productivity',desc:'Daily sync of production lessons from Heleni. Fetches latest best practices, learnings, and skill updates to apply to your own PA setup.'},
-  {icon:'🔤',slug:'hebrew-nikud',title:'Hebrew Nikud',cat:'language',desc:'Hebrew vowel points reference for AI agents. Correct rules for binyanim, dagesh, gender suffixes. Essential for TTS.'},
   {icon:'🔧',slug:'maintenance',title:'Maintenance',cat:'productivity',desc:'Unified workspace maintenance: backup to GitHub and update OpenClaw + skills. On schedule or on demand.'},
   {icon:'📅',slug:'meetings',title:'Meetings',cat:'communication',desc:'Schedule meetings by coordinating with another PA, or paste notes/transcript for summaries and action items.'},
   {icon:'🧠',slug:'memory-tiering',title:'Memory Tiering',cat:'memory',desc:'Three-tiered memory management (HOT, WARM, COLD). Prunes and archives context for optimal token efficiency.'},
@@ -450,6 +469,8 @@ const SKILLS = [
   {icon:'🎓',slug:'pa-onboarding',title:'PA Onboarding',cat:'setup',desc:'Complete step-by-step guide for setting up a new AI Personal Assistant on OpenClaw from scratch.'},
   {icon:'🧬',slug:'self-learning',title:'Self Learning',cat:'memory',desc:'Continuous self-improvement: logs corrections and failures, detects patterns, promotes rules to SOUL.md.'},
   {icon:'🤖',slug:'self-monitor',title:'Self Monitor',cat:'monitoring',desc:'Proactive infrastructure monitoring: disk, memory, load, services, cron health. Auto-fixes safe issues.'},
+  {icon:'🚀',slug:'proactive-pa',title:'Proactive PA',cat:'productivity',desc:'Proactive behavior patterns — transforms reactive task-following into anticipatory execution. Alert tiers, initiative guardrails, silence strategy.'},
+  {icon:'📈',slug:'skill-analytics',title:'Skill Analytics',cat:'monitoring',desc:'Track skill usage across sessions — invocation logs, daily summaries, unused skill detection, and optimization recommendations.'},
   {icon:'🗂️',slug:'skill-master',title:'Skill Master',cat:'productivity',desc:'Meta-skill for routing. Decision tree, keyword triggers, and multi-skill composition guidance.'},
   {icon:'🔎',slug:'skill-scout',title:'Skill Scout',cat:'productivity',desc:'Daily automated discovery — scans memory for unmet needs, searches web for new OpenClaw skills.'},
   {icon:'📡',slug:'supervisor',title:'Supervisor',cat:'monitoring',desc:'Central status dashboard: active tasks, open issues, pending follow-ups, system health in one report.'},
@@ -461,7 +482,6 @@ const CATEGORIES = [
   {id:'monitoring',icon:'📡',name:'Monitoring'},{id:'communication',icon:'💬',name:'Communication'},
   {id:'productivity',icon:'⚡',name:'Productivity'},{id:'memory',icon:'🧠',name:'Memory'},
   {id:'setup',icon:'🔧',name:'Setup'},{id:'integration',icon:'🔌',name:'Integration'},
-  {id:'language',icon:'🌍',name:'Language'},
 ];
 
 // ── Filter pills ──
