@@ -182,6 +182,18 @@ Never log: casual greetings, duplicate info, credentials.
 4. After responding: log anything worth remembering
 ```
 
+> ⚠️ **Enforcement rule (learned in production, April 2026):**
+> A rule written in a skill without a trigger mechanism will not be followed.
+> After installing this skill, add the following line to your **HEARTBEAT.md**:
+>
+> ```
+> ## WhatsApp Group Memory (every response)
+> On every group message response — update memory/whatsapp/groups/<JID>/context.md.
+> Path: /opt/ocana/openclaw/workspace/memory/whatsapp/groups/
+> ```
+>
+> Without this HEARTBEAT.md entry, the logging rule will silently fail across sessions.
+
 ---
 
 ## Part 2: Unanswered Message Tracking
