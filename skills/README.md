@@ -40,6 +40,7 @@ Modular SKILL.md-based playbooks for OpenClaw AI Personal Assistant agents. Each
 | [heleni-best-practices](heleni-best-practices/) | Daily sync of best practices from the pa-skills website |
 | [skill-scout](skill-scout/) | Automated daily discovery of new skills and PA automation ideas |
 | [memory-tiering](memory-tiering/) | Multi-tiered memory management (HOT/WARM/COLD) with automated pruning |
+| [proactive-pa](proactive-pa/) | Proactive PA behavior patterns — transforms reactive task-following into anticipatory execution |
 
 ### Operations
 
@@ -47,12 +48,6 @@ Modular SKILL.md-based playbooks for OpenClaw AI Personal Assistant agents. Each
 |-------|-------------|
 | [maintenance](maintenance/) | Workspace backup to GitHub + OpenClaw/skill updates |
 | [billing-monitor](billing-monitor/) | API billing error detection, alerting, and fallback model switching |
-
-### Language
-
-| Skill | Description |
-|-------|-------------|
-| [hebrew-nikud](hebrew-nikud/) | Hebrew vowel-point reference for correct nikud in AI-generated text and TTS |
 
 ## Skill Format
 

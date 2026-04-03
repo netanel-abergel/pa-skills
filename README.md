@@ -48,7 +48,7 @@ description: "Monitor API billing errors and alert the owner. Use when: ..."
 
 ---
 
-## Skills (20)
+## Skills (21)
 
 ### Core
 
@@ -86,6 +86,7 @@ description: "Monitor API billing errors and alert the owner. Use when: ..."
 | [heleni-best-practices](skills/heleni-best-practices/) | Daily sync of production lessons from the pa-skills website |
 | [skill-scout](skills/skill-scout/) | Automated daily discovery of new skills and PA automation ideas |
 | [memory-tiering](skills/memory-tiering/) | Multi-tiered memory management (HOT/WARM/COLD) with automated pruning |
+| [proactive-pa](skills/proactive-pa/) | Proactive PA behavior patterns — transforms reactive task-following into anticipatory execution |
 
 ### Operations
 
@@ -93,12 +94,6 @@ description: "Monitor API billing errors and alert the owner. Use when: ..."
 |-------|-------------|
 | [maintenance](skills/maintenance/) | Workspace backup to GitHub + OpenClaw and skill updates |
 | [billing-monitor](skills/billing-monitor/) | API billing error detection, alerting, and fallback model switching |
-
-### Language
-
-| Skill | Description |
-|-------|-------------|
-| [hebrew-nikud](skills/hebrew-nikud/) | Hebrew vowel-point reference for correct nikud in AI-generated text and TTS |
 
 ---
 
@@ -139,7 +134,7 @@ pa-skills/
 ├── index.html               # GitHub Pages website
 ├── install.sh               # Batch installer script
 ├── heleni.jpg               # Heleni avatar
-└── .github/workflows/       # Auto-deploy to GitHub Pages
+└── heleni-hero.png          # Heleni hero illustration
 ```
 
 ---
@@ -155,7 +150,7 @@ pa-skills/
 ### Skill design guidelines
 
 - **One domain = one skill.** Users think in domains, not tools.
-- **Keep the skill count between 28–32.** Above 40, routing breaks down.
+- **Keep the skill count under 25.** Above 30, routing breaks down.
 - **Each skill needs one clear "Use when:" sentence** in the description.
 - **Universal rules go in SOUL.md**, not in skills. Skills are triggered on demand.
 - **Diagnostics = appendix.** Never a standalone skill.
