@@ -206,7 +206,21 @@ footer a{color:var(--accent)}
   .search-box{max-width:100%}
   .story-block{padding:18px}
   .nav-right .nav-cmd.hide-mobile{display:none}
+  .guide-grid{grid-template-columns:1fr}
 }
+
+/* GUIDE */
+.guide-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
+.guide-category{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:border-color .2s}
+.guide-category:hover{border-color:var(--border-hover)}
+.guide-cat-header{display:flex;align-items:center;gap:10px;padding:16px 20px;border-bottom:1px solid var(--border);background:rgba(255,255,255,.015)}
+.guide-cat-icon{font-size:20px}
+.guide-cat-name{font-size:14px;font-weight:700;color:var(--text-bright);font-family:var(--sans)}
+.guide-items{padding:4px 0}
+.guide-item{padding:12px 20px;border-bottom:1px solid rgba(255,255,255,.03)}
+.guide-item:last-child{border-bottom:none}
+.guide-q{font-size:13px;color:var(--accent);font-weight:600;margin-bottom:4px}
+.guide-a{font-size:12px;color:var(--text-dim);line-height:1.6}
 </style>
 </head>
 <body>
@@ -241,6 +255,7 @@ footer a{color:var(--accent)}
 <!-- TAB BAR -->
 <div class="tab-bar">
   <button class="tab-btn active" data-tab="heleni" onclick="switchTab('heleni')">Heleni</button>
+  <button class="tab-btn" data-tab="guide" onclick="switchTab('guide')">Guide</button>
   <button class="tab-btn" data-tab="skills" onclick="switchTab('skills')">Skills</button>
   <button class="tab-btn" data-tab="learnings" onclick="switchTab('learnings')">Learnings</button>
   <button class="tab-btn" data-tab="install" onclick="switchTab('install')">Install</button>
@@ -344,6 +359,136 @@ footer a{color:var(--accent)}
         <div class="skill-desc" style="-webkit-line-clamp:unset;overflow:visible">Daily sync of production lessons from Heleni. Fetches latest best practices, learnings, and skill updates — then applies relevant lessons to your own PA setup. The <code style="color:var(--accent);background:var(--accent-dim);padding:1px 5px;border-radius:3px;font-size:12px">SOUL.md</code> in skill form.</div>
         <div class="skill-meta"><span style="color:var(--text-dim)">SKILL.md</span><span class="skill-arrow" style="opacity:1">&rarr;</span></div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- TAB: GUIDE -->
+<div class="tab-panel" id="tab-guide">
+  <div class="section-prompt">cat GUIDE.md</div>
+  <div class="section-title">What Can You Ask Your AI PA?</div>
+  <div class="section-sub">// real examples of what to say and what you get back — works in English and Hebrew</div>
+
+  <div class="guide-grid">
+
+    <div class="guide-category">
+      <div class="guide-cat-header">
+        <span class="guide-cat-icon">📅</span>
+        <span class="guide-cat-name">Meetings</span>
+      </div>
+      <div class="guide-items">
+        <div class="guide-item"><div class="guide-q">"What's my next meeting?"</div><div class="guide-a">Next meeting + time, participants, summary of last meeting with them, open action items</div></div>
+        <div class="guide-item"><div class="guide-q">"Summarize my meeting with Daniel"</div><div class="guide-a">Title, date, participants, 3-5 summary bullets, topics, action items</div></div>
+        <div class="guide-item"><div class="guide-q">"Schedule a meeting with Omri on Tuesday"</div><div class="guide-a">Checks both calendars, finds a free slot, sends invite</div></div>
+      </div>
+    </div>
+
+    <div class="guide-category">
+      <div class="guide-cat-header">
+        <span class="guide-cat-icon">☀️</span>
+        <span class="guide-cat-name">Morning Briefing</span>
+      </div>
+      <div class="guide-items">
+        <div class="guide-item"><div class="guide-q">Auto-sent at 07:30 every day</div><div class="guide-a">Today's meetings, urgent emails, open tasks, meeting prep (past summary + open actions for each meeting)</div></div>
+        <div class="guide-item"><div class="guide-q">"Send me a briefing"</div><div class="guide-a">Same as above, on demand</div></div>
+      </div>
+    </div>
+
+    <div class="guide-category">
+      <div class="guide-cat-header">
+        <span class="guide-cat-icon">📡</span>
+        <span class="guide-cat-name">Status</span>
+      </div>
+      <div class="guide-items">
+        <div class="guide-item"><div class="guide-q">"What's the status?"</div><div class="guide-a">Full report: open tasks, monitored groups, pending follow-ups, system health</div></div>
+        <div class="guide-item"><div class="guide-q">"What are you working on?"</div><div class="guide-a">Active tasks with owner, status, and next step</div></div>
+        <div class="guide-item"><div class="guide-q">"Is everything OK?"</div><div class="guide-a">Health check: billing, calendar, crons, unanswered messages</div></div>
+      </div>
+    </div>
+
+    <div class="guide-category">
+      <div class="guide-cat-header">
+        <span class="guide-cat-icon">🔍</span>
+        <span class="guide-cat-name">Research & Synthesis</span>
+      </div>
+      <div class="guide-items">
+        <div class="guide-item"><div class="guide-q">"Research what MCP is"</div><div class="guide-a">3-5 sentence synthesis + bullet points + cited sources</div></div>
+        <div class="guide-item"><div class="guide-q">"Find me tools for AI scheduling"</div><div class="guide-a">Synthesized answer from multiple sources, with links</div></div>
+        <div class="guide-item"><div class="guide-q">"What do we know about [Competitor]?"</div><div class="guide-a">Summary from monday board + latest web findings</div></div>
+      </div>
+    </div>
+
+    <div class="guide-category">
+      <div class="guide-cat-header">
+        <span class="guide-cat-icon">✅</span>
+        <span class="guide-cat-name">Task Management</span>
+      </div>
+      <div class="guide-items">
+        <div class="guide-item"><div class="guide-q">"Take ownership of this task"</div><div class="guide-a">Task registered with status, updates when stuck or done</div></div>
+        <div class="guide-item"><div class="guide-q">"Follow up with Ruth on the onboarding doc"</div><div class="guide-a">Sends follow-up, logs outcome, closes loop with you</div></div>
+        <div class="guide-item"><div class="guide-q">"What's the status of your tasks?"</div><div class="guide-a">List of open tasks with status and who's waiting</div></div>
+      </div>
+    </div>
+
+    <div class="guide-category">
+      <div class="guide-cat-header">
+        <span class="guide-cat-icon">📊</span>
+        <span class="guide-cat-name">monday.com</span>
+      </div>
+      <div class="guide-items">
+        <div class="guide-item"><div class="guide-q">"What's the status of the PA rollout project?"</div><div class="guide-a">Board items, statuses, deadlines, blockers</div></div>
+        <div class="guide-item"><div class="guide-q">"Add a task to the board"</div><div class="guide-a">Creates item with owner, due date, status</div></div>
+        <div class="guide-item"><div class="guide-q">"What's overdue?"</div><div class="guide-a">All items past their due date</div></div>
+        <div class="guide-item"><div class="guide-q">"Summarize what changed on the board this week"</div><div class="guide-a">Activity log digest — what moved, what was added</div></div>
+      </div>
+    </div>
+
+    <div class="guide-category">
+      <div class="guide-cat-header">
+        <span class="guide-cat-icon">💬</span>
+        <span class="guide-cat-name">WhatsApp & Communication</span>
+      </div>
+      <div class="guide-items">
+        <div class="guide-item"><div class="guide-q">"Who hasn't replied to me?"</div><div class="guide-a">Unanswered messages in the last 30 minutes</div></div>
+        <div class="guide-item"><div class="guide-q">"What's the latest with Alfred?"</div><div class="guide-a">Conversation history, decisions, open loops</div></div>
+        <div class="guide-item"><div class="guide-q">"Send Ruth that..."</div><div class="guide-a">Sends message (after confirmation)</div></div>
+      </div>
+    </div>
+
+    <div class="guide-category">
+      <div class="guide-cat-header">
+        <span class="guide-cat-icon">🔧</span>
+        <span class="guide-cat-name">System & Health</span>
+      </div>
+      <div class="guide-items">
+        <div class="guide-item"><div class="guide-q">"Is billing OK?"</div><div class="guide-a">API key + billing status check</div></div>
+        <div class="guide-item"><div class="guide-q">"Run an eval"</div><div class="guide-a">Performance score 1-25, findings, recommendations</div></div>
+        <div class="guide-item"><div class="guide-q">"Back up the workspace to GitHub"</div><div class="guide-a">Push to repo + confirmation</div></div>
+        <div class="guide-item"><div class="guide-q">"What skills are you missing?"</div><div class="guide-a">Gap report + new skill recommendations</div></div>
+      </div>
+    </div>
+
+    <div class="guide-category">
+      <div class="guide-cat-header">
+        <span class="guide-cat-icon">🧠</span>
+        <span class="guide-cat-name">Memory & Learning</span>
+      </div>
+      <div class="guide-items">
+        <div class="guide-item"><div class="guide-q">"Remember that..."</div><div class="guide-a">Saves to memory file</div></div>
+        <div class="guide-item"><div class="guide-q">"What did you learn this week?"</div><div class="guide-a">MEMORY.md update with key insights</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="margin-top:36px;padding:20px 24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);border-left:3px solid var(--accent)">
+    <div style="font-size:13px;font-weight:700;color:var(--text-bright);margin-bottom:10px">Tips</div>
+    <div style="font-size:12px;color:var(--text-dim);line-height:1.8">
+      <strong style="color:var(--accent)">Hebrew works</strong> — all triggers work in Hebrew too<br>
+      <strong style="color:var(--accent)">No exact format needed</strong> — natural language works<br>
+      <strong style="color:var(--accent)">After a meeting summary</strong> — say "push the action items to monday" and your PA will create them<br>
+      <strong style="color:var(--accent)">Morning briefing</strong> — arrives automatically at 07:30 with prep for each of today's meetings<br>
+      <strong style="color:var(--accent)">Status anytime</strong> — "what's the status?" works in any context, at any time
     </div>
   </div>
 </div>
@@ -453,7 +598,7 @@ function switchTab(tab) {
 
 // Handle hash on load
 const hash = location.hash.replace('#','');
-if (['heleni','skills','learnings','install','faq'].includes(hash)) switchTab(hash);
+if (['heleni','guide','skills','learnings','install','faq'].includes(hash)) switchTab(hash);
 
 const SKILLS = [
   {icon:'🌐',slug:'ai-pa',title:'AI-PA Network',cat:'communication',desc:'Multi-agent PA coordination — contact peer PAs, delegate tasks, share context across the network.'},
