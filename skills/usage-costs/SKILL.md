@@ -1,5 +1,6 @@
 ---
 name: usage-costs
+version: "1.0.0"
 description: "Report AI token usage and estimated costs. Use when: owner asks about costs today/yesterday/this week, per session, or per model. Shows main session, cron jobs, and subagents. Answers: 'how much did today cost?', 'how much was this session?', 'what was last week's spend?'"
 ---
 
