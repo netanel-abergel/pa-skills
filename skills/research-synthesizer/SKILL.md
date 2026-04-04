@@ -35,6 +35,27 @@ Trigger phrases:
 
 ## Step-by-Step Process
 
+### Step 0: Question Decomposition (GPT Researcher Pattern)
+
+Before searching, decompose the question into specific sub-questions:
+
+```
+Input: "What is Paperclip and how does it compare to monday.com?"
+
+Sub-questions:
+1. What is Paperclip? What does it do?
+2. Who built it and when?
+3. What are its core features?
+4. How is it positioned vs. project management tools?
+5. What does monday.com offer that Paperclip doesn't (and vice versa)?
+```
+
+**Rule:** For broad or multi-faceted questions (competitive analysis, "explain X", "compare A and B") — always decompose first. For simple factual questions ("who founded X", "when did Y happen") — skip this step.
+
+Each sub-question becomes its own search query. This produces deeper, less biased results than 5 phrasings of the same question.
+
+---
+
 ### Step 1: Classify the Question
 
 Before searching:
@@ -79,15 +100,19 @@ Run all query variants using `web_search`. Collect:
 
 Do not fetch full page content unless snippet is insufficient.
 
-### Step 4: Deduplicate & Filter
+### Step 4: Deduplicate, Filter & Score Sources
 
 From all results:
 1. Remove duplicate URLs
 2. Remove results that don't address the question
 3. Remove results older than 2 years for fast-moving topics (AI, tech, news)
-4. Prioritize: official docs > reputable publications > blogs > forums
+4. Score source credibility:
+   - **High:** Official docs, peer-reviewed, major publications (TechCrunch, Wired, HBR)
+   - **Medium:** Reputable blogs, GitHub repos, well-known newsletters
+   - **Low:** Forums, anonymous posts, marketing pages
+5. Prioritize high-credibility sources. If only low-credibility sources available — flag it.
 
-Keep the top 3–6 most useful sources.
+Target: 5–10 sources for deep research, 3–5 for quick questions.
 
 ### Step 5: Synthesize
 
@@ -188,8 +213,9 @@ If the topic is inherently Israeli (local news, Israeli law, etc.) → weight He
 
 ## Rules
 
-1. **Always cite sources** — no answer without at least 2 URLs
-2. **Max ~400 words** — be concise, not exhaustive
+1. **Always cite sources** — no answer without at least 2 URLs. For competitive analysis: minimum 5 sources.
+2. **Deep questions → decompose first** (Step 0). Simple facts → skip decomposition.
+3. **Max ~400 words** — be concise, not exhaustive
 3. **Direct answer first** — no preamble, no "I will now search..."
 4. **Hebrew in, Hebrew out** — match the user's language
 5. **Flag uncertainty** — if sources conflict or data is stale, say so
