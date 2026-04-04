@@ -1,9 +1,17 @@
 ---
 name: meeting-notetaker
-description: "Fetch and present meeting notes from monday.com Notetaker, or show the next upcoming meeting with full context prep. Use when: asked to summarize a meeting, find notes from a meeting with a specific person, retrieve past meeting summaries, or asked about the next meeting. Trigger phrases: 'סכם פגישה', 'meeting notes', 'מה היה בפגישה', 'notes from meeting with X', 'פגישה עם X', 'last meeting with', 'תסכמי פגישה', 'מה הפגישה הבאה שלי', 'next meeting', 'what is my next meeting'."
+version: "1.0.0"
+description: "Fetch and present meeting notes from monday.com Notetaker, or show the next upcoming meeting with full context prep. Use when: asked to summarize a meeting, find notes from a meeting with a specific person, retrieve past meeting summaries, or asked about the next meeting. Trigger phrases: 'meeting notes', 'notes from meeting with X', 'last meeting with', 'summarize meeting', 'next meeting', 'what is my next meeting'."
 ---
 
 # Meeting Notetaker Skill
+
+## Load Local Context
+```bash
+CONTEXT_FILE="/opt/ocana/openclaw/workspace/skills/meeting-notetaker/.context"
+[ -f "$CONTEXT_FILE" ] && source "$CONTEXT_FILE"
+# Then use: $OWNER_EMAIL, $CALENDAR_ID, $GOG_CREDS, etc.
+```
 
 ## Scope
 
@@ -14,18 +22,6 @@ It does NOT fetch Zoom, Fathom, Fireflies, or other external recording services.
 
 ## Trigger Phrases
 
-### Hebrew
-- "סכם פגישה"
-- "מה היה בפגישה"
-- "פגישה עם X"
-- "תסכמי פגישה"
-- "מה קרה בפגישה עם X"
-- "תני לי סיכום פגישה"
-- "מה הפגישה הבאה שלי"
-- "מה יש לי עכשיו"
-- "מה הבאה"
-
-### English
 - "meeting notes"
 - "notes from meeting with X"
 - "last meeting with X"
@@ -44,17 +40,17 @@ Determine search mode:
 
 | Input | Mode |
 |---|---|
-| "last meeting" / "הפגישה האחרונה" | **Most Recent** — no filter |
-| "meeting with [Name]" / "פגישה עם [Name]" | **Person Search** — use name as search term |
-| "meeting about [Topic]" / "פגישה על [Topic]" | **Topic Search** — use topic as search term |
+| "last meeting" | **Most Recent** — no filter |
+| "meeting with [Name]" | **Person Search** — use name as search term |
+| "meeting about [Topic]" | **Topic Search** — use topic as search term |
 | Specific date given | **Date Search** — filter by date after fetching |
-| "next meeting" / "מה הפגישה הבאה" | **Next Meeting Mode** — see Step 1a below |
+| "next meeting" | **Next Meeting Mode** — see Step 1a below |
 
 ---
 
 ## Step 1a — Next Meeting Mode
 
-When triggered by "מה הפגישה הבאה", "next meeting", or similar:
+When triggered by "next meeting" or similar:
 
 1. **Fetch calendar** using direct Google Calendar API (NOT `gog` CLI — broken on server). Use credentials from `/opt/ocana/openclaw/.gog/credentials.json` account `owner`. See owner-briefing skill for the full auth flow.
 2. **Find the next upcoming event** — first event that starts after now
@@ -68,25 +64,25 @@ When triggered by "מה הפגישה הבאה", "next meeting", or similar:
 ### Next Meeting Prep Format
 
 ```
-📅 הפגישה הבאה שלך:
+📅 Your next meeting:
 [Meeting Title]
 🕐 [Time] ([X minutes from now])
 👥 [Participants]
 
-🎯 הכנה:
-לא נמצא היסטוריה עם [Name] / OR:
+🎯 Prep:
+No history found with [Name] / OR:
 
-פגישה אחרונה עם [Name] ([date]):
+Last meeting with [Name] ([date]):
 • [Summary bullet 1]
 • [Summary bullet 2]
 • [Summary bullet 3]
 
-✅ Action items פתוחים:
+✅ Open action items:
 • [Action] — [Owner]
 ```
 
 If no past meetings found with the participants → skip the prep section and just show the meeting details.
-If no upcoming meetings today → report "אין פגישות נוספות היום".
+If no upcoming meetings today → report "No more meetings today".
 
 ---
 
@@ -187,7 +183,7 @@ If owner says yes:
 
 | Situation | Response |
 |---|---|
-| No meetings found | "לא נמצאו פגישות ב-Monday Notetaker עבור [X]" / "No monday.com notetaker meetings found for [X]" |
+| No meetings found | "No monday.com notetaker meetings found for [X]" |
 | Search returns ambiguous results | List top 3 options with dates, ask which one |
 | Meeting found but no summary/topics | Show what's available, note "Summary not available for this meeting" |
 | Tool error | Report as BLOCKED: "Could not fetch meeting notes — notetaker service unavailable" |
