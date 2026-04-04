@@ -5,14 +5,17 @@ triggers:
   - "take ownership"
   - "track this"
   - "own this task"
-  - "קחי בעלות"
-  - "תעקבי אחרי"
-  - "תטפלי בזה"
   - "ownership"
-  - "תסמני כמשימה"
   - "add to my tasks"
   - "remind me about"
 ---
+
+## Load Local Context
+```bash
+CONTEXT_FILE="/opt/ocana/openclaw/workspace/skills/pa-ownership/.context"
+[ -f "$CONTEXT_FILE" ] && source "$CONTEXT_FILE"
+# Then use: $OWNER_PHONE, $TASKS_FILE, $WORKSPACE, etc.
+```
 
 # PA Ownership Skill
 
@@ -23,10 +26,10 @@ Heleni tracks tasks she owns — executing, retrying when blocked, and closing t
 ## When to Use
 
 Trigger phrases:
-- "take ownership" / "קחי בעלות"
-- "track this" / "תעקבי אחרי"
-- "תטפלי בזה" / "own this"
-- "add to my tasks" / "תסמני כמשימה"
+- "take ownership"
+- "track this"
+"own this"
+- "add to my tasks"
 - Any task Heleni explicitly commits to completing
 
 ---
@@ -115,7 +118,7 @@ On failure or block:
 ```
 If attempts >= max_attempts:
   → Set status: "FAILED"
-  → Report to initiated_by: "❌ [task] נכשל לאחר 3 ניסיונות: [reason]"
+  → Report to initiated_by: "❌ [task] failed after 3 attempts: [reason]"
   → Do NOT retry further
 Else:
   → Set status: "BLOCKED"
@@ -181,7 +184,6 @@ For each task in pa-tasks.json where status IN ["IN_PROGRESS", "BLOCKED"]:
   age = now - updated_at
   
   If age > 2 hours AND NOT reported_stuck:
-    → Notify Netanel: "⚠️ [task] תקועה כבר [X] שעות. [reason if BLOCKED]"
     → Mark last_notified_at = now
   
   If status == "BLOCKED" AND attempts < max_attempts:
@@ -216,25 +218,17 @@ When setting up this skill for the first time, add to HEARTBEAT.md:
 
 ### Task Stuck Alert (>2h)
 ```
-⚠️ משימה תקועה
 📋 [task title]
-⏱️ זמן: [X] שעות
-🚫 סיבה: [blocked_reason or "לא ידוע"]
-🔄 ניסיונות: [attempts]/[max_attempts]
+[max_attempts]
 ```
 
 ### Task Complete
 ```
-✅ [task title] — הושלם
 📝 [result summary]
 ```
 
 ### Task Failed (all retries exhausted)
 ```
-❌ [task title] — נכשל
-🔁 3 ניסיונות בוצעו
-🚫 סיבה: [blocked_reason]
-💡 צעד הבא: [recommendation]
 ```
 
 ---
