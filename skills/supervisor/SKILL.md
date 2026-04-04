@@ -3,6 +3,13 @@ name: supervisor
 description: "Central status dashboard for the PA agent. Use when: owner asks 'what's the status', 'what are you working on', 'what's happening', or any status/overview question. Aggregates active tasks, open issues, monitored groups, pending follow-ups, and system health into one structured report."
 ---
 
+## Load Local Context
+```bash
+CONTEXT_FILE="/opt/ocana/openclaw/workspace/skills/supervisor/.context"
+[ -f "$CONTEXT_FILE" ] && source "$CONTEXT_FILE"
+# Then use: $OWNER_PHONE, $TASKS_FILE, $PA_LIST_FILE, $BILLING_STATUS_FILE, etc.
+```
+
 # Supervisor Skill
 
 The single source of truth for what the agent is currently tracking.
@@ -12,10 +19,10 @@ The single source of truth for what the agent is currently tracking.
 ## When to Use
 
 Trigger phrases:
-- "מה הסטטוס" / "what's the status"
-- "מה קורה" / "what's going on"
-- "תתני לי סיכום" / "give me a summary"
-- "על מה את עובדת" / "what are you working on"
+- "what's the status" / "what's the status"
+- "what's going on" / "what's going on"
+- "give me a summary" / "give me a summary"
+- "what are you working on" / "what are you working on"
 - "supervisor"
 
 ---
@@ -68,13 +75,11 @@ build_status_report() {
 
   # Open tasks / blockers from daily notes
   echo "🔴 URGENT / BLOCKING"
-  grep -i "blocked\|urgent\|waiting\|מחכה\|חסום" \
     "$WORKSPACE/memory/$TODAY.md" 2>/dev/null | tail -5
   echo ""
 
   # Pending follow-ups from DM memory
   echo "📬 PENDING FOLLOW-UPS"
-  grep -r "follow.up\|pending\|לעקוב\|להחזיר" \
     "$WORKSPACE/memory/whatsapp/dms/" 2>/dev/null \
     --include="*.md" | grep "$(date +%Y-%m)" | tail -5
   echo ""
@@ -220,7 +225,7 @@ Use a larger model only if summarizing very long conversation histories.
 
 ---
 
-## Scope Rules
+## Scope Rules (MANDATORY)
 
 **Always check who is asking and from where before generating the status report:**
 
@@ -229,6 +234,14 @@ Use a larger model only if summarizing very long conversation histories.
 | DM from owner | Full report — all tasks, all groups, all issues, system health |
 | Group message | Filter to THIS GROUP ONLY — topics, decisions, open items from this group |
 | DM from someone else | Filter to items relevant to this person only |
+
+**Never send the full supervisor report in a group.**
+
+## Communication Rules
+- React 👍 when owner asks for status (acknowledges you received the request)
+- After generating report: react ✅
+- PA contacts: read from `/opt/ocana/openclaw/workspace/PA_LIST.md`
+- "my pleasure / you're welcome" rule: if owner says "thank you" after the report, reply "my pleasure / you're welcome"
 
 **Never send the full supervisor report in a group.**
 
