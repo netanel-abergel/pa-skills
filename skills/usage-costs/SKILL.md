@@ -133,9 +133,9 @@ Append to `/opt/ocana/openclaw/workspace/data/token-history.jsonl`:
 ---
 
 ## Trigger Phrases
-- "כמה עלה היום?" / "how much did today cost?"
-- "כמה עלה הסשיין הזה?" / "how much was this session?"
-- "כמה עלה השבוע?" / "how much this week?"
-- "תראי לי עלויות" / "show me costs"
+"how much did today cost?"
+"how much was this session?"
+"how much this week?"
+"show me costs"
 - "usage report"
 - "token usage"
