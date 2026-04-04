@@ -32,7 +32,7 @@ Before saving anything, route it to the correct destination.
 
 ### ALWAYS → monday.com
 - Research (competitors, market, technology)
-- Documents Netanel needs to access or share
+- Documents the owner needs to access or share
 - Project tracking, tasks, milestones
 - Meeting summaries
 - GTM, product, strategy content
@@ -44,7 +44,7 @@ Before saving anything, route it to the correct destination.
 - PA directory (PA_LIST.md)
 
 ### ALWAYS → MEMORY.md
-- Netanel preferences (after confirmed 2+ times)
+- Owner preferences (after confirmed 2+ times)
 - Behavioral rules (after a correction)
 - Key contacts and relationships
 - System facts (calendar auth, server details)
