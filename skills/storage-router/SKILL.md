@@ -59,13 +59,21 @@ Before saving anything, route it to the correct destination.
 
 ## monday.com Workspace Map
 
-| Content | Workspace | Board/Doc |
+**Workspace:** Builders CoWORK (ID: 14880329)
+**Structure Index Doc:** 39993682 (always check here for latest IDs)
+
+| Content | Folder | Board/Doc ID |
 |---|---|---|
-| Competitor analysis | Builders CoWORK (14880329) | Competitive Analysis — Builders CoWORK (doc: 39808656) |
-| Market research | Builders CoWORK (14880329) | Market Research — Builders CoWORK |
-| Product brief | Builders CoWORK (14880329) | Product Brief — Builders CoWORK |
-| PA Rollout tracking | Builders CoWORK (14880329) | PA Rollout — Project Tracker (18407159006) |
-| Technology research | Builders CoWORK (14880329) | Claude SDK vs LangGraph doc |
+| Competitor analysis | 📁 Research (20077300) | Board: 18406632346 / Doc: 39808656 |
+| Market research | 📁 Research (20077300) | Board: 18406632334 |
+| Technology deep dives | 📁 Research (20077300) | Per-tool board (see index) |
+| Product brief | 📁 Product (20077301) | Board: 18406632301 / Doc: 39808645 |
+| MVP planning | 📁 Product (20077301) | Board: 18406632217 |
+| GTM strategy | 📁 GTM (20077298) | Board: 18406632223 |
+| PA Rollout tracking | 📁 Operations (20077299) | Board: 18407159006 |
+| Skills guide | 📁 Operations (20077299) | Board: 18407110746 |
+
+> For full index with all IDs: read doc 39993682 in monday.com before saving anything new.
 
 ---
 
