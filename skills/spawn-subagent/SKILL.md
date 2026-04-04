@@ -10,6 +10,27 @@ Any model. Task delegation doesn't require complex reasoning.
 
 ---
 
+## Subagent Safety Constraints (Isolation)
+
+Subagents share the same filesystem as the main session. To prevent destructive accidents:
+
+**Subagents are NOT allowed to:**
+- `rm -rf` or mass-delete files without explicit mention in task description
+- Force-push to git (`git push --force`)
+- Delete monday.com boards, workspaces, or items
+- Modify SOUL.md, MEMORY.md, or AGENTS.md
+- Send messages to external parties (WhatsApp, email)
+- Execute any command that contains: `drop`, `truncate`, `delete`, `destroy`, `wipe`, `nuke`
+
+**If a subagent task requires any of the above:**
+1. Log to audit.log: `[BLOCKED] subagent requested destructive action: <action>`
+2. Report BLOCKED to main session
+3. Main session must explicitly re-authorize before proceeding
+
+**Task description must be explicit:** If the task description doesn't mention a destructive action, the subagent must not perform it — even if it seems logical.
+
+---
+
 ## Audit Log (MANDATORY for external actions)
 
 Before any external action (send message, write file, push git, modify monday, restart service):
