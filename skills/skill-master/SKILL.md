@@ -7,6 +7,13 @@ description: "Meta-skill for skill selection and routing. Use this skill FIRST w
 
 # Skill Master
 
+## Load Local Context
+```bash
+CONTEXT_FILE="/opt/ocana/openclaw/workspace/skills/skill-master/.context"
+[ -f "$CONTEXT_FILE" ] && source "$CONTEXT_FILE"
+# Then use: $ANALYTICS_LOG, $PA_LIST_FILE, $GOG_CREDS, $WORKSPACE, etc.
+```
+
 ## Minimum Model
 Any model. This is a lookup table — any model can use it.
 
@@ -239,6 +246,8 @@ When a new skill is added:
 6. Add the skill name to the `KNOWN_SKILLS` list in `skill-analytics/SKILL.md`.
 
 > **Storage rule (always applies):** Before saving any content, run `storage-router` skill. Research/docs/strategy → monday.com. State/config/WhatsApp → local. Never save research locally.
+
+> **Privacy review (before any push to pa-skills or public repo):** Scan for internal names (workspace/product names, project codenames), phone numbers, JIDs, board/workspace IDs, internal domain names, and personal names. Replace with generic placeholders. Internal data belongs in `.context` files only.
 
 ---
 
