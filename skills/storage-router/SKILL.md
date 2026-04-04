@@ -28,6 +28,21 @@ Before saving anything, route it to the correct destination.
 
 ---
 
+## Persistent Layer Decision
+
+| Layer | Best for | Why |
+|---|---|---|
+| **GitHub** (private repo) | Agent state, memory, skills, .context | Version history, automated backup, private |
+| **monday.com** | Research, docs, tasks, strategy | Searchable, shareable, owner-accessible |
+| **Local only** | Runtime state, credentials, cron state | Speed, security, no sync needed |
+
+**Rule of thumb:**
+- Owner needs to read/share it → monday.com
+- Agent needs it across sessions → GitHub
+- Ephemeral or secret → local only
+
+---
+
 ## Rules
 
 ### ALWAYS → monday.com
@@ -37,23 +52,23 @@ Before saving anything, route it to the correct destination.
 - Meeting summaries
 - GTM, product, strategy content
 
-### ALWAYS → local
+### ALWAYS → GitHub (private repo)
+- MEMORY.md, daily notes, .context files
+- Skill files (SKILL.md → pa-skills public repo)
+- Agent behavioral rules and preferences
+- Lessons learned
+
+### ALWAYS → local only
 - Runtime state (cron jobs, inbox, heartbeat state)
 - WhatsApp memory (per-conversation context)
 - Credentials and config
 - PA directory (PA_LIST.md)
 
-### ALWAYS → MEMORY.md
-- Owner preferences (after confirmed 2+ times)
-- Behavioral rules (after a correction)
-- Key contacts and relationships
-- System facts (calendar auth, server details)
-
 ### NEVER
-- ❌ Save research/docs to local files
+- ❌ Save research/docs to local files only
 - ❌ Save credentials or config to monday.com
 - ❌ Save WhatsApp context to monday.com
-- ❌ Duplicate content in both local and monday
+- ❌ Duplicate content across layers
 
 ---
 
