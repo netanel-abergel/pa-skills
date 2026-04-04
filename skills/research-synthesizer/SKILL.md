@@ -35,7 +35,18 @@ Trigger phrases:
 
 ## Step-by-Step Process
 
-### Step 0: Question Decomposition (GPT Researcher Pattern)
+### Step 0: Clarify the Brief
+
+Before any research on companies, products, or competitors — ask or verify:
+1. **What is the positioning of OUR product?** Don't assume. Ask if unclear.
+2. **What is the scope?** Competitor analysis? Market sizing? Both?
+3. **What will the output be used for?** Pitch deck? Internal doc? Strategy?
+
+This prevents writing a wrong document that needs to be rewritten.
+
+---
+
+### Step 0b: Question Decomposition (GPT Researcher Pattern)
 
 Before searching, decompose the question into specific sub-questions:
 
@@ -90,6 +101,20 @@ Create 3–5 distinct query phrasings to maximize coverage and reduce bias:
 - Q3: "LangGraph explained simply"
 - Q4: "LangGraph מה זה"
 - Q5: "LangGraph 2025 latest"
+
+### Step 2b: Verify Companies — Visit Their Website First
+
+**MANDATORY for any competitor/company research:**
+
+Before writing anything about a company:
+1. `web_fetch` their main URL (homepage + relevant sub-pages: /agents, /product, /pricing)
+2. `web_search` "[company] funding 2026" AND "[company] review 2026"
+3. Only write what you actually found. If unverified — say "unverified"
+
+**Never assume a company's capabilities from its category name.**
+Example: "issue tracker" does NOT mean "no agents." Verify.
+
+---
 
 ### Step 3: Run Searches (Parallel)
 
@@ -214,8 +239,11 @@ If the topic is inherently Israeli (local news, Israeli law, etc.) → weight He
 ## Rules
 
 1. **Always cite sources** — no answer without at least 2 URLs. For competitive analysis: minimum 5 sources.
-2. **Deep questions → decompose first** (Step 0). Simple facts → skip decomposition.
-3. **Max ~400 words** — be concise, not exhaustive
+2. **Clarify positioning before writing** (Step 0) — especially for competitive analysis. Ask what OUR product does before comparing.
+3. **Verify companies from their own website** (Step 2b) — never assume from category name.
+4. **Deep questions → decompose first** (Step 0b). Simple facts → skip decomposition.
+5. **Max ~400 words** — be concise, not exhaustive
+6. **One clean doc, not multiple drafts** — get it right before publishing
 3. **Direct answer first** — no preamble, no "I will now search..."
 4. **Hebrew in, Hebrew out** — match the user's language
 5. **Flag uncertainty** — if sources conflict or data is stale, say so
