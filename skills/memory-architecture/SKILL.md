@@ -1,7 +1,15 @@
 ---
 name: memory-architecture
+version: "1.0.0"
 description: "Honcho-inspired memory architecture for PA agents. Use when writing to MEMORY.md, ending a significant conversation, or deciding what to remember long-term. Implements two key patterns: deductive memory (not just facts, but logical conclusions) and session summaries (capture context before it disappears)."
 ---
+
+## Load Local Context
+```bash
+CONTEXT_FILE="/opt/ocana/openclaw/workspace/skills/memory-architecture/.context"
+[ -f "$CONTEXT_FILE" ] && source "$CONTEXT_FILE"
+# Then use: $WORKSPACE, $MEMORY_FILE, $WHATSAPP_MEMORY_DIR, $OWNER_TIMEZONE, etc.
+```
 
 # Memory Architecture Skill (Honcho-inspired)
 
@@ -136,7 +144,7 @@ openclaw cron add \
 - WhatsApp memory path: `memory/whatsapp/groups/<JID-sanitized>/context.md` or `memory/whatsapp/dms/<PHONE-sanitized>/context.md`
 - Sanitize rule: replace `@`, `.`, `+` with `-`
 - After writing memory — push to git (git-backup skill)
-- **"בכיף" is a behavior rule** (not a memory item) — it lives in SOUL.md, do not re-derive from memory
+- **"sure thing" is a behavior rule** (not a memory item) — it lives in SOUL.md, do not re-derive from memory
 
 ## Cost Tips
 
