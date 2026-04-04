@@ -2,15 +2,10 @@
 name: research-synthesizer
 description: "Multi-source research synthesizer. Takes a question, runs 3-5 parallel web searches with varied phrasings, deduplicates, and returns a cited, concise answer. For Hebrew questions, searches in both Hebrew and English. Output is always under ~400 words."
 triggers:
-  - "תחקר"
-  - "חפש לי"
   - "research"
   - "find out about"
   - "what do you know about"
   - "synthesize"
-  - "תסכם לי מחקר"
-  - "מה אתה יודע על"
-  - "תמצא לי מידע"
   - "look up"
 ---
 
@@ -23,12 +18,11 @@ Multi-source search → deduplicate → synthesize → cite. Concise answer unde
 ## When to Use
 
 Trigger phrases:
-- "תחקר [topic]" / "research [topic]"
-- "חפש לי [topic]" / "find out about [topic]"
+- "research [topic]"
+- "find out about [topic]"
 - "what do you know about [topic]"
 - "synthesize [topic]"
-- "מה אתה יודע על [topic]"
-- "תמצא לי מידע על [topic]"
+
 - "look up [topic]"
 
 ---
@@ -95,11 +89,11 @@ Create 3–5 distinct query phrasings to maximize coverage and reduce bias:
 - Q4: *(skip — English topic)*
 - Q5: "LangGraph 2024 use cases"
 
-**Example — question: "מה זה LangGraph?"**
+**Example — question: "What is LangGraph?"**
 - Q1: "What is LangGraph and how does it work"
 - Q2: "LangGraph framework overview"
 - Q3: "LangGraph explained simply"
-- Q4: "LangGraph מה זה"
+- Q4: "LangGraph explained" (if topic has non-English coverage)
 - Q5: "LangGraph 2025 latest"
 
 ### Step 2b: Verify Companies — Visit Their Website First
@@ -182,12 +176,12 @@ Send the synthesized answer. Do NOT:
 
 [Direct 3-5 sentence answer]
 
-📌 עיקרי הנקודות / Key Points:
+📌 Key Points:
 • ...
 • ...
 • ...
 
-📚 מקורות / Sources:
+📚 Sources:
 1. [Title] — [URL]
 2. [Title] — [URL]
 3. [Title] — [URL]
@@ -197,23 +191,23 @@ Send the synthesized answer. Do NOT:
 
 ## Example
 
-**Input:** "תחקר — מה זה Model Context Protocol?"
+**Input:** "Research: What is Model Context Protocol?"
 
 **Output:**
 
 ```
 🔍 Model Context Protocol (MCP)
 
-Model Context Protocol (MCP) הוא תקן פתוח שפיתחה Anthropic המאפשר ל-LLMs להתחבר בצורה אחידה לכלים, APIs ומקורות נתונים חיצוניים. במקום שכל אינטגרציה תדרוש קוד מותאם אישית, MCP מגדיר שפה משותפת בין המודל לשרת הכלים. זה מפשט בניית agents ומאפשר שימוש חוזר בכלים בין פלטפורמות שונות.
+Model Context Protocol (MCP) is an open standard developed by Anthropic that lets LLMs connect uniformly to tools, APIs, and external data sources. Instead of each integration requiring custom code, MCP defines a shared language between the model and the tool server.
 
-📌 עיקרי הנקודות:
-• פרוטוקול client-server: ה-LLM הוא ה-client, הכלים הם servers
-• תמיכה ב-stdio ו-HTTP transport
-• מאפשר: tool calling, resource access, prompts
-• אימוץ רחב: Claude, Cursor, VS Code, ועוד
-• קוד פתוח — SDK זמין ל-Python, TypeScript, Java
+📌 Key Points:
+• Client-server protocol: the LLM is the client, tools are servers
+• Supports stdio and HTTP transport
+• Enables: tool calling, resource access, prompts
+• Widely adopted: Claude, Cursor, VS Code, and more
+• Open source — SDK available for Python, TypeScript, Java
 
-📚 מקורות:
+📚 Sources:
 1. MCP Official Docs — https://modelcontextprotocol.io
 2. Anthropic MCP Announcement — https://www.anthropic.com/news/model-context-protocol
 3. MCP GitHub — https://github.com/modelcontextprotocol
