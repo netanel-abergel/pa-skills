@@ -29,7 +29,7 @@ echo '{"ts":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'","skill":"SKILL_NAME","trigger":"T
 Fields:
 - `ts` — ISO 8601 UTC timestamp
 - `skill` — skill name (e.g. `meetings`, `supervisor`)
-- `trigger` — short phrase that caused selection (e.g. `"schedule meeting"`, `"מה הסטטוס"`)
+- `trigger` — short phrase that caused selection (e.g. `"schedule meeting"`, `"what's the status"`)
 - `context` — `dm`, `group:<name>`, or `cron`
 
 ---
@@ -155,7 +155,7 @@ Add to crontab to auto-send report every morning:
 
 ### Recent Activity
 - 07:14 — owner-briefing [morning briefing]
-- 07:30 — supervisor [מה הסטטוס]
+- 07:30 — supervisor [what's the status]
 - 09:02 — meetings [schedule meeting with Daniel]
 ```
 
