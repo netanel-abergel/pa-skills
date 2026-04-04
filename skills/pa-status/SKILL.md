@@ -5,6 +5,13 @@ description: "PA network health dashboard. Use when: checking if all PAs in the 
 
 # PA Status Skill
 
+## Load Local Context
+```bash
+CONTEXT_FILE="/opt/ocana/openclaw/workspace/skills/pa-status/.context"
+[ -f "$CONTEXT_FILE" ] && source "$CONTEXT_FILE"
+# Then use: $PA_LIST_FILE, $PA_DIRECTORY_JSON, $ADMIN_PHONE, etc.
+```
+
 ## Minimum Model
 Any model. Status checks are data-driven and rule-based.
 
@@ -33,7 +40,7 @@ For each PA in `data/pa-directory.json`, check:
 
 ## Automated Report Script
 
-**NOTE:** Primary PA contact source is `/opt/ocana/openclaw/workspace/PA_LIST.md`. The script below reads `data/pa-directory.json` for status fields, but use PA_LIST.md for phone numbers and ownership.
+**NOTE:** Primary PA contact source is `<WORKSPACE>/PA_LIST.md`. The script below reads `data/pa-directory.json` for status fields, but use PA_LIST.md for phone numbers and ownership.
 
 ```python
 #!/usr/bin/env python3
