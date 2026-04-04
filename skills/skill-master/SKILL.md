@@ -26,8 +26,8 @@ Start lean. Add a new skill only when there's a clear, recurring trigger that no
 ## Production Rules (Always Active)
 - **React 👍** when receiving task from owner — before starting
 - **React ✅** when done
-- **"בכיף"** when anyone says "תודה"
-- **NO_REPLY** for casual PA acks (👍, "got it", "תודה") unless directly asked
+- **"my pleasure / you're welcome"** when anyone says "thank you"
+- **NO_REPLY** for casual PA acks (👍, "got it", "thank you") unless directly asked
 - PA contacts: read from `/opt/ocana/openclaw/workspace/PA_LIST.md`
 - Google Calendar: use `/opt/ocana/openclaw/.gog/credentials.json` (NOT gog CLI)
 
@@ -97,12 +97,12 @@ Ask: "skill stats" / "skill usage" / "which skills am I using?" → triggers `sk
 | "I made a mistake" / "owner corrected me" | self-learning |
 | "backup workspace" / "push to git" | maintenance |
 | "update openclaw" / "update skills" / "run maintenance" | maintenance |
-| "שמור" / "save this" / "תתעדי" / "document this" | storage-router |
-| "כמה עלה היום" / "how much did today cost" / "usage report" | usage-costs |
-| "כמה עלה הסשיין" / "token usage" / "show me costs" | usage-costs |
-| "תעקבי על זה" / "track this" / "תפתחי ticket" | monday-for-agents |
+"save this" / "document this" / "document this" | storage-router |
+"how much did today cost" / "usage report" | usage-costs |
+"token usage" / "show me costs" | usage-costs |
+"track this" / "open a ticket" | monday-for-agents |
 | Task with 3+ steps or subagent | monday-for-agents |
-| "לאן לשמור" / "where should I save" | storage-router |
+| "where to save" / "where should I save" | storage-router |
 | "what was discussed in [group]" | whatsapp |
 | "find new skill ideas" / "what skills are trending" | skill-scout |
 | "skill usage" / "skill stats" / "skill report" | skill-analytics |
@@ -110,9 +110,9 @@ Ask: "skill stats" / "skill usage" / "which skills am I using?" → triggers `sk
 | "security check" / "check for vulnerabilities" | self-monitor |
 | "health check" / "check infrastructure" | self-monitor |
 | "how are all the PAs doing" / "PA network status" | supervisor |
-| "מה הסטטוס" / "what's the status" | supervisor |
+| "what's the status" / "what's the status" | supervisor |
 | "how am I doing" / "review my performance" | eval |
-| "run eval" / "מה עובד ומה לא" | eval |
+| "run eval" / "what's working and what isn't" | eval |
 | "summarize this YouTube video" | youtube-watcher |
 | "add nikud to this" / "Hebrew vowel points" | hebrew-nikud |
 | "compact memory" / "organize memory" | memory-tiering |
@@ -180,7 +180,6 @@ What kind of task is this?
 | **skill-analytics** | Analytics | Track skill usage, generate daily reports, find unused skills |
 | **storage-router** | Routing | Decide where to save content: monday.com vs local vs MEMORY.md |
 | **usage-costs** | Analytics | Token usage and cost reports: per session, per day, per week |
-
 
 ---
 
@@ -264,9 +263,9 @@ When a new skill is added:
 
 | Trigger | Action |
 |---|---|
-| "מה הסטטוס" / "what's the status" | supervisor |
+| "what's the status" / "what's the status" | supervisor |
 | "supervisor" | supervisor |
-| "מה קורה" / "give me a summary" | supervisor |
+| "what's going on" / "give me a summary" | supervisor |
 
 The supervisor skill aggregates: active tasks, billing issues, group activity, pending follow-ups, and system health into one structured report.
 
@@ -276,9 +275,9 @@ The supervisor skill aggregates: active tasks, billing issues, group activity, p
 
 | Trigger | Action |
 |---|---|
-| "תעשי eval" / "run eval" | eval |
-| "מה עובד ומה לא" | eval |
-| "בדקי הכל" | eval |
+| "run eval" / "run eval" | eval |
+| "what's working and what isn't" | eval |
+| "check everything" | eval |
 
 The eval skill scores performance, audits tasks, checks PA network health, verifies integrations, and reviews memory quality — all in one report.
 
