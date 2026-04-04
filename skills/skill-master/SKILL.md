@@ -98,6 +98,8 @@ Ask: "skill stats" / "skill usage" / "which skills am I using?" → triggers `sk
 | "backup workspace" / "push to git" | maintenance |
 | "update openclaw" / "update skills" / "run maintenance" | maintenance |
 | "שמור" / "save this" / "תתעדי" / "document this" | storage-router |
+| "תעקבי על זה" / "track this" / "תפתחי ticket" | task-tracker |
+| Task with 3+ steps or subagent | task-tracker |
 | "לאן לשמור" / "where should I save" | storage-router |
 | "what was discussed in [group]" | whatsapp |
 | "find new skill ideas" / "what skills are trending" | skill-scout |
@@ -175,6 +177,7 @@ What kind of task is this?
 | **youtube-watcher** | Utility | Fetch and summarize YouTube video transcripts |
 | **skill-analytics** | Analytics | Track skill usage, generate daily reports, find unused skills |
 | **storage-router** | Routing | Decide where to save content: monday.com vs local vs MEMORY.md |
+| **task-tracker** | Operations | Manage multi-step tasks in monday.com Task Tracker board |
 
 ---
 
