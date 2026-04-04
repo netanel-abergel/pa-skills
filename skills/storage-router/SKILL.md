@@ -1,5 +1,6 @@
 ---
 name: storage-router
+version: "1.0.0"
 description: "Decide where to save any piece of information — monday.com, local file, or MEMORY.md. Use this skill before saving anything to ensure the right destination. Prevents local clutter and ensures Netanel can access all relevant content in monday.com."
 ---
 
