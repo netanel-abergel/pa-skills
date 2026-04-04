@@ -11,6 +11,13 @@ Covers two responsibilities in one skill:
 
 ---
 
+## Load Local Context
+```bash
+CONTEXT_FILE="/opt/ocana/openclaw/workspace/skills/heleni-whatsapp/.context"
+[ -f "$CONTEXT_FILE" ] && source "$CONTEXT_FILE"
+# Then use: $OWNER_PHONE, $JID_CORE_TEAM, $INBOX_FILE, etc.
+```
+
 ## Minimum Model
 Any model. All operations are file-based. No reasoning required.
 Use a medium+ model only when deciding *what* is worth logging.
@@ -47,11 +54,11 @@ inbox/
 - **React ✅ when task is complete**
 - 👎 from owner = poor result — fix and log lesson
 
-### "בכיף" Rule
-- When anyone says "תודה" → always reply **"בכיף"** (no exceptions)
+### "my pleasure / you're welcome" Rule
+- When anyone says "thank you" → always reply **"my pleasure / you're welcome"** (no exceptions)
 
 ### Silence Rules (NO_REPLY)
-- Casual acks from PAs: 👍, "got it", "תודה", "noted" → **NO_REPLY** unless directly asked
+- Casual acks from PAs: 👍, "got it", "thank you", "noted" → **NO_REPLY** unless directly asked
 - Echo prevention: if sender is your own agent/number → **NO_REPLY** immediately
 - In groups: only respond if directly addressed or you add genuine value
 
@@ -328,7 +335,7 @@ unanswered = [
 
 if unanswered:
     for m in unanswered:
-        print(f"⚠️ לא ענינו ל-{m['sender_name']}: {m['body'][:80]}")
+        print(f"⚠️ No reply to {m['sender_name']}: {m['body'][:80]}")
 ```
 
 ### Cleanup (Weekly)
@@ -363,7 +370,7 @@ with open(INBOX, "w") as f:
 - Task details from owner's DM → never mention to third parties
 - When replying to person X → do NOT include context from conversation with person Y
 - Progress reports → owner in private DM only
-- ❌ Never write "לנתנאל:" or any internal framing inside a message to a third party
+- ❌ Never write "To Netanel:" or any internal framing inside a message to a third party
 - ❌ Never include the owner's name or intent in outbound messages to PAs or contacts
 
 ### Close the Loop With the Requester
