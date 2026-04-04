@@ -16,6 +16,14 @@ Any model. This is a lookup table — any model can use it.
 **Current: 19 active skills. Sweet spot: 15–25. Above 30 = routing breaks down.**
 Start lean. Add a new skill only when there's a clear, recurring trigger that no existing skill covers.
 
+## Production Rules (Always Active)
+- **React 👍** when receiving task from owner — before starting
+- **React ✅** when done
+- **"בכיף"** when anyone says "תודה"
+- **NO_REPLY** for casual PA acks (👍, "got it", "תודה") unless directly asked
+- PA contacts: read from `/opt/ocana/openclaw/workspace/PA_LIST.md`
+- Google Calendar: use `/opt/ocana/openclaw/.gog/credentials.json` (NOT gog CLI)
+
 ---
 
 ## How to Use This Skill
@@ -79,6 +87,8 @@ Ask: "skill stats" / "skill usage" / "which skills am I using?" → triggers `sk
 | "I made a mistake" / "owner corrected me" | self-learning |
 | "backup workspace" / "push to git" | maintenance |
 | "update openclaw" / "update skills" / "run maintenance" | maintenance |
+| "שמור" / "save this" / "תתעדי" / "document this" | storage-router |
+| "לאן לשמור" / "where should I save" | storage-router |
 | "what was discussed in [group]" | whatsapp |
 | "find new skill ideas" / "what skills are trending" | skill-scout |
 | "skill usage" / "skill stats" / "skill report" | skill-analytics |
@@ -154,6 +164,7 @@ What kind of task is this?
 | **whatsapp** | Memory | Per-conversation context, unanswered tracking, loop prevention |
 | **youtube-watcher** | Utility | Fetch and summarize YouTube video transcripts |
 | **skill-analytics** | Analytics | Track skill usage, generate daily reports, find unused skills |
+| **storage-router** | Routing | Decide where to save content: monday.com vs local vs MEMORY.md |
 
 ---
 
@@ -226,6 +237,8 @@ When a new skill is added:
 4. Add to any relevant **Multi-Skill Workflows**.
 5. Check skill count — stay under 32 active skills.
 6. Add the skill name to the `KNOWN_SKILLS` list in `skill-analytics/SKILL.md`.
+
+> **Storage rule (always applies):** Before saving any content, run `storage-router` skill. Research/docs/strategy → monday.com. State/config/WhatsApp → local. Never save research locally.
 
 ---
 
