@@ -5,6 +5,13 @@ description: "Evaluate PA performance through structured scoring, owner feedback
 
 # PA Eval Skill
 
+## Load Local Context
+```bash
+CONTEXT_FILE="/opt/ocana/openclaw/workspace/skills/pa-eval/.context"
+[ -f "$CONTEXT_FILE" ] && source "$CONTEXT_FILE"
+# Then use: $OWNER_PHONE, $EVAL_DIR, $WORKSPACE, etc.
+```
+
 ## Minimum Model
 Any model for filling in templates. Use a medium model for trend analysis and recommendations.
 
@@ -176,6 +183,42 @@ Log these automatically when detected:
 2.
 3.
 ```
+
+---
+
+## Score-Driven Skill Improvement (AutoAgent Pattern)
+
+After every eval, hill-climb on low scores:
+
+```python
+# Dimension → skill to improve
+SKILL_MAP = {
+    'Execution': 'spawn-subagent',      # atomic checkout, no double work
+    'Accuracy': 'self-learning',         # log corrections, update HOT.md
+    'Speed': 'skill-master',             # routing efficiency
+    'Proactivity': 'proactive-pa',       # heartbeat checks
+    'Communication': 'heleni-whatsapp',  # messaging rules
+    'Memory': 'memory-architecture',     # tiering, daily notes
+    'Tool Use': 'monday-for-agents',     # API patterns
+    'Judgment': 'skill-master',          # decision tree
+}
+
+# For each dimension scored < 4:
+# 1. Identify what went wrong (look at corrections from the week)
+# 2. Open the relevant SKILL.md
+# 3. Add or improve the specific rule that would have prevented the issue
+# 4. Push update to pa-skills
+```
+
+**Rule:** Never end an eval without updating at least one skill if any dimension scored < 4.
+
+**Weekly improvement loop:**
+- Run eval → identify lowest dimension
+- Check skill-analytics for unused/low-value skills
+- Update the skill → push to pa-skills
+- Next week: measure if score improved
+
+This is hill-climbing: each eval produces a score, each skill edit is a "commit", keep what improves the score.
 
 ---
 
