@@ -98,6 +98,8 @@ Ask: "skill stats" / "skill usage" / "which skills am I using?" → triggers `sk
 | "backup workspace" / "push to git" | maintenance |
 | "update openclaw" / "update skills" / "run maintenance" | maintenance |
 | "שמור" / "save this" / "תתעדי" / "document this" | storage-router |
+| "כמה עלה היום" / "how much did today cost" / "usage report" | usage-costs |
+| "כמה עלה הסשיין" / "token usage" / "show me costs" | usage-costs |
 | "תעקבי על זה" / "track this" / "תפתחי ticket" | monday-for-agents |
 | Task with 3+ steps or subagent | monday-for-agents |
 | "לאן לשמור" / "where should I save" | storage-router |
@@ -177,6 +179,7 @@ What kind of task is this?
 | **youtube-watcher** | Utility | Fetch and summarize YouTube video transcripts |
 | **skill-analytics** | Analytics | Track skill usage, generate daily reports, find unused skills |
 | **storage-router** | Routing | Decide where to save content: monday.com vs local vs MEMORY.md |
+| **usage-costs** | Analytics | Token usage and cost reports: per session, per day, per week |
 
 
 ---
