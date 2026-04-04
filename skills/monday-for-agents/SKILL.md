@@ -277,6 +277,105 @@ Follow these rules every time, without exception:
 
 ---
 
+## Section 5 — Task Tracking & Project Board Templates
+
+Use this when a task has 3+ steps, spans sessions, or involves subagents.
+
+### When to Create a Ticket
+
+| Create ticket | Don't create ticket |
+|---|---|
+| 3+ steps | Simple one-shot answer |
+| Involves subagent | Quick lookup/search |
+| Spans multiple sessions | Fast reply |
+| Owner says "track this" | |
+
+### Create a Task Item
+
+```bash
+# In the Task Tracker board (load board ID from .context)
+monday_query '{
+  "query": "mutation ($board: ID!, $group: String!, $name: String!, $cols: JSON!) { create_item(board_id: $board, group_id: $group, item_name: $name, column_values: $cols) { id } }",
+  "variables": {
+    "board": "BOARD_ID",
+    "group": "GROUP_ACTIVE_ID",
+    "name": "Task name",
+    "cols": "{\"goal_why\": \"Which Active Goal\", \"context_steps\": \"What to do and why\"}"
+  }
+}'
+```
+
+### Task Lifecycle
+
+```
+NEW       → create item in 🔴 Active group
+IN_PROGRESS → update Context & Steps column with current state + next steps
+BLOCKED   → move item to 🟡 Blocked group, fill Blocked By column
+DONE      → move item to ✅ Done group + add final update comment
+```
+
+---
+
+### Project Board Templates
+
+When starting a new project, create a board with the right structure:
+
+#### Research Board Template
+```bash
+# Create board
+create_board name="Research — <Topic>" workspace_id=WORKSPACE_ID
+
+# Add columns
+create_column type=status title="Status"        # Working on it / Done / Blocked
+create_column type=text title="Source"          # URL or reference
+create_column type=long_text title="Key Findings"
+create_column type=date title="Published"
+
+# Add groups
+create_group name="🔍 To Research"
+create_group name="✅ Analyzed"
+```
+
+#### Rollout / Project Board Template
+```bash
+# Create board
+create_board name="<Project> — Tracker" workspace_id=WORKSPACE_ID
+
+# Add columns
+create_column type=status title="Status"        # Done / Working on it / Stuck / Not started
+create_column type=people title="Owner"
+create_column type=date title="Due"
+create_column type=long_text title="Notes"
+create_column type=text title="Blocked By"
+
+# Add groups
+create_group name="🔴 This Week"
+create_group name="🟡 Upcoming"
+create_group name="✅ Done"
+```
+
+#### Competitive Analysis Board Template
+```bash
+# Add columns to existing Competitive Analysis board
+create_column type=status title="Threat Level"  # Low / Medium / High
+create_column type=text title="Category"        # Orchestration / PM / AI Ops
+create_column type=date title="Analyzed"
+create_column type=file title="Deep Dive Doc"   # Link to doc
+```
+
+---
+
+### Route for Saving (storage-router integration)
+
+| Task artifact | Destination |
+|---|---|
+| Task status / steps | Task Tracker board (monday.com) |
+| Research findings | Research board or Competitive Analysis doc |
+| Decisions made | Task item update + daily notes |
+| Final deliverable | Relevant monday.com doc/board |
+
+---
+
 ## Cost Tips
 
 - **Cheap:** MCP handles natural language → API translation. Prefer it over raw GraphQL.
