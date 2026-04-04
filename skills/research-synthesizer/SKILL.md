@@ -1,5 +1,6 @@
 ---
 name: research-synthesizer
+version: "1.0.0"
 description: "Multi-source research synthesizer. Takes a question, runs 3-5 parallel web searches with varied phrasings, deduplicates, and returns a cited, concise answer. For Hebrew questions, searches in both Hebrew and English. Output is always under ~400 words."
 triggers:
   - "research"
