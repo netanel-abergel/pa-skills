@@ -10,6 +10,49 @@ Any model. Task delegation doesn't require complex reasoning.
 
 ---
 
+## Audit Log (MANDATORY for external actions)
+
+Before any external action (send message, write file, push git, modify monday, restart service):
+
+```bash
+echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] ACTION: <what> | TARGET: <where> | REASON: <why>" \
+  >> /opt/ocana/openclaw/workspace/.learnings/audit.log
+```
+
+Examples:
+```bash
+# Sending a message
+echo "[2026-04-04T15:00:00Z] ACTION: send_whatsapp | TARGET: +972548834688 | REASON: billing alert from Yennefar" >> .learnings/audit.log
+
+# Pushing to git
+echo "[2026-04-04T15:00:00Z] ACTION: git_push | TARGET: heleni-memory/main | REASON: daily memory + skill updates" >> .learnings/audit.log
+
+# Spawning subagent
+echo "[2026-04-04T15:00:00Z] ACTION: spawn_subagent | TARGET: skill-review task | REASON: review 19 skills for gaps" >> .learnings/audit.log
+```
+
+The audit log is immutable — never delete entries. Append only.
+
+---
+
+## Atomic Task Checkout (MANDATORY)
+
+Before spawning a subagent, log the task as IN_PROGRESS in today's daily notes:
+
+```bash
+echo "[$(date -u +%H:%M)] IN_PROGRESS: <task> → subagent" >> /opt/ocana/openclaw/workspace/memory/$(date +%Y-%m-%d).md
+```
+
+When the subagent completes, update the log:
+
+```bash
+echo "[$(date -u +%H:%M)] DONE: <task> → subagent complete" >> /opt/ocana/openclaw/workspace/memory/$(date +%Y-%m-%d).md
+```
+
+**Rule:** While a subagent is running on a task — do NOT continue that same task in the main session. Wait for push-based completion before proceeding.
+
+---
+
 ## When to Spawn vs. Stay in Main Session
 
 **Spawn a subagent when:**
