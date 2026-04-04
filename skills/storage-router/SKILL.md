@@ -13,8 +13,8 @@ Before saving anything, route it to the correct destination.
 
 | Content Type | Destination | Notes |
 |---|---|---|
-| Competitor research | monday.com — Competitive Analysis doc | Builders CoWORK workspace |
-| Product briefs, strategy docs | monday.com — relevant doc | Builders CoWORK workspace |
+| Competitor research | monday.com — Competitive Analysis doc | your monday.com workspace |
+| Product briefs, strategy docs | monday.com — relevant doc | your monday.com workspace |
 | Meeting notes | monday.com — Notetaker / item update | |
 | Project tasks / tracking | monday.com — board item | |
 | PA rules & preferences | MEMORY.md | Long-term only, distilled |
@@ -57,9 +57,21 @@ Before saving anything, route it to the correct destination.
 
 ---
 
+## Local Context
+
+Load agent-specific IDs from `.context` file in this skill's directory:
+```bash
+CONTEXT_FILE="/opt/ocana/openclaw/workspace/skills/storage-router/.context"
+[ -f "$CONTEXT_FILE" ] && source "$CONTEXT_FILE"
+# Then use: $WORKSPACE_ID, $FOLDER_RESEARCH, $DOC_COMPETITIVE_ANALYSIS, etc.
+```
+If `.context` doesn't exist — use Structure Index doc (DOC_STRUCTURE_INDEX) from monday.com to find current IDs.
+
+---
+
 ## monday.com Workspace Map
 
-**Workspace:** Builders CoWORK (ID: 14880329)
+**Workspace:** your monday.com workspace
 **Structure Index Doc:** 39993682 (always check here for latest IDs)
 
 | Content | Folder | Board/Doc ID |
