@@ -1,5 +1,6 @@
 ---
 name: pa-ownership
+version: "1.0.0"
 description: "Autonomous task tracking with retry loops and proactive updates. Use when Heleni takes ownership of a task that needs to be tracked, retried on failure, and reported when complete or stuck. Integrates with heartbeat to surface stale tasks."
 triggers:
   - "take ownership"
