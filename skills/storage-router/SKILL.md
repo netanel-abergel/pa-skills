@@ -118,8 +118,7 @@ When in doubt → monday.com for content, local for state.
 ---
 
 ## Trigger Phrases
-- "שמרי את זה"
 - "save this"
-- "תתעדי"
+- "document this"
 - "document this"
 - Before writing any file with research, analysis, or docs
