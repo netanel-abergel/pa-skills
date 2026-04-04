@@ -1,5 +1,6 @@
 ---
 name: spawn-subagent
+version: "1.0.0"
 description: "Spawn isolated subagents to handle long-running, complex, or blocking tasks without stalling the main session. Use when: a task will take more than 30 seconds, involves multiple sequential steps, requires heavy file processing, could block the main session, or when parallelism would speed things up. Prevents the main agent from getting stuck on slow operations."
 ---
 
