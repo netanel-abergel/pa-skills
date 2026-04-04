@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Heleni — AI Personal Assistant</title>
-<meta name="description" content="Discover and install open-source SKILL.md playbooks for AI Personal Assistants. 21 battle-tested skills for OpenClaw agents.">
+<meta name="description" content="Discover and install open-source SKILL.md playbooks for AI Personal Assistants. 32 battle-tested skills for OpenClaw agents.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -273,7 +273,7 @@ footer a{color:var(--accent)}
       <!-- Quick stats -->
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center">
-          <div style="font-size:24px;font-weight:800;color:var(--accent)">21</div>
+          <div style="font-size:24px;font-weight:800;color:var(--accent)">32</div>
           <div style="font-size:11px;color:var(--text-dim);margin-top:2px">Skills</div>
         </div>
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center">
@@ -528,6 +528,7 @@ footer a{color:var(--accent)}
     <div class="learning-card"><div class="learning-icon">💳</div><div class="learning-title">Proactive Billing Alerts</div><div class="learning-desc">Billing errors should trigger automatic fallback + notification, not reactive handling. Use billing-monitor with heartbeat integration.</div><div class="learning-why"><strong>Why:</strong> 5+ PAs went down simultaneously from billing errors. Each required manual detection and intervention.</div></div>
     <div class="learning-card"><div class="learning-icon">📋</div><div class="learning-title">Config Deduplication</div><div class="learning-desc">SOUL.md, AGENTS.md, and MEMORY.md had 60% content overlap causing contradictions. One source of truth per concern.</div><div class="learning-why"><strong>Why:</strong> Conflicting instructions caused inconsistent behavior. Fixed: SOUL = behavior, MEMORY = facts, IDENTITY = who.</div></div>
     <div class="learning-card"><div class="learning-icon">📱</div><div class="learning-title">Connected != Working</div><div class="learning-desc">"Connected and listening" with Messages=0 means the ingest layer is broken, not the messaging platform.</div><div class="learning-why"><strong>Why:</strong> Multiple PAs showed WhatsApp connected but never responded. Problem was the runtime binding, not WhatsApp.</div></div>
+    <div class="learning-card"><div class="learning-icon">🗂️</div><div class="learning-title">.context Files — Separate Agent Config from Generic Skills</div><div class="learning-desc">Keep SKILL.md files fully generic and synced to pa-skills. Store agent-specific data (phone numbers, JIDs, workspace IDs, board IDs) in a local .context file per skill. This lets any PA adopt a skill and fill in her own context.</div><div class="learning-why"><strong>Why:</strong> Skills were breaking because they contained hardcoded IDs that only worked for one agent. The .context pattern makes every skill portable without sacrificing personalization.</div></div>
   </div>
 </div>
 
@@ -621,6 +622,18 @@ const SKILLS = [
   {icon:'📡',slug:'supervisor',title:'Supervisor',cat:'monitoring',desc:'Central status dashboard: active tasks, open issues, pending follow-ups, system health in one report.'},
   {icon:'💬',slug:'whatsapp',title:'WhatsApp',cat:'communication',desc:'Per-conversation memory for groups and DMs, unanswered message tracking, loop prevention, multi-PA coordination.'},
   {icon:'📺',slug:'youtube-watcher',title:'YouTube Watcher',cat:'integration',desc:'Fetch and read transcripts from YouTube videos. Summarize, answer questions, extract information.'},
+  {icon:'🌡️',slug:'dynamic-temperature',title:'Dynamic Temperature',cat:'productivity',desc:'Dynamic LLM temperature selection by task type — precision for scheduling and commands, warmth for communication, creativity for expression.'},
+  {icon:'💾',slug:'git-backup',title:'Git Backup',cat:'productivity',desc:'Backup the agent workspace to a GitHub repository. Handles token discovery, repo initialization, and push on demand or scheduled.'},
+  {icon:'💬',slug:'heleni-whatsapp',title:'Heleni WhatsApp',cat:'communication',desc:'Complete WhatsApp management: per-conversation memory, unanswered message tracking, loop prevention, and multi-PA coordination.'},
+  {icon:'📝',slug:'meeting-notetaker',title:'Meeting Notetaker',cat:'communication',desc:'Fetch and present meeting notes from monday.com Notetaker, or prep for the next upcoming meeting with full context.'},
+  {icon:'📅',slug:'meeting-scheduler',title:'Meeting Scheduler',cat:'communication',desc:'Schedule meetings by coordinating with another PA, finding common free slots in both calendars, and sending a calendar invite.'},
+  {icon:'🏛️',slug:'memory-architecture',title:'Memory Architecture',cat:'memory',desc:'Honcho-inspired memory architecture: deductive memory (logical conclusions, not just facts) and session summaries to capture context before it disappears.'},
+  {icon:'🏅',slug:'pa-eval',title:'PA Eval',cat:'monitoring',desc:'Evaluate PA performance through structured scoring, owner feedback analysis, and behavioral benchmarking. Weekly or monthly reviews.'},
+  {icon:'🔄',slug:'pa-ownership',title:'PA Ownership',cat:'productivity',desc:'Autonomous task tracking with retry loops and proactive updates. Integrates with heartbeat to surface stale tasks.'},
+  {icon:'📊',slug:'pa-status',title:'PA Status',cat:'monitoring',desc:'PA network health dashboard: check if all PAs are active, verify billing and calendar connections, generate network status reports.'},
+  {icon:'🔬',slug:'research-synthesizer',title:'Research Synthesizer',cat:'productivity',desc:'Multi-source research synthesizer: runs 3-5 parallel web searches, deduplicates, returns a cited concise answer under 400 words.'},
+  {icon:'🚦',slug:'spawn-subagent',title:'Spawn Subagent',cat:'productivity',desc:'Spawn isolated subagents for long-running, complex, or blocking tasks without stalling the main session.'},
+  {icon:'🗄️',slug:'storage-router',title:'Storage Router',cat:'productivity',desc:'Decide where to save any piece of information — monday.com, local file, or MEMORY.md — before saving anything.'},
 ];
 
 const CATEGORIES = [
