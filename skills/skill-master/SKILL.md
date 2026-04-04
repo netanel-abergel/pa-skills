@@ -36,10 +36,13 @@ Start lean. Add a new skill only when there's a clear, recurring trigger that no
 ## How to Use This Skill
 
 1. Read the owner's request.
-2. Find a match in the **Quick Lookup** table below.
-3. If not found, use the **Decision Tree**.
-4. **⚠️ Log the selection FIRST — before doing any work** (see Analytics below).
-5. Load that skill's SKILL.md and follow it.
+2. **Check Active Goals** — read `HEARTBEAT.md` Active Goals section to understand context and "why".
+3. Find a match in the **Quick Lookup** table below.
+4. If not found, use the **Decision Tree**.
+5. **⚠️ Log the selection FIRST — before doing any work** (see Analytics below).
+6. Load that skill's SKILL.md and follow it.
+
+> **Goal-aware rule:** Before executing any non-trivial task, connect it to an Active Goal. If it doesn’t connect — ask why we’re doing it.
 
 Do not improvise. If no skill matches, say so and ask the owner.
 
