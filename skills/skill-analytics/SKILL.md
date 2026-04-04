@@ -161,6 +161,53 @@ Add to crontab to auto-send report every morning:
 
 ---
 
+## Weekly Improvement Loop (AutoAgent Pattern)
+
+Once a week, use analytics to drive skill improvements:
+
+```python
+import json
+from collections import Counter
+from datetime import datetime, timedelta, timezone
+
+INBOX = '/opt/ocana/openclaw/workspace/data/skill-analytics.jsonl'
+cutoff = datetime.now(timezone.utc) - timedelta(days=7)
+
+skill_counts = Counter()
+with open(INBOX) as f:
+    for line in f:
+        try:
+            d = json.loads(line)
+            ts = datetime.fromisoformat(d['ts'].replace('Z', '+00:00'))
+            if ts > cutoff:
+                skill_counts[d['skill']] += 1
+        except: pass
+
+# All known skills
+ALL_SKILLS = [
+    'heleni-whatsapp', 'storage-router', 'git-backup', 'ai-pa',
+    'billing-monitor', 'supervisor', 'skill-master', 'monday-for-agents',
+    'research-synthesizer', 'owner-briefing', 'pa-onboarding', 'eval',
+    'meeting-notetaker', 'meeting-scheduler', 'proactive-pa', 'spawn-subagent',
+    'memory-architecture', 'usage-costs', 'pa-eval', 'skill-analytics'
+]
+
+unused = [s for s in ALL_SKILLS if skill_counts.get(s, 0) == 0]
+heavy = skill_counts.most_common(3)
+
+print(f'Heavy hitters: {heavy}')
+print(f'Unused this week: {unused}')
+print('Action: Review unused skills — update description or merge into another skill')
+print('Action: Review heavy hitters — are they doing their job well? Add improvements.')
+```
+
+**Hill-climbing rule:**
+- Unused skill (0 uses in 7 days) → improve trigger phrases or merge
+- Heavy skill (>5 uses/day) → optimize for the most common use case
+- After changes → check next week if usage pattern improved
+
+---
+
 ## Reset / Archive
 
 ```bash
