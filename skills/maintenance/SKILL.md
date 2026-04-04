@@ -1,5 +1,5 @@
 ---
-name: maintenance
+name: workspace-maintenance
 description: "Unified workspace maintenance skill. Covers: (1) backing up the workspace to GitHub git repo, and (2) updating OpenClaw and skills. Use when: asked to backup, push to git, update openclaw, update skills, or run maintenance."
 ---
 
