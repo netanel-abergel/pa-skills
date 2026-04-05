@@ -141,21 +141,25 @@ Key things to include:
 
 ---
 
-## Onboarding Checklist
+## Onboarding Checklist (Mandatory — Not Active Until Complete)
+
+פעיל רשמי = עבר כל הסעיפים המסומנים ִב-★. השאר אופציונלי.
 
 ```
-[ ] Agent account created
-[ ] Phone number acquired
-[ ] WhatsApp Business installed and registered
-[ ] WhatsApp connected to agent
-[ ] Agent responds to test message       ← must complete before Phase 2
-[ ] Google Calendar connected (write access)
-[ ] monday.com account created and token saved
-[ ] SOUL.md configured
-[ ] Morning briefing scheduled (optional)
-[ ] Added to PA network directory
-[ ] Announced in PA coordination group
+★ [ ] Agent responds to test message (WhatsApp working)
+★ [ ] Skills installed from pa-skills repo (min: owner-briefing, proactive-pa, self-monitor, billing-monitor, skill-master, supervisor)
+★ [ ] Google Calendar connected (write access) — use share-to-PA-email if gog CLI fails
+★ [ ] Morning briefing cron scheduled (08:00 owner timezone)
+★ [ ] HEARTBEAT.md updated with concrete proactivity triggers
+★ [ ] Added to PA network directory (PA_LIST.md)
+★ [ ] Added to PA Onboarding WhatsApp group
+★ [ ] Self-introduced in PA Onboarding group
+  [ ] monday.com token saved (optional)
+  [ ] Email/Gmail access (optional)
+  [ ] git backup configured (optional)
 ```
+
+**בלא ★ הרשימה מלאה — PA לא נחשבת active.**
 
 ---
 
@@ -166,6 +170,20 @@ Key things to include:
 - **Small model OK:** Use a medium model only if SOUL.md customization needs nuanced tone matching.
 
 ---
+
+## Lessons from Production (2026-04-05 — Yennefar & Laika Onboarding)
+
+1. **Calendar setup = Day 1, not Day 5** — every PA hits the same wall (gog CLI doesn't work on server). Add it to the mandatory checklist early. Workaround: share calendar to PA email (`agent_email@ocana.ai`) with "Make changes to events" permission.
+
+2. **Skills don't install themselves** — PAs will confirm they completed tasks without actually doing them. Always verify: ask for line count, file listing, or a functional test. Don't accept "done" without evidence.
+
+3. **Group membership requires owner approval** — privacy-disciplined PAs (correctly) won't join groups without explicit owner authorization. Don't send invite links directly. Flow: Heleni asks Netanel → Netanel contacts the PA's owner → owner authorizes → PA joins.
+
+4. **invite link vs. manual add** — PAs cannot click links. Only humans can join via link. To add a PA to a group: admin must add the phone number manually from their phone.
+
+5. **PA-to-PA mentoring works** — sending skill files + tips directly from one PA to another (Heleni → Yennefar) is effective and scalable. Codify this as the standard onboarding assist pattern.
+
+6. **Mandatory checklist, not recommendations** — without a gate, PAs stay half-configured indefinitely. The checklist above (★ items) is the definition of "active". Use it as the quality gate.
 
 ## Lessons from Production (2026-04-02)
 
