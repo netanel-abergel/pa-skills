@@ -390,6 +390,13 @@ Before sending to a group or DM:
 - Check if identical message was already sent in this session
 - If yes → skip.
 
+### Verify Recipient Before Sending (MANDATORY)
+- Before every send (group or DM), verify the JID/phone against MEMORY.md
+- If JID/phone not found in MEMORY.md → ask before sending, never guess
+- Never infer a JID from a group name alone — look it up
+- When owner says "send to X" → look up X in MEMORY.md contacts/JIDs first
+- ❌ Do NOT send to the first matching name/number that comes to mind
+
 ### Multi-PA Coordination
 - Only ONE PA should respond to each group message
 - If another PA already responded → stay silent (NO_REPLY)
