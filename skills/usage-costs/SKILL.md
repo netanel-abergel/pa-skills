@@ -133,6 +133,52 @@ Append to `/opt/ocana/openclaw/workspace/data/token-history.jsonl`:
 
 ---
 
+## Cost Extraction Script (from session jsonl files)
+
+This is the authoritative method for extracting real costs — works for Anthropic/Claude models:
+
+```python
+python3 -c "
+import json, glob, os
+from datetime import datetime, timezone
+
+sessions_dir = '/opt/ocana/openclaw/agents/main/sessions'
+files = glob.glob(f'{sessions_dir}/*.jsonl')
+today = datetime.now(timezone.utc).date()
+total_cost = 0
+total_cache_write = 0
+total_cache_read = 0
+sessions_today = 0
+
+for fpath in files:
+    mtime = datetime.fromtimestamp(os.path.getmtime(fpath), tz=timezone.utc).date()
+    if mtime != today:
+        continue
+    sessions_today += 1
+    with open(fpath) as f:
+        for line in f:
+            try:
+                l = json.loads(line)
+                if l.get('type') == 'message' and l.get('message',{}).get('role') == 'assistant':
+                    u = l['message'].get('usage',{})
+                    total_cost += u.get('cost',{}).get('total',0)
+                    total_cache_write += u.get('cacheWrite',0)
+                    total_cache_read += u.get('cacheRead',0)
+            except: pass
+
+print(f'Today: {sessions_today} sessions — \${total_cost:.2f}')
+print(f'Cache writes: {total_cache_write:,} tokens')
+print(f'Cache reads: {total_cache_read:,} tokens')
+"
+```
+
+**⚠️ Provider compatibility:**
+- ✅ Works for: Anthropic Claude (sonnet, haiku, opus)
+- ❌ Does NOT work for: Google Gemini, OpenAI GPT — cost field is empty
+- For Google/OpenAI agents: use provider billing dashboard directly
+
+---
+
 ## Trigger Phrases
 "how much did today cost?"
 "how much was this session?"

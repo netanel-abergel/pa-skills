@@ -157,6 +157,7 @@ Key things to include:
   [ ] monday.com token saved (optional)
   [ ] Email/Gmail access (optional)
   [ ] git backup configured (optional)
+  [ ] usage-costs skill installed + daily-token-report cron configured (recommended)
 ```
 
 **בלא ★ הרשימה מלאה — PA לא נחשבת active.**
@@ -184,6 +185,16 @@ Key things to include:
 5. **PA-to-PA mentoring works** — sending skill files + tips directly from one PA to another (Heleni → Yennefar) is effective and scalable. Codify this as the standard onboarding assist pattern.
 
 6. **Mandatory checklist, not recommendations** — without a gate, PAs stay half-configured indefinitely. The checklist above (★ items) is the definition of "active". Use it as the quality gate.
+
+## Lessons from Production (2026-04-05 — Cost Optimization Survey)
+
+1. **0 out of 14 PAs tracked costs** — cost visibility is a blind spot across the entire network. Install `usage-costs` skill as standard onboarding (not optional). Add `daily-token-report` cron from day 1.
+
+2. **Google/OpenAI agents need different cost tracking** — the jsonl cost extraction script only works for Anthropic Claude. Edward (Gemini) and Laika (GPT) had no cost data. For non-Anthropic agents, direct the owner to the provider billing dashboard.
+
+3. **Most PAs use `/status` for tokens, not dollars** — tokens alone are misleading (cache reads are cheap, cache writes are expensive). Always track `$` cost, not just token count.
+
+4. **thinkingDefault=off + Haiku for simple crons = significant savings** — 5 simple crons migrated from Sonnet+thinking to Haiku+off. Estimated ~$2–4/day saving per agent. Apply this pattern to all new agents from day 1.
 
 ## Lessons from Production (2026-04-02)
 
