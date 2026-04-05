@@ -123,3 +123,12 @@ When in doubt → monday.com for content, local for state.
 - "document this"
 - "document this"
 - Before writing any file with research, analysis, or docs
+- Before saving any new piece of information (links, data, configs)
+
+## Key Rule (Lesson Learned 2026-04-05)
+Before saving, ask: **"Where would someone look for this?"** — not **"Where does this technically belong?"**
+
+Example: A WhatsApp group invite link → PA_LIST.md (under Key Groups), NOT TOOLS.md.
+The user looks for group info in the directory, not in a technical tools file.
+
+**Always run storage-router before saving. Never save on reflex.**
