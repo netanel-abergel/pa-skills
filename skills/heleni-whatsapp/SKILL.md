@@ -391,11 +391,11 @@ Before sending to a group or DM:
 - If yes → skip.
 
 ### Verify Recipient Before Sending (MANDATORY)
-- Before every send (group or DM), verify the JID/phone against MEMORY.md
-- If JID/phone not found in MEMORY.md → ask before sending, never guess
-- Never infer a JID from a group name alone — look it up
-- When owner says "send to X" → look up X in MEMORY.md contacts/JIDs first
+- Before every send, look up the JID/phone in `memory/whatsapp/` (meta.json files)
+- If not found → run `init_whatsapp_memory` first, or ask owner before sending
+- Never infer a JID from a group name alone — check meta.json
 - ❌ Do NOT send to the first matching name/number that comes to mind
+- Internal contacts belong in memory/whatsapp/ — never hardcoded in SKILL.md
 
 ### Multi-PA Coordination
 - Only ONE PA should respond to each group message
