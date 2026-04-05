@@ -4,7 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Heleni — AI Personal Assistant</title>
-<meta name="description" content="Discover and install open-source SKILL.md playbooks for AI Personal Assistants. 31 battle-tested skills for OpenClaw agents.">
+<meta name="description" content="Discover and install open-source SKILL.md playbooks for AI Personal Assistants. Battle-tested skills for OpenClaw agents.">
+<link rel="canonical" href="https://netanel-abergel.github.io/pa-skills/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Heleni — AI Personal Assistant Skills">
+<meta property="og:description" content="Open-source SKILL.md playbooks for AI Personal Assistants. Battle-tested by Heleni, a production AI PA on OpenClaw.">
+<meta property="og:image" content="https://netanel-abergel.github.io/pa-skills/heleni-hero.png">
+<meta property="og:url" content="https://netanel-abergel.github.io/pa-skills/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Heleni — AI Personal Assistant Skills">
+<meta name="twitter:description" content="Open-source SKILL.md playbooks for AI Personal Assistants. Battle-tested by Heleni, a production AI PA on OpenClaw.">
+<meta name="twitter:image" content="https://netanel-abergel.github.io/pa-skills/heleni-hero.png">
+<link rel="icon" type="image/png" href="heleni-hero.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -505,6 +516,7 @@ footer a{color:var(--accent)}
       <span style="color:var(--text-dim);font-size:13px">find</span>
       <input class="search-input" type="text" placeholder="search skills..." id="searchInput">
     </div>
+    <span id="skillCount" style="font-size:12px;color:var(--text-dim);white-space:nowrap"></span>
     <div class="filter-pills" id="filterPills"></div>
   </div>
   <div class="skill-grid" id="skillGrid"></div>
@@ -523,11 +535,11 @@ footer a{color:var(--accent)}
     <div class="learning-card"><div class="learning-icon">🎯</div><div class="learning-title">Execution > Conversation</div><div class="learning-desc">Execute first, report results only. Never share reasoning, intermediate steps, or "let me check" narration. Lead with one recommendation instead of listing options.</div><div class="learning-why"><strong>Why:</strong> The owner explicitly corrected this pattern. Showing search process and multiple options added friction without value.</div></div>
     <div class="learning-card"><div class="learning-icon">🔒</div><div class="learning-title">Credential Exposure Protocol</div><div class="learning-desc">If credentials appear in chat, warn immediately on receipt — before any operations. Then proceed with task, and remind to revoke after completion.</div><div class="learning-why"><strong>Why:</strong> GitHub tokens were shared in WhatsApp. The PA used them first and warned after — too late.</div></div>
     <div class="learning-card"><div class="learning-icon">📡</div><div class="learning-title">Explicit Delivery Targets</div><div class="learning-desc">Cron jobs without explicit delivery targets fall back to last active session — can leak messages to wrong chats. Always pin the target explicitly.</div><div class="learning-why"><strong>Why:</strong> A daily AI digest intended for a work group was delivered to the owner's private DM.</div></div>
-    <div class="learning-card"><div class="learning-icon">🧠</div><div class="learning-title">Memory Discipline</div><div class="learning-desc">Daily memory files should stay under 50 lines. Extract only durable facts: contacts, decisions, persistent rules, unresolved blockers.</div><div class="learning-why"><strong>Why:</strong> A daily notes file grew to 200+ lines with transient events, eating context window for no value.</div></div>
+    <div class="learning-card" style="cursor:pointer" onclick="switchTab('skills');setTimeout(()=>{searchInput.value='memory';renderSkills()},100)"><div class="learning-icon">🧠</div><div class="learning-title">Memory Discipline</div><div class="learning-desc">Daily memory files should stay under 50 lines. Extract only durable facts: contacts, decisions, persistent rules, unresolved blockers.</div><div class="learning-why"><strong>Why:</strong> A daily notes file grew to 200+ lines with transient events, eating context window for no value.</div></div>
     <div class="learning-card"><div class="learning-icon">🔍</div><div class="learning-title">Runtime Identity Check</div><div class="learning-desc">Model identity must be checked via live session status, never assumed from context. Models can change mid-session without notice.</div><div class="learning-why"><strong>Why:</strong> Model switched from GPT to Claude mid-session. PA kept reporting the old model from compacted context.</div></div>
-    <div class="learning-card"><div class="learning-icon">💳</div><div class="learning-title">Proactive Billing Alerts</div><div class="learning-desc">Billing errors should trigger automatic fallback + notification, not reactive handling. Use billing-monitor with heartbeat integration.</div><div class="learning-why"><strong>Why:</strong> 5+ PAs went down simultaneously from billing errors. Each required manual detection and intervention.</div></div>
+    <div class="learning-card" style="cursor:pointer" onclick="switchTab('skills');setTimeout(()=>{searchInput.value='billing';renderSkills()},100)"><div class="learning-icon">💳</div><div class="learning-title">Proactive Billing Alerts</div><div class="learning-desc">Billing errors should trigger automatic fallback + notification, not reactive handling. Use billing-monitor with heartbeat integration.</div><div class="learning-why"><strong>Why:</strong> 5+ PAs went down simultaneously from billing errors. Each required manual detection and intervention.</div></div>
     <div class="learning-card"><div class="learning-icon">📋</div><div class="learning-title">Config Deduplication</div><div class="learning-desc">SOUL.md, AGENTS.md, and MEMORY.md had 60% content overlap causing contradictions. One source of truth per concern.</div><div class="learning-why"><strong>Why:</strong> Conflicting instructions caused inconsistent behavior. Fixed: SOUL = behavior, MEMORY = facts, IDENTITY = who.</div></div>
-    <div class="learning-card"><div class="learning-icon">📱</div><div class="learning-title">Connected != Working</div><div class="learning-desc">"Connected and listening" with Messages=0 means the ingest layer is broken, not the messaging platform.</div><div class="learning-why"><strong>Why:</strong> Multiple PAs showed WhatsApp connected but never responded. Problem was the runtime binding, not WhatsApp.</div></div>
+    <div class="learning-card" style="cursor:pointer" onclick="switchTab('skills');setTimeout(()=>{searchInput.value='self-monitor';renderSkills()},100)"><div class="learning-icon">📱</div><div class="learning-title">Connected != Working</div><div class="learning-desc">"Connected and listening" with Messages=0 means the ingest layer is broken, not the messaging platform.</div><div class="learning-why"><strong>Why:</strong> Multiple PAs showed WhatsApp connected but never responded. Problem was the runtime binding, not WhatsApp.</div></div>
     <div class="learning-card"><div class="learning-icon">🗂️</div><div class="learning-title">.context Files — Separate Agent Config from Generic Skills</div><div class="learning-desc">Keep SKILL.md files fully generic and synced to pa-skills. Store agent-specific data (phone numbers, JIDs, workspace IDs, board IDs) in a local .context file per skill. This lets any PA adopt a skill and fill in her own context.</div><div class="learning-why"><strong>Why:</strong> Skills were breaking because they contained hardcoded IDs that only worked for one agent. The .context pattern makes every skill portable without sacrificing personalization.</div></div>
   </div>
 </div>
@@ -538,12 +550,13 @@ footer a{color:var(--accent)}
   <div class="section-title">Quick Install</div>
   <div class="section-sub">// three ways to add skills to your agent</div>
 
-  <div class="install-terminal">
+  <div class="install-terminal" style="position:relative">
     <div class="terminal-bar">
       <div class="terminal-dot r"></div><div class="terminal-dot y"></div><div class="terminal-dot g"></div>
       <span class="terminal-title">install.sh</span>
+      <button class="copy-btn" style="margin-left:auto" onclick="copyInstallBlock()">copy</button>
     </div>
-    <div class="install-body">
+    <div class="install-body" id="install-block">
       <div class="comment"># Option 1: Clone the whole repo</div>
       <div class="cmd"><span class="arg">git clone</span> https://github.com/netanel-abergel/pa-skills</div>
       <br>
@@ -633,6 +646,7 @@ const SKILLS = [
   {icon:'🔬',slug:'research-synthesizer',title:'Research Synthesizer',cat:'productivity',desc:'Multi-source research synthesizer: runs 3-5 parallel web searches, deduplicates, returns a cited concise answer under 400 words.'},
   {icon:'🚦',slug:'spawn-subagent',title:'Spawn Subagent',cat:'productivity',desc:'Spawn isolated subagents for long-running, complex, or blocking tasks without stalling the main session.'},
   {icon:'🗄️',slug:'storage-router',title:'Storage Router',cat:'productivity',desc:'Decide where to save any piece of information — monday.com, local file, or MEMORY.md — before saving anything.'},
+  {icon:'💰',slug:'usage-costs',title:'Usage Costs',cat:'monitoring',desc:'Track and report API usage costs across models and providers. Budget alerts, daily/weekly summaries, and cost optimization recommendations.'},
 ];
 
 const CATEGORIES = [
@@ -676,12 +690,16 @@ function renderSkills() {
     count++;
     const card = document.createElement('div');
     card.className = 'skill-card';
+    card.tabIndex = 0;
+    card.setAttribute('role', 'button');
     card.style.animationDelay = `${count * .04}s`;
     card.innerHTML = `<div class="skill-card-head"><div class="skill-name"><span class="icon">${s.icon}</span> ${s.title}</div><span class="skill-tag tag-${s.cat}">${s.cat}</span></div><div class="skill-desc">${s.desc}</div><div class="skill-meta"><span style="color:var(--text-dim)">SKILL.md</span><span class="skill-arrow">&rarr;</span></div>`;
     card.onclick = () => openModal(s);
+    card.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(s); } };
     skillGrid.appendChild(card);
   });
   noResults.style.display = count === 0 ? 'block' : 'none';
+  document.getElementById('skillCount').textContent = count + ' skill' + (count !== 1 ? 's' : '');
 }
 renderSkills();
 
@@ -734,6 +752,16 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal({
 function copyInstall() {
   navigator.clipboard.writeText(document.getElementById('m-install-cmd').textContent).then(() => {
     const b = document.getElementById('m-copy'); b.textContent = 'copied!'; setTimeout(() => b.textContent = 'copy', 1500);
+  });
+}
+
+// ── Copy install block ──
+function copyInstallBlock() {
+  const el = document.getElementById('install-block');
+  const text = el.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    const b = el.closest('.install-terminal').querySelector('.copy-btn');
+    b.textContent = 'copied!'; setTimeout(() => b.textContent = 'copy', 1500);
   });
 }
 

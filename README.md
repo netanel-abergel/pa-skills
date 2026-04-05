@@ -1,7 +1,13 @@
 # Heleni — AI Personal Assistant Skills
 
+[![Skills](https://img.shields.io/badge/skills-32-38bd94)](https://netanel-abergel.github.io/pa-skills/#skills)
+[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/netanel-abergel/pa-skills?style=social)](https://github.com/netanel-abergel/pa-skills)
+
 Open-source skill library for [OpenClaw](https://openclaw.ai) AI Personal Assistant agents.
 Built and battle-tested by [Heleni](https://netanel-abergel.github.io/pa-skills/), Netanel's production AI PA.
+
+> **What is OpenClaw?** An open-source platform for running AI Personal Assistants — it provides the runtime, gateway, and workspace infrastructure that skills plug into. Model-agnostic: works with Claude, GPT, Gemini, Llama, and others.
 
 **Website:** https://netanel-abergel.github.io/pa-skills/
 
@@ -14,7 +20,7 @@ Want your PA to automatically learn from Heleni's production lessons? Install th
 ```bash
 # Quick install
 git clone https://github.com/netanel-abergel/pa-skills.git
-cp -r pa-skills/skills/heleni-best-practices /opt/ocana/openclaw/workspace/skills/
+cp -r pa-skills/skills/heleni-best-practices ~/.openclaw/workspace/skills/
 ```
 
 Once installed, your PA will:
@@ -48,7 +54,7 @@ description: "Monitor API billing errors and alert the owner. Use when: ..."
 
 ---
 
-## Skills (21)
+## Skills (32)
 
 ### Core
 
@@ -59,6 +65,9 @@ description: "Monitor API billing errors and alert the owner. Use when: ..."
 | [owner-briefing](skills/owner-briefing/) | Daily briefing: meetings, emails, tasks, and action items |
 | [skill-master](skills/skill-master/) | Meta-skill for routing — use when unsure which skill fits |
 | [eval](skills/eval/) | Evaluate PA performance: tasks, skills, network health, memory quality |
+| [pa-eval](skills/pa-eval/) | Structured PA performance scoring, owner feedback analysis, and behavioral benchmarking |
+| [pa-status](skills/pa-status/) | PA network health dashboard — check if all PAs are active, verify connections |
+| [pa-ownership](skills/pa-ownership/) | Autonomous task tracking with retry loops and proactive updates |
 
 ### Communication
 
@@ -66,7 +75,9 @@ description: "Monitor API billing errors and alert the owner. Use when: ..."
 |-------|-------------|
 | [ai-pa](skills/ai-pa/) | Multi-agent PA coordination: contact peers, schedule across owners, broadcast messages |
 | [meetings](skills/meetings/) | Schedule meetings via PA-to-PA coordination + summarize notes and transcripts |
-| [whatsapp](skills/whatsapp/) | Per-conversation memory, unanswered message tracking, loop prevention, multi-PA coordination |
+| [meeting-scheduler](skills/meeting-scheduler/) | Schedule meetings by coordinating with another PA, finding common free slots |
+| [meeting-notetaker](skills/meeting-notetaker/) | Fetch and present meeting notes from monday.com Notetaker |
+| [heleni-whatsapp](skills/heleni-whatsapp/) | Per-conversation memory, unanswered message tracking, loop prevention, multi-PA coordination |
 
 ### Integrations
 
@@ -86,6 +97,7 @@ description: "Monitor API billing errors and alert the owner. Use when: ..."
 | [heleni-best-practices](skills/heleni-best-practices/) | Daily sync of production lessons from the pa-skills website |
 | [skill-scout](skills/skill-scout/) | Automated daily discovery of new skills and PA automation ideas |
 | [memory-tiering](skills/memory-tiering/) | Multi-tiered memory management (HOT/WARM/COLD) with automated pruning |
+| [memory-architecture](skills/memory-architecture/) | Honcho-inspired deductive memory and session summaries |
 | [proactive-pa](skills/proactive-pa/) | Proactive PA behavior patterns — transforms reactive task-following into anticipatory execution |
 
 ### Operations
@@ -94,6 +106,26 @@ description: "Monitor API billing errors and alert the owner. Use when: ..."
 |-------|-------------|
 | [maintenance](skills/maintenance/) | Workspace backup to GitHub + OpenClaw and skill updates |
 | [billing-monitor](skills/billing-monitor/) | API billing error detection, alerting, and fallback model switching |
+| [usage-costs](skills/usage-costs/) | Track and report API usage costs across models and providers |
+| [git-backup](skills/git-backup/) | Backup the agent workspace to a GitHub repository |
+| [storage-router](skills/storage-router/) | Decide where to save information — monday.com, local file, or MEMORY.md |
+| [dynamic-temperature](skills/dynamic-temperature/) | Dynamic LLM temperature selection by task type |
+| [spawn-subagent](skills/spawn-subagent/) | Spawn isolated subagents for long-running or blocking tasks |
+| [research-synthesizer](skills/research-synthesizer/) | Multi-source research synthesizer with cited concise answers |
+
+---
+
+## Compatibility
+
+These skills use the open `SKILL.md` standard and are **model-agnostic** — they work with any LLM:
+
+- **Claude** (Anthropic)
+- **GPT** (OpenAI)
+- **Gemini** (Google)
+- **Llama** (Meta)
+- **Mistral**, and others
+
+Skills are procedural markdown playbooks, not executable code. Any AI agent that reads markdown can use them.
 
 ---
 
@@ -110,7 +142,7 @@ curl -fsSL https://netanel-abergel.github.io/pa-skills/install.sh | bash
 ```bash
 # Clone and copy
 git clone https://github.com/netanel-abergel/pa-skills.git
-cp -r pa-skills/skills/billing-monitor /opt/ocana/openclaw/workspace/skills/
+cp -r pa-skills/skills/billing-monitor ~/.openclaw/workspace/skills/
 ```
 
 ### Restart to activate
