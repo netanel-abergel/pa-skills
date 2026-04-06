@@ -104,6 +104,8 @@ Ask: "skill stats" / "skill usage" / "which skills am I using?" → triggers `sk
 | Task with 3+ steps or subagent | monday-for-agents |
 | "where to save" / "where should I save" | storage-router |
 | "what was discussed in [group]" | whatsapp |
+| "what did X say" / "search past messages" / "find conversation with X" | chat-history |
+| "past messages" / "search history" / "what was discussed" (across chats) | chat-history |
 | "find new skill ideas" / "what skills are trending" | skill-scout |
 | "skill usage" / "skill stats" / "skill report" | skill-analytics |
 | "which skills am I using" / "unused skills" | skill-analytics |
@@ -175,7 +177,8 @@ What kind of task is this?
 | **skill-master** | Routing | Pick the right skill (this file) |
 | **skill-scout** | Discovery | Weekly search for new skill ideas |
 | **supervisor** | Operations | Network-wide status dashboard — all PAs, tasks, system health |
-| **whatsapp** | Memory | Per-conversation context, unanswered tracking, loop prevention |
+| **whatsapp** | Memory | Per-conversation context, unanswered tracking, loop prevention. Supports DB mode via `PA_DB_URL` env var. |
+| **chat-history** | Memory | Search past WhatsApp conversations via DB (psycopg2) or context files |
 | **youtube-watcher** | Utility | Fetch and summarize YouTube video transcripts |
 | **skill-analytics** | Analytics | Track skill usage, generate daily reports, find unused skills |
 | **storage-router** | Routing | Decide where to save content: monday.com vs local vs MEMORY.md |
