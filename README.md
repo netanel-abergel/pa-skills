@@ -182,7 +182,7 @@ pa-skills/
 ### Skill design guidelines
 
 - **One domain = one skill.** Users think in domains, not tools.
-- **Keep the skill count under 25.** Above 30, routing breaks down.
+- **Keep skills focused.** Above ~35, routing accuracy degrades — merge overlapping skills and retire unused ones.
 - **Each skill needs one clear "Use when:" sentence** in the description.
 - **Universal rules go in SOUL.md**, not in skills. Skills are triggered on demand.
 - **Diagnostics = appendix.** Never a standalone skill.

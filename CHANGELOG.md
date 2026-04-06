@@ -19,10 +19,15 @@ All notable changes to the pa-skills library will be documented in this file.
 - Missing `usage-costs` skill added to website Skills tab
 - Clickable learning cards that link to relevant skills
 - Updated README skill table to include all 32 skills
+- Guide tab: added Calendar section with weekly view and booking examples
+- Guide tab: added Competitive Analysis section
+- Guide tab: added missing items — cancel meeting, filtered board views, project board creation, usage costs query
 
 ### Fixed
 - Removed hardcoded skill count from meta description
 - Consistent install paths across README and website (`~/.openclaw/workspace/skills/`)
+- Fixed `maintenance` skill frontmatter name mismatch (`workspace-maintenance` → `maintenance`)
+- Updated README skill count guideline to reflect actual library size (32 skills)
 
 ## [2.0.0] - 2026-04-04
 
