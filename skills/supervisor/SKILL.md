@@ -330,3 +330,36 @@ For each PA in issues list:
 - **Daily at 09:00** — Full network report to admin
 - **On billing error** — Immediate partial report for affected PA
 - **On demand** — When admin asks "what's the status?"
+
+---
+
+## DB Health Check (if PA_DB_URL is set)
+
+Include in the status report when `PA_DB_URL` is available:
+
+```python
+import os, psycopg2
+
+url = os.environ.get('PA_DB_URL') or os.environ.get('HELENI_DB_URL')
+if url:
+    try:
+        conn = psycopg2.connect(url)
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT
+                COUNT(*) as total,
+                COUNT(*) FILTER (WHERE created_at > NOW() - INTERVAL '1 day') as today,
+                MIN(created_at) as first_msg,
+                MAX(created_at) as last_msg
+            FROM wa_messages
+        """)
+        total, today, first_msg, last_msg = cur.fetchone()
+        print(f"📨 Message DB: {total} total | {today} today | {first_msg} → {last_msg}")
+        conn.close()
+    except Exception as e:
+        print(f"⚠️ Message DB unavailable: {e}")
+else:
+    print("📂 Message DB: not configured (file-based mode)")
+```
+
+Add this output as a line in the System Health section of the status report.
