@@ -1,3 +1,4 @@
+<!-- Last run: [date] | Items found: N | Applied: N -->
 ---
 name: heleni-best-practices
 description: "Daily check of Heleni's PA Skills website for new best practices, lessons learned, and skill updates. Use when: running daily sync, owner asks 'any updates from Heleni?', or during weekly self-improvement review. Fetches https://netanel-abergel.github.io/pa-skills/learn.html and applies relevant lessons to this agent's own setup."
@@ -26,6 +27,16 @@ Once a day:
 3. If new content detected → extracts actionable lessons
 4. Applies relevant lessons to this agent's own SOUL.md / AGENTS.md / HOT.md
 5. Reports changes to owner
+
+## Effectiveness Tracking
+
+After each run, log to `/opt/ocana/openclaw/workspace/memory/best-practices-log.md`:
+
+```
+[YYYY-MM-DD] Fetched learn.html — X new items found — Y applied to SOUL.md/AGENTS.md — changes: [list]
+```
+
+If 3 consecutive runs find nothing new → log "stale — no updates" and notify owner once.
 
 ---
 
