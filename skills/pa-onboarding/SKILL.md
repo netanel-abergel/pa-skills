@@ -211,3 +211,45 @@ Lessons learned from running PAs in production. Future agents setting up a new P
 5. **DEPRECATED.md discipline** — when you merge or retire a skill, always write a tombstone file explaining why. Include: what it merged into, the date, the reason, and the lesson. Future agents (and humans) will thank you. Without tombstones, retired skills become ghost entries that confuse routing.
 
 6. **pa-skills repo** — before building a skill from scratch, check https://github.com/netanel-abergel/pa-skills for a curated starting library. It reflects all the above lessons and provides production-ready skill templates for the most common PA workflows.
+
+---
+
+## Optional: Enable Message History DB
+
+Enable PostgreSQL audit logging to allow searching past WhatsApp conversations via SQL.
+
+### 1. Install dependencies
+```bash
+sudo apt install -y postgresql python3-psycopg2
+```
+
+### 2. Create DB user and database
+```bash
+sudo -u postgres psql <<SQL
+CREATE USER heleni WITH PASSWORD 'heleni_mem_2026';
+CREATE DATABASE heleni_memory OWNER heleni;
+\q
+SQL
+```
+
+### 3. Apply schema
+```bash
+psql postgresql://heleni:heleni_mem_2026@localhost:5432/heleni_memory \
+  -f /opt/ocana/openclaw/audit-log-schema.sql
+```
+
+### 4. Add PA_DB_URL to hook env in openclaw.json
+In `/opt/ocana/openclaw/openclaw.json`, find `hooks → internal → entries → wa-audit-log → env` and add:
+```json
+"env": {
+  "HELENI_DB_URL": "postgresql://heleni:heleni_mem_2026@localhost:5432/heleni_memory",
+  "PA_DB_URL": "postgresql://heleni:heleni_mem_2026@localhost:5432/heleni_memory"
+}
+```
+
+### 5. Restart gateway
+```bash
+openclaw gateway restart
+```
+
+Once active, the `wa-audit-log` hook will automatically write every message to the `wa_messages` table. Use the `chat-history` skill to search past conversations.
