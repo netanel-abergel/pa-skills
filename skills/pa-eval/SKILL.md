@@ -19,10 +19,23 @@ Any model for filling in templates. Use a medium model for trend analysis and re
 
 ## When to Run
 
-- **Weekly self-eval:** Every 7 days. Run automatically.
+- **Daily self-eval:** Every night at 21:00 UTC via cron (see setup below).
 - **On owner correction:** Log the correction immediately, then re-score the affected dimension.
-- **Monthly report:** At the end of each month, aggregate all weekly evals.
+- **Monthly report:** At the end of each month, aggregate all daily evals.
 - **On demand:** If owner asks "how am I doing?" → generate current eval on the spot.
+
+## Cron Setup (Daily)
+
+```bash
+openclaw cron add \
+  --name "daily-self-eval" \
+  --cron "0 21 * * *" \
+  --session isolated \
+  --model "anthropic/claude-haiku-4-5" \
+  --message "Daily self-evaluation. Read memory/eval-rubric.md and today's daily memory file. Score yourself 1-5 on each of the 10 dimensions. Append to memory/eval-scores.jsonl: {date, scores[], total, notes}. If total < 35 send WhatsApp alert to owner. Otherwise NO_REPLY." \
+  --timeout-seconds 90 \
+  --announce
+```
 
 ---
 
@@ -30,26 +43,28 @@ Any model for filling in templates. Use a medium model for trend analysis and re
 
 Score each 1–5:
 
-| Dimension | What to Measure |
-|---|---|
-| **Execution** | Tasks completed without reminders |
-| **Accuracy** | Results are correct and complete |
-| **Speed** | Response time is fast |
-| **Proactivity** | Acts without being asked |
-| **Communication** | Concise and context-appropriate |
-| **Memory** | Remembers context across sessions |
-| **Tool Use** | Tools used correctly and efficiently |
-| **Judgment** | Knows when to act vs. when to ask |
+| # | Dimension | 1 | 3 | 5 |
+|---|---|---|---|---|
+| 1 | **Memory continuity** | Forgot context | Remembered most | Zero gaps |
+| 2 | **Task execution accuracy** | Errors, needed correction | Minor errors | First-time-right |
+| 3 | **Proactivity** | Only reacted | Caught 1-2 unprompted | Surfaced before asked |
+| 4 | **Infrastructure health** | Crons failed silently | Caught late | All healthy, caught immediately |
+| 5 | **PA network coordination** | Wrong/missed | Mostly correct | Accurate, zero duplicates |
+| 6 | **WhatsApp DM context** | No context files | Some missing | Every DM has context file |
+| 7 | **Boundaries** | Sent without verifying | 1 mistake | Zero unverified sends |
+| 8 | **Skill/doc updates** | Nothing updated | When reminded | Proactively after every change |
+| 9 | **Open loops** | Items dropped | Some missed | All tracked and closed |
+| 10 | **Token efficiency** | Wasteful | Moderate | Right model, no waste |
 
-**Score meanings:**
-- 5 = Consistently exceeds expectations
-- 4 = Meets expectations with minor gaps
-- 3 = Acceptable but basic
-- 2 = Frequent gaps or errors
-- 1 = Fails basic expectations
+**Score meanings:** 5=Excellent, 4=Good, 3=OK, 2=Gaps, 1=Failed
 
-**Total:** Max 40 points.
-Grade: A (36–40), B (28–35), C (20–27), D (<20)
+**Total:** Max 50. Grade: A (45-50), B (35-44), C (25-34), D (<25)
+**Alert threshold:** total < 35 → WhatsApp alert to owner.
+
+**Save results to:** `memory/eval-scores.jsonl`
+```json
+{"date": "YYYY-MM-DD", "scores": [4,5,3,4,4,5,5,4,3,4], "total": 41, "notes": "..."}
+```
 
 ---
 
