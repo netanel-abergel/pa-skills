@@ -47,6 +47,74 @@ inbox/
 
 ---
 
+## DB Mode (if PA_DB_URL is set)
+
+If `PA_DB_URL` is available and the DB is reachable, prefer SQL over file-based operations.
+
+### Check availability
+```bash
+python3 -c "
+import os, psycopg2
+url = os.environ.get('PA_DB_URL') or os.environ.get('HELENI_DB_URL')
+if not url: exit(1)
+try:
+    conn = psycopg2.connect(url)
+    conn.close()
+    print('DB_AVAILABLE')
+except: exit(1)
+"
+```
+
+### Search history via SQL
+```python
+import os, psycopg2
+url = os.environ['PA_DB_URL']
+conn = psycopg2.connect(url)
+cur = conn.cursor()
+# Full-text search
+cur.execute("""
+    SELECT created_at, sender_name, chat_name, body
+    FROM wa_messages
+    WHERE body ILIKE %s
+    ORDER BY created_at DESC LIMIT 20
+""", ('%search_term%',))
+for row in cur.fetchall():
+    print(row)
+conn.close()
+```
+
+### Find unanswered messages via SQL
+```python
+import os, psycopg2
+url = os.environ['PA_DB_URL']
+conn = psycopg2.connect(url)
+cur = conn.cursor()
+cur.execute("""
+    SELECT chat_id, chat_name, MAX(created_at) as last_msg, COUNT(*) as unread
+    FROM wa_messages
+    WHERE is_from_me = false
+      AND chat_id NOT IN (
+          SELECT DISTINCT chat_id FROM wa_messages
+          WHERE is_from_me = true
+            AND created_at > NOW() - INTERVAL '24 hours'
+      )
+      AND created_at > NOW() - INTERVAL '24 hours'
+    GROUP BY chat_id, chat_name
+    ORDER BY last_msg DESC
+""") 
+for row in cur.fetchall():
+    print(row)
+conn.close()
+```
+
+### Log is automatic
+When DB mode is active, the `wa-audit-log` hook writes every message to `wa_messages` automatically. No manual logging needed.
+
+### File fallback
+If `PA_DB_URL` is unset or DB is unreachable, use the file-based approach: `inbox/pending.json` and `memory/whatsapp/` context files (existing behavior below).
+
+---
+
 ## Production Behavioral Rules (MANDATORY)
 
 ### Reaction Protocol
@@ -56,6 +124,19 @@ inbox/
 
 ### "my pleasure / you're welcome" Rule
 - When anyone says "thank you" → always reply **"my pleasure / you're welcome"** (no exceptions)
+
+### Outbound DM Tracking Rule
+- When **I initiate a DM** (not responding — I'm the one who started) → add to inbox as `"waiting_reply": true`
+- At every heartbeat → check for pending outbound DMs and whether a reply came in
+- If reply came → read it, update context.md, mark resolved
+- If no reply after 30min → note in context.md but don't re-ping unless Netanel asks
+- This solves the blind spot: when the other party replies in a new session, I still track it
+
+### Post-Send Group Monitoring Rule
+- After sending a message to **any group** → wait ~30 seconds, then check for direct replies or @mentions
+- If someone responds directly to you within that window → reply before moving on
+- Applies especially to: PA Onboarding, Core Team, monday Internal AI
+- After 30 seconds with no direct response → move on (don't poll continuously)
 
 ### Silence Rules (NO_REPLY)
 - Casual acks from PAs: 👍, "got it", "thank you", "noted" → **NO_REPLY** unless directly asked
@@ -479,16 +560,3 @@ curl -s -o /dev/null -w "%{http_code}" \
 - Never use the same phone number on two devices simultaneously
 
 **When to escalate:** Gateway restart doesn't fix Messages = 0, logs show `socket`/`binding`/`session` errors, or multiple agents affected at the same time.
-
----
-
-## Caveats / Known Issues
-
-- **`clawhub` may not be installed:** Many deployments don't have `clawhub` in PATH. Fallback: clone directly via git.
-  ```bash
-  git clone https://github.com/netanel-abergel/pa-skills /tmp/pa-skills
-  cp -r /tmp/pa-skills/skills/heleni-whatsapp /your/workspace/skills/
-  ```
-- **Workspace path varies:** Default path in this skill is `/opt/ocana/openclaw/workspace`. Standard installs may use `~/.openclaw/workspace`. Verify before setting any file paths in .context.
-- **DM context file is mandatory, not optional:** Skipping it means the agent loses per-person memory on session restart. Most common setup error — write context files immediately after every significant DM interaction.
-- **Loop prevention requires explicit config:** Without it, agents in multi-PA groups can echo each other. Verify loop prevention is active before adding your PA to any group with another active PA.
