@@ -5,6 +5,8 @@ description: "Generate and send a daily briefing to your owner covering today's 
 
 # Owner Briefing Skill
 
+> ⚠️ KNOWN ISSUE: `gog` CLI is broken on this server. All calendar access uses direct API via credentials.json. Gmail section is unavailable — skip it.
+
 ## Minimum Model
 Any small model. Data collection is CLI-based. Formatting is simple.
 
@@ -44,52 +46,85 @@ Have a great day! 🙌
 
 ## Step 1 — Get Today's Calendar Events
 
-```bash
-#!/bin/bash
-set -e
+```python
+#!/usr/bin/env python3
+"""Fetch today's calendar events via Google Calendar API (direct auth — gog CLI is broken)."""
+import json, sys, requests
+from datetime import datetime, timezone, timedelta
 
-# Calculate today and tomorrow in UTC ISO format
-TODAY=$(date -u +%Y-%m-%dT00:00:00Z)
-TOMORROW=$(
-  date -u -d '+1 day' +%Y-%m-%dT00:00:00Z 2>/dev/null \
-  || date -u -v+1d +%Y-%m-%dT00:00:00Z
-)
+CREDS_FILE = '/opt/ocana/openclaw/.gog/credentials.json'
+CALENDAR_ID = 'netanelab@monday.com'
 
-# Fetch events from Google Calendar via gog
-GOG_ACCOUNT=owner@company.com gog calendar events primary \
-  --from "$TODAY" \
-  --to "$TOMORROW" \
-  2>/dev/null \
-  | python3 -c "
-import sys, json
-
-# Parse JSON, default to empty list on error
 try:
-    events = json.loads(sys.stdin.read().strip() or '[]')
-except json.JSONDecodeError:
-    events = []
+    with open(CREDS_FILE) as f:
+        creds = json.load(f)
 
-print('📅 TODAY\'S MEETINGS')
+    # Find owner account
+    owner = next(a for a in creds['accounts'] if a['type'] == 'owner')
 
-if not events:
-    print('• No events')
-else:
-    # Sort by start time, format each event
-    for e in sorted(events, key=lambda x: x.get('start', {}).get('dateTime', '')):
-        start = e.get('start', {}).get('dateTime', '')[:16].replace('T', ' ')
-        title = e.get('summary', 'Untitled')
-        print('•', start, '—', title)
-"
+    # Get access token via refresh_token flow
+    resp = requests.post('https://oauth2.googleapis.com/token', data={
+        'client_id': owner['client_id'],
+        'client_secret': owner['client_secret'],
+        'refresh_token': owner['refresh_token'],
+        'grant_type': 'refresh_token'
+    })
+    access_token = resp.json()['access_token']
+
+    # Calculate today's time range (UTC)
+    now = datetime.now(timezone.utc)
+    today_start = now.replace(hour=0, minute=0, second=0, microsecond=0).isoformat()
+    today_end = (now.replace(hour=0, minute=0, second=0, microsecond=0) + timedelta(days=1)).isoformat()
+
+    # Fetch events
+    r = requests.get(
+        f'https://www.googleapis.com/calendar/v3/calendars/netanelab%40monday.com/events',
+        headers={'Authorization': f'Bearer {access_token}'},
+        params={
+            'timeMin': today_start,
+            'timeMax': today_end,
+            'singleEvents': 'true',
+            'orderBy': 'startTime'
+        }
+    )
+    events = r.json().get('items', [])
+
+    print("📅 TODAY'S MEETINGS")
+    if not events:
+        print('• No events today')
+    else:
+        for e in events:
+            start_dt = e.get('start', {}).get('dateTime', '')
+            start = datetime.fromisoformat(start_dt).strftime('%H:%M') if start_dt else 'All day'
+            end_dt = e.get('end', {}).get('dateTime', '')
+            if start_dt and end_dt:
+                delta = datetime.fromisoformat(end_dt) - datetime.fromisoformat(start_dt)
+                mins = int(delta.total_seconds() / 60)
+                dur = f"{mins // 60}h" if mins >= 60 else f"{mins}min"
+            else:
+                dur = ''
+            title = e.get('summary', 'Untitled')
+            line = f"• {start} — {title}"
+            if dur:
+                line += f" ({dur})"
+            print(line)
+
+except Exception as e:
+    print("📅 TODAY'S MEETINGS")
+    print('• (unavailable)')
 ```
 
 ---
 
 ## Step 2 — Get Urgent Emails
 
+> ⚠️ Gmail via gog is also broken — skip or mark as unavailable. Use monday.com tasks section instead for open items.
+
 ```bash
 #!/bin/bash
 set -e
 
+# BROKEN: gog gmail is unavailable on this server — section will print as unavailable
 # Fetch up to 5 unread emails from the last day
 GOG_ACCOUNT=owner@company.com gog gmail search \
   'is:unread newer_than:1d' \
