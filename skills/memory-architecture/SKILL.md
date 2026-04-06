@@ -36,10 +36,30 @@ Something inferred from patterns, corrections, or repeated behavior.
 ## Memory Tiers
 
 | Tier | Where | When to write |
-|---|---|---|
+|---|---|---------|
 | **Working** | In-session context | Available automatically |
-| **Session** | `memory/YYYY-MM-DD.md` | End of every significant conversation (5+ exchanges) |
+| **Daily** | `memory/daily/YYYY-MM-DD.md` | End of every significant conversation (5+ exchanges) |
+| **Projects** | `memory/projects/<name>.md` | Ongoing context per topic/project — open loops, status, decisions |
 | **Long-term** | `MEMORY.md` | When pattern repeats 2+ times, or explicitly asked |
+
+### Project Files
+For active, multi-session work (rollouts, ongoing tasks, recurring topics), maintain a project file:
+
+```
+memory/projects/pa-rollout.md
+memory/projects/crons-health.md
+memory/projects/my-project.md
+```
+
+Each project file should contain:
+- **Status** — current state
+- **Open loops** — unresolved items that carry across days
+- **Key decisions** — what was decided and why
+
+**Load on demand:** Read the relevant project file when that topic comes up — not every session.
+**Daily files are raw log.** Project files are living context.
+
+**Rule:** If a task or decision needs to be remembered tomorrow — put it in the project file, not just the daily log.
 
 ---
 
