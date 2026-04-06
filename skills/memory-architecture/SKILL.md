@@ -138,6 +138,45 @@ openclaw cron add \
 
 ---
 
+## Memory Compaction (Prevent Bloat)
+
+Left unchecked, MEMORY.md and AGENTS.md grow unbounded — causing context window bloat and degraded performance.
+
+**Targets:**
+- `MEMORY.md` → max 175 lines
+- `AGENTS.md` → max 60 lines
+
+**When to compact:**
+- Weekly — set up a cron (see below)
+- When MEMORY.md exceeds 200 lines
+- When loading files already consumes >5% of context window
+
+**How to compact:**
+1. Read MEMORY.md fully
+2. Merge duplicates, remove outdated entries, trim examples
+3. Keep: active rules, key contacts, deduced patterns still valid
+4. Remove: removed crons, resolved issues, one-time events
+5. Commit to git after
+
+**Weekly compaction cron:**
+```bash
+openclaw cron add \
+  --name "weekly-memory-compaction" \
+  --cron "0 7 * * 0" \
+  --session isolated \
+  --model "anthropic/claude-haiku-4-5" \
+  --message "Weekly memory compaction: Read MEMORY.md and AGENTS.md. Remove outdated entries, merge duplicates. Target: MEMORY.md <175 lines, AGENTS.md <60 lines. Git push after. NO_REPLY." \
+  --announce \
+  --timeout-seconds 120
+```
+
+**Signal you need compaction:**
+- MEMORY.md > 200 lines
+- Session startup feels slow
+- You notice you're repeating old rules that are no longer relevant
+
+---
+
 ## Production Notes
 
 - Workspace path: `/opt/ocana/openclaw/workspace` (not `~/.openclaw/workspace`)
