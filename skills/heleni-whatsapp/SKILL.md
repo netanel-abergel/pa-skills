@@ -70,6 +70,24 @@ inbox/
 - What to log: tasks assigned, decisions made, important context
 - What NOT to log: casual greetings, short acks, duplicates
 
+### ⚠️ CONTEXT RULE (MANDATORY — every conversation)
+**After every significant exchange** — incoming OR outgoing — create or update the DM context file.
+This is not optional. Sessions restart constantly. Without a context file, you have zero memory of who this person is or what was discussed.
+
+**Triggers:**
+- You send a message to someone → write context immediately
+- Someone messages you → read existing context first, then update after replying
+- Decision made / task assigned / status changed → update context
+
+Template:
+```
+mkdir -p memory/whatsapp/dms/<PHONE>/
+# Write to memory/whatsapp/dms/<PHONE>/context.md:
+# Name, role, last interaction date, what was discussed, current status
+```
+
+**No exceptions. Every DM = a context file.**
+
 ---
 
 ## Part 1: Conversation Memory
@@ -391,11 +409,11 @@ Before sending to a group or DM:
 - If yes → skip.
 
 ### Verify Recipient Before Sending (MANDATORY)
-- Before every send, look up the JID/phone in `memory/whatsapp/` (meta.json files)
-- If not found → run `init_whatsapp_memory` first, or ask owner before sending
-- Never infer a JID from a group name alone — check meta.json
+- Before every send (group or DM), verify the JID/phone against MEMORY.md
+- If JID/phone not found in MEMORY.md → ask before sending, never guess
+- Never infer a JID from a group name alone — look it up
+- When owner says "send to X" → look up X in MEMORY.md contacts/JIDs first
 - ❌ Do NOT send to the first matching name/number that comes to mind
-- Internal contacts belong in memory/whatsapp/ — never hardcoded in SKILL.md
 
 ### Multi-PA Coordination
 - Only ONE PA should respond to each group message
