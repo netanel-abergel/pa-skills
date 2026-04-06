@@ -210,3 +210,16 @@ openclaw cron add \
 - **Cheap:** File writes are free — don't hesitate to log
 - **Session summaries:** Write once at the end, not after each message
 - **MEMORY.md promotions:** Batch once per session, not per interaction
+
+---
+
+## Caveats / Known Issues
+
+- **`clawhub` may not be installed:** Many deployments don't have `clawhub` in PATH. Fallback: clone directly via git.
+  ```bash
+  git clone https://github.com/netanel-abergel/pa-skills /tmp/pa-skills
+  cp -r /tmp/pa-skills/skills/memory-architecture /your/workspace/skills/
+  ```
+- **Workspace path varies by deployment:** This skill assumes `/opt/ocana/openclaw/workspace`. Standard installs may use `~/.openclaw/workspace`. Check `openclaw status` for your actual path before running file commands.
+- **MEMORY.md promotion:** Promoting too aggressively bloats context. Target: max 2–3 new entries per session. Batch at end of session, not live.
+- **Compaction cron:** Assumes Haiku is available for isolated model runs. If your deployment doesn't support cron isolation, run compaction manually during low-traffic hours.
