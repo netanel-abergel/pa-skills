@@ -12,6 +12,8 @@ Any model. For timezone reasoning or complex scheduling constraints, use a mediu
 - "schedule a meeting" / "set up a meeting with X" / "book a call with Y"
 - "summarize meeting notes" / "take notes" / "action items from meeting" / "extract tasks from this transcript"
 
+> ⚠️ CALENDAR AUTH: Do NOT use `gog` CLI — it's broken on this server. Use direct Google Calendar API with credentials from `/opt/ocana/openclaw/.gog/credentials.json`. See calendar-setup skill for full auth pattern.
+
 ---
 
 ## Section 1 — Schedule a Meeting
@@ -67,6 +69,8 @@ TODAY=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 NEXT_WEEK=$(date -u -d '+7 days' +%Y-%m-%dT%H:%M:%SZ 2>/dev/null \
   || date -u -v+7d +%Y-%m-%dT%H:%M:%SZ)
 
+# BROKEN: replace with direct API call — see calendar-setup skill
+# ACCESS_TOKEN: use refresh_token flow from /opt/ocana/openclaw/.gog/credentials.json
 GOG_ACCOUNT=owner@company.com gog calendar events primary \
   --from "$TODAY" \
   --to "$NEXT_WEEK" \
@@ -99,6 +103,8 @@ WORK_START_HOUR = 9
 WORK_END_HOUR = 18
 
 try:
+    # BROKEN: replace with direct API call — see calendar-setup skill
+    # ACCESS_TOKEN: use refresh_token flow from /opt/ocana/openclaw/.gog/credentials.json
     result = subprocess.run(
         ['gog', 'calendar', 'events', 'primary',
          '--from', datetime.now(timezone.utc).isoformat(),
@@ -172,6 +178,7 @@ If still no response after 4 hours → tell owner and suggest direct contact.
 Once both sides agree:
 
 ```bash
+# BROKEN: gog calendar create is unavailable — use the Python alternative below
 GOG_ACCOUNT=owner@company.com gog calendar create primary \
   --summary "Meeting: [Owner A] + [Owner B]" \
   --start "YYYY-MM-DDTHH:MM:SS+00:00" \
@@ -183,6 +190,42 @@ GOG_ACCOUNT=owner@company.com gog calendar create primary \
 For video calls, add:
 ```bash
   --description "Video call: https://meet.google.com/xxx-xxxx-xxx"
+```
+
+**✅ Working alternative — Create calendar event via direct API:**
+
+```python
+# Create calendar event via direct API
+import json, requests
+from datetime import datetime, timezone
+
+# Get access token (see auth pattern in calendar-setup skill)
+with open('/opt/ocana/openclaw/.gog/credentials.json') as f:
+    creds = json.load(f)
+owner = next(a for a in creds['accounts'] if a['type'] == 'owner')
+resp = requests.post('https://oauth2.googleapis.com/token', data={
+    'client_id': owner['client_id'],
+    'client_secret': owner['client_secret'],
+    'refresh_token': owner['refresh_token'],
+    'grant_type': 'refresh_token'
+})
+access_token = resp.json()['access_token']
+
+event = {
+    "summary": MEETING_TITLE,
+    "start": {"dateTime": START_ISO, "timeZone": "Asia/Jerusalem"},
+    "end": {"dateTime": END_ISO, "timeZone": "Asia/Jerusalem"},
+    "attendees": [{"email": ATTENDEE_EMAIL}],
+    "description": DESCRIPTION
+}
+
+resp = requests.post(
+    f"https://www.googleapis.com/calendar/v3/calendars/netanelab%40monday.com/events",
+    headers={"Authorization": f"Bearer {access_token}", "Content-Type": "application/json"},
+    json=event
+)
+event_id = resp.json().get('id')
+print(f"Event created: {event_id}")
 ```
 
 ---
@@ -210,12 +253,17 @@ To the other PA:
 ### Rescheduling
 
 ```bash
+# BROKEN: replace with direct API call — see calendar-setup skill
+# ACCESS_TOKEN: use refresh_token flow from /opt/ocana/openclaw/.gog/credentials.json
+
 # Find the event
 GOG_ACCOUNT=owner@company.com gog calendar events primary \
   --from "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
   --to "$(date -u -d '+14 days' +%Y-%m-%dT%H:%M:%SZ)"
 
-# Delete old event (use ID from above)
+# BROKEN: replace with direct API call — see calendar-setup skill
+# ACCESS_TOKEN: use refresh_token flow from /opt/ocana/openclaw/.gog/credentials.json
+# Delete old event: DELETE https://www.googleapis.com/calendar/v3/calendars/netanelab%40monday.com/events/{EVENT_ID}
 GOG_ACCOUNT=owner@company.com gog calendar delete primary EVENT_ID
 
 # Re-coordinate and create new event
