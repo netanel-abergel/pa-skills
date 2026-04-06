@@ -35,6 +35,7 @@ For each PA in `data/pa-directory.json`, check:
 | Billing | `billing_error` | `false` |
 | Calendar | `calendar_connected` | `true` |
 | Status | `status` | `"active"` |
+| Message DB | `PA_DB_URL` env set | Connected (psycopg2) |
 
 ---
 
@@ -98,6 +99,23 @@ if offline:
 
 if not issues and not offline:
     print("\nAll PAs are healthy 🎉")
+
+# DB Health check
+import os
+db_status = "not configured"
+pa_db = os.environ.get('PA_DB_URL')
+if pa_db:
+    try:
+        import psycopg2
+        conn = psycopg2.connect(pa_db)
+        cur = conn.cursor()
+        cur.execute("SELECT COUNT(*), MAX(ts) FROM messages WHERE ts > NOW() - INTERVAL '24h'")
+        count, last = cur.fetchone()
+        db_status = f"✅ {count} msgs today, last: {last}"
+        conn.close()
+    except Exception as e:
+        db_status = f"❌ {e}"
+print(f"  DB: {db_status}")
 ```
 
 ---
