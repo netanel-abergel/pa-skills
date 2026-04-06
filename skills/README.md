@@ -125,6 +125,8 @@ description: "What it does and when to use it."
 
 Followed by the full playbook: steps, scripts, examples, and configuration.
 
+Every skill should include a **`## Caveats`** section (see Skill Design Rules below) with real-world failure modes, version requirements, and known gotchas.
+
 Optionally, a `.context` file with agent-specific values (gitignored from this repo):
 
 ```bash
@@ -144,6 +146,20 @@ BOARD_ID=12345678
 5. **Each skill needs one clear "Use when:" sentence**
 6. **Skill count sweet spot: 28–32** (above 40 = routing degrades)
 7. **Privacy review before push** — scan for internal names, IDs, phone numbers
+8. **Every skill must have a `## Caveats` section** — document real failure modes, version requirements, and known gotchas. A skill without caveats teaches what *should* work; caveats teach how to survive reality. Write from production experience, not the happy path.
+
+### Caveats Section Template
+
+```markdown
+## Caveats
+
+- **Version requirement:** Requires OpenClaw 2026.X.X+ (check with `openclaw --version` first)
+- **Known failure mode:** [What breaks, under what condition]
+- **Workaround:** [What to do instead when it fails]
+- **Gotcha:** [Non-obvious behavior that has surprised people in production]
+```
+
+Leave this section empty with `_None documented yet — add yours after running in production._` if the skill is new.
 
 ---
 
@@ -151,7 +167,10 @@ BOARD_ID=12345678
 
 1. Create a directory under `skills/<skill-name>/`
 2. Add a `SKILL.md` with proper frontmatter and playbook
-3. No hardcoded personal data — use `.context` pattern
-4. Submit a PR
+3. Include a `## Caveats` section (even if empty — leave the placeholder)
+4. No hardcoded personal data — use `.context` pattern
+5. Submit a PR
+
+**Most valuable contributions:** real failure modes, version caveats, configs that didn't work as expected. "Here's what happened when I actually ran it" beats "here's what should work" every time.
 
 See the [website](https://netanel-abergel.github.io/pa-skills/) for the full learnings library.
