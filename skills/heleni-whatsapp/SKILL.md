@@ -479,3 +479,16 @@ curl -s -o /dev/null -w "%{http_code}" \
 - Never use the same phone number on two devices simultaneously
 
 **When to escalate:** Gateway restart doesn't fix Messages = 0, logs show `socket`/`binding`/`session` errors, or multiple agents affected at the same time.
+
+---
+
+## Caveats / Known Issues
+
+- **`clawhub` may not be installed:** Many deployments don't have `clawhub` in PATH. Fallback: clone directly via git.
+  ```bash
+  git clone https://github.com/netanel-abergel/pa-skills /tmp/pa-skills
+  cp -r /tmp/pa-skills/skills/heleni-whatsapp /your/workspace/skills/
+  ```
+- **Workspace path varies:** Default path in this skill is `/opt/ocana/openclaw/workspace`. Standard installs may use `~/.openclaw/workspace`. Verify before setting any file paths in .context.
+- **DM context file is mandatory, not optional:** Skipping it means the agent loses per-person memory on session restart. Most common setup error — write context files immediately after every significant DM interaction.
+- **Loop prevention requires explicit config:** Without it, agents in multi-PA groups can echo each other. Verify loop prevention is active before adding your PA to any group with another active PA.
