@@ -1,6 +1,6 @@
 # Heleni — AI Personal Assistant Skills
 
-[![Skills](https://img.shields.io/badge/skills-32-38bd94)](https://netanel-abergel.github.io/pa-skills/#skills)
+[![Skills](https://img.shields.io/badge/skills-40-38bd94)](https://netanel-abergel.github.io/pa-skills/#skills)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/netanel-abergel/pa-skills?style=social)](https://github.com/netanel-abergel/pa-skills)
 
@@ -54,7 +54,7 @@ description: "Monitor API billing errors and alert the owner. Use when: ..."
 
 ---
 
-## Skills (32)
+## Skills (40)
 
 ### Core
 
@@ -78,6 +78,10 @@ description: "Monitor API billing errors and alert the owner. Use when: ..."
 | [meeting-scheduler](skills/meeting-scheduler/) | Schedule meetings by coordinating with another PA, finding common free slots |
 | [meeting-notetaker](skills/meeting-notetaker/) | Fetch and present meeting notes from monday.com Notetaker |
 | [heleni-whatsapp](skills/heleni-whatsapp/) | Per-conversation memory, unanswered message tracking, loop prevention, multi-PA coordination |
+| [chat-history-local](skills/chat-history-local/) | Search past WhatsApp/chat conversations stored in the audit log PostgreSQL database |
+| [personal-crm](skills/personal-crm/) | Personal CRM on monday.com — tracks contacts, last interactions, next meetings, and pre-meeting briefings |
+| [stakeholder-update](skills/stakeholder-update/) | Draft and send structured project or task updates to stakeholders |
+| [whatsapp-voice](skills/whatsapp-voice/) | Transcribe WhatsApp voice messages using local Whisper CLI — Hebrew and English supported |
 
 ### Integrations
 
@@ -85,6 +89,7 @@ description: "Monitor API billing errors and alert the owner. Use when: ..."
 |-------|-------------|
 | [calendar-setup](skills/calendar-setup/) | Connect Google Calendar to an OpenClaw agent (setup, troubleshooting, permissions) |
 | [monday-for-agents](skills/monday-for-agents/) | monday.com integration: boards, items, GraphQL API, MCP configuration |
+| [openclaw-email-orientation](skills/openclaw-email-orientation/) | Explain how email and Google Calendar work for OpenClaw agents — credentials, setup, troubleshooting |
 | [youtube-watcher](skills/youtube-watcher/) | Fetch YouTube transcripts for summarization and Q&A |
 
 ### Self-Improvement
@@ -112,6 +117,9 @@ description: "Monitor API billing errors and alert the owner. Use when: ..."
 | [dynamic-temperature](skills/dynamic-temperature/) | Dynamic LLM temperature selection by task type |
 | [spawn-subagent](skills/spawn-subagent/) | Spawn isolated subagents for long-running or blocking tasks |
 | [research-synthesizer](skills/research-synthesizer/) | Multi-source research synthesizer with cited concise answers |
+| [quick-reminders](skills/quick-reminders/) | Same-day, short-horizon reminders via nohup sleep — simple setup, no cron required |
+| [cron-reminders](skills/cron-reminders/) | Reboot-safe reminders for days, weeks, or months out — uses cron + JSON for persistence |
+| [whatsapp-diagnostics](skills/whatsapp-diagnostics/) | Diagnose and fix WhatsApp connectivity issues for OpenClaw agents |
 
 ---
 
