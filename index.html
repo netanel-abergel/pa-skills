@@ -269,7 +269,6 @@ footer a{color:var(--accent)}
   <button class="tab-btn" data-tab="guide" onclick="switchTab('guide')">Guide</button>
   <button class="tab-btn" data-tab="skills" onclick="switchTab('skills')">Skills</button>
   <button class="tab-btn" data-tab="learnings" onclick="switchTab('learnings')">Learnings</button>
-  <button class="tab-btn" data-tab="resources" onclick="switchTab('resources')">Resources</button>
   <button class="tab-btn" data-tab="install" onclick="switchTab('install')">Install</button>
   <button class="tab-btn" data-tab="faq" onclick="switchTab('faq')">FAQ</button>
 </div>
@@ -570,56 +569,54 @@ footer a{color:var(--accent)}
     <div class="learning-card" style="cursor:pointer" onclick="switchTab('skills');setTimeout(()=>{searchInput.value='self-monitor';renderSkills()},100)"><div class="learning-icon">📱</div><div class="learning-title">Connected != Working</div><div class="learning-desc">"Connected and listening" with Messages=0 means the ingest layer is broken, not the messaging platform.</div><div class="learning-why"><strong>Why:</strong> Multiple PAs showed WhatsApp connected but never responded. Problem was the runtime binding, not WhatsApp.</div></div>
     <div class="learning-card"><div class="learning-icon">🗂️</div><div class="learning-title">.context Files — Separate Agent Config from Generic Skills</div><div class="learning-desc">Keep SKILL.md files fully generic and synced to pa-skills. Store agent-specific data (phone numbers, JIDs, workspace IDs, board IDs) in a local .context file per skill. This lets any PA adopt a skill and fill in her own context.</div><div class="learning-why"><strong>Why:</strong> Skills were breaking because they contained hardcoded IDs that only worked for one agent. The .context pattern makes every skill portable without sacrificing personalization.</div></div>
   </div>
-</div>
 
-<!-- TAB: RESOURCES -->
-<div class="tab-panel" id="tab-resources">
-  <div class="section-prompt">ls files/</div>
-  <div class="section-title">Resources</div>
-  <div class="section-sub">// deep-dive guides born from production experience</div>
+  <!-- MEMORY MANAGEMENT GUIDE -->
+  <div style="margin-top:48px">
+    <div class="section-prompt">cat files/memory-management.md</div>
+    <div class="section-title" style="font-size:22px;margin-bottom:8px">Memory Management for AI PA Agents</div>
+    <div class="section-sub" style="margin-bottom:20px">// every session starts from zero &mdash; structured, tiered memory puts the right information in the right place at the right time</div>
 
-  <div class="story-section">
-    <div class="story-block">
-      <div class="story-label">// memory-management.pdf</div>
-      <div class="story-title">Memory Management for AI PA Agents</div>
-      <div class="story-text">AI agents wake up fresh every session. Without deliberate memory management, they repeat mistakes, forget context, and frustrate the people they work with. This guide covers how to build a memory system that actually works.</div>
+    <div class="story-block" style="margin-bottom:24px">
+      <div class="story-label">// the core problem</div>
+      <div class="story-text">AI agents wake up fresh every session. Without deliberate memory management, they repeat mistakes, forget context, and frustrate the people they work with. The solution isn't to load everything into context &mdash; that's expensive and slow. The solution is <strong>structured, tiered memory</strong>: the right information, in the right place, loaded at the right time.</div>
     </div>
 
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-top:20px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px">
       <div class="learning-card">
         <div class="learning-icon">🧠</div>
         <div class="learning-title">Three Memory Tiers</div>
-        <div class="learning-desc"><strong style="color:var(--accent)">Tier 1 — Working Memory:</strong> System prompt + MEMORY.md + today's notes. Keep under ~10,000 tokens.<br><br><strong style="color:var(--accent)">Tier 2 — Session Memory:</strong> Daily log (<code>memory/YYYY-MM-DD.md</code>). Write once per conversation, not after every message.<br><br><strong style="color:var(--accent)">Tier 3 — Long-term Memory:</strong> MEMORY.md — curated, not raw. Promote only after 2+ repetitions or explicit correction.</div>
+        <div class="learning-desc"><strong style="color:var(--accent)">Tier 1 — Working Memory (in-session):</strong> System prompt (SOUL.md, AGENTS.md, USER.md), MEMORY.md, today's daily notes, the conversation itself. Keep under ~10,000 tokens &mdash; every token costs money on every message.<br><br><strong style="color:var(--accent)">Tier 2 — Session Memory:</strong> Daily log (<code>memory/YYYY-MM-DD.md</code>). Write tasks assigned/completed, decisions made, corrections received, context needed for tomorrow. Skip casual greetings, short acks, transient state. Write once per conversation at the end.<br><br><strong style="color:var(--accent)">Tier 3 — Long-term Memory:</strong> MEMORY.md &mdash; curated, not raw. Owner preferences, key contacts, cross-session rules, lessons from mistakes. Not: completed one-time tasks, outdated rules, temporary status. Promote only after 2+ repetitions or explicit correction.</div>
       </div>
       <div class="learning-card">
         <div class="learning-icon">🔍</div>
         <div class="learning-title">Two Memory Types</div>
-        <div class="learning-desc"><strong style="color:var(--accent)">FACT</strong> — Something the owner stated directly. <em>"I work until 20:00"</em><br><br><strong style="color:var(--accent)">DEDUCED</strong> — A logical conclusion inferred from behavior. <em>"Prefers execution over explanation — never asks me to explain my reasoning, only wants results"</em><br><br>Write [DEDUCED] entries proactively. If you notice a pattern — capture it.</div>
+        <div class="learning-desc"><strong style="color:var(--accent)">[FACT]</strong> &mdash; Something the owner stated directly.<br><em>"I work until 20:00"</em><br><br><strong style="color:var(--accent)">[DEDUCED]</strong> &mdash; A logical conclusion inferred from behavior, corrections, or patterns.<br><em>"Prefers execution over explanation &mdash; never asks me to explain my reasoning, only wants results"</em><br><br>Write [DEDUCED] entries proactively. Don't wait for the owner to state it explicitly. If you notice a pattern &mdash; capture it.</div>
       </div>
       <div class="learning-card">
         <div class="learning-icon">💬</div>
         <div class="learning-title">WhatsApp Memory</div>
-        <div class="learning-desc">Every DM conversation needs its own context file — incoming and outgoing.<br><br><code>memory/whatsapp/dms/&lt;PHONE&gt;/context.md</code><br><code>memory/whatsapp/groups/&lt;JID&gt;/context.md</code><br><br><strong style="color:var(--red)">Critical:</strong> After sending any proactive message, create the context file immediately. If someone replies a day later in a new session, you'll have zero context without it.</div>
+        <div class="learning-desc">Every DM conversation needs its own context file &mdash; incoming and outgoing.<br><br><code>memory/whatsapp/dms/&lt;PHONE&gt;/context.md</code><br><code>memory/whatsapp/groups/&lt;JID-sanitized&gt;/context.md</code><br><br><strong style="color:var(--red)">Critical:</strong> After sending any proactive message, create the context file immediately. If someone replies a day later in a new session, you'll have zero context without it.<br><br><strong style="color:var(--text-bright)">What to log:</strong> Who this person is (name, role, relationship), why you contacted them / what they asked, what was decided, current status.</div>
       </div>
       <div class="learning-card">
         <div class="learning-icon">📏</div>
         <div class="learning-title">Preventing Bloat</div>
-        <div class="learning-desc">MEMORY.md: max 175 lines. System files: max 60 lines.<br><br><strong style="color:var(--accent)">Weekly compaction cron:</strong> Every Sunday, a lightweight model reads the memory files, removes outdated entries, merges duplicates, and pushes to git. No human involvement needed.<br><br><strong style="color:var(--amber)">Signs you need compaction:</strong> MEMORY.md exceeds 200 lines, loading irrelevant context, startup feels heavy.</div>
+        <div class="learning-desc"><strong style="color:var(--text-bright)">Targets:</strong> MEMORY.md &rarr; max 175 lines. AGENTS.md / system files &rarr; max 60 lines.<br><br><strong style="color:var(--accent)">Weekly compaction cron:</strong> Every Sunday, a lightweight model (Haiku) reads the memory files, removes outdated entries, merges duplicates, and pushes to git. No human involvement needed.<br><br><strong style="color:var(--amber)">Signs you need compaction:</strong> MEMORY.md exceeds 200 lines, loading irrelevant context, session startup feels heavy.</div>
       </div>
       <div class="learning-card">
         <div class="learning-icon">🗂️</div>
         <div class="learning-title">What to Store Where</div>
-        <div class="learning-desc"><strong style="color:var(--text-bright)">MEMORY.md</strong> — Rules, preferences, key contacts<br><strong style="color:var(--text-bright)">memory/YYYY-MM-DD.md</strong> — Daily events, task logs<br><strong style="color:var(--text-bright)">memory/whatsapp/</strong> — Conversation context<br><strong style="color:var(--text-bright)">monday.com</strong> — Research, strategy, docs<br><strong style="color:var(--text-bright)">Local files only</strong> — Credentials, config<br><strong style="color:var(--text-bright)">skills/&lt;name&gt;/.context</strong> — Skill-specific config</div>
+        <div class="learning-desc"><strong style="color:var(--text-bright)">MEMORY.md</strong> &mdash; Rules, preferences, key contacts<br><strong style="color:var(--text-bright)">memory/YYYY-MM-DD.md</strong> &mdash; Daily events, task logs<br><strong style="color:var(--text-bright)">memory/whatsapp/</strong> &mdash; Conversation context<br><strong style="color:var(--text-bright)">monday.com</strong> &mdash; Research, strategy, docs<br><strong style="color:var(--text-bright)">Local files only</strong> &mdash; Credentials, config (never monday)<br><strong style="color:var(--text-bright)">skills/&lt;name&gt;/.context</strong> &mdash; Skill-specific config</div>
       </div>
       <div class="learning-card">
         <div class="learning-icon">💡</div>
         <div class="learning-title">The Compaction Mindset</div>
-        <div class="learning-desc">Think of memory like a human's long-term memory — not a log file. A human doesn't remember every conversation word for word. They remember <em>what mattered, what they learned, who they can trust, and what decisions were made and why</em>. Your MEMORY.md should read the same way. Curated, dense, useful — not a transcript.</div>
+        <div class="learning-desc">Think of memory like a human's long-term memory &mdash; not a log file. A human doesn't remember every conversation word for word. They remember <em>what mattered, what they learned, who they can trust and how they work, and what decisions were made and why</em>. Your MEMORY.md should read the same way. Curated, dense, useful &mdash; not a transcript.</div>
       </div>
-    </div>
-
-    <div style="margin-top:20px;text-align:center">
-      <a class="btn btn-outline" href="files/memory-management.pdf" target="_blank" style="font-size:12px;padding:10px 18px">Download full PDF &rarr;</a>
+      <div class="learning-card">
+        <div class="learning-icon">⚡</div>
+        <div class="learning-title">Quick Reference</div>
+        <div class="learning-desc"><strong style="color:var(--text-bright)">Write to daily notes</strong> &mdash; After any significant conversation (5+ exchanges)<br><strong style="color:var(--text-bright)">Write to MEMORY.md</strong> &mdash; After 2+ repetitions, or after correction<br><strong style="color:var(--text-bright)">Write WhatsApp DM context</strong> &mdash; Immediately after any message sent or received<br><strong style="color:var(--text-bright)">Run compaction</strong> &mdash; Weekly (automated) or when &gt;200 lines<br><strong style="color:var(--text-bright)">Push to git</strong> &mdash; After any memory write</div>
+      </div>
     </div>
   </div>
 </div>
@@ -692,7 +689,7 @@ function switchTab(tab) {
 
 // Handle hash on load
 const hash = location.hash.replace('#','');
-if (['heleni','guide','skills','learnings','resources','install','faq'].includes(hash)) switchTab(hash);
+if (['heleni','guide','skills','learnings','install','faq'].includes(hash)) switchTab(hash);
 
 const SKILLS = [
   {icon:'🌐',slug:'ai-pa',title:'AI-PA Network',cat:'communication',desc:'Multi-agent PA coordination — contact peer PAs, delegate tasks, share context across the network.'},
