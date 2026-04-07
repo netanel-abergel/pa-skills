@@ -11,6 +11,28 @@ Covers two responsibilities in one skill:
 
 ---
 
+## Dedup — Queued Message Double-Delivery (OpenClaw bug #34041)
+
+OpenClaw runs the agent twice on the same message when queued messages are present.
+This causes duplicate content in a single reply.
+
+**Workaround:** Run dedup check at the start of every turn.
+
+```bash
+python3 /opt/ocana/openclaw/workspace/tools/dedup_check.py "<message_id>"
+# exit 0 = already seen → respond with exactly: NO_REPLY
+# exit 1 = new message → proceed normally
+```
+
+The `message_id` comes from the inbound metadata block (`message_id` field).
+The script uses a 120-second TTL cache at `/tmp/heleni_dedup.json`.
+
+**Note:** `NO_REPLY` is an OpenClaw platform token — it is stripped before delivery, never shown to the user.
+
+**Install:** Script is at `workspace/tools/dedup_check.py` — no dependencies, runs on any Python 3.
+
+---
+
 ## Load Local Context
 ```bash
 CONTEXT_FILE="/opt/ocana/openclaw/workspace/skills/heleni-whatsapp/.context"
