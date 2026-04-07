@@ -248,6 +248,43 @@ If the topic is inherently Israeli (local news, Israeli law, etc.) → weight He
 
 ---
 
+---
+
+## Feedback Mode (Inbound Synthesis)
+
+> **When NOT to use this mode:** If you need web research, use the standard flow above. This mode is for synthesizing *inbound feedback already received* — from WhatsApp groups, emails, notes.
+
+**Trigger:** Owner asks "what are users saying about X?", "summarize feedback on Y", "any patterns in the complaints?"
+
+**When to use:**
+- After a product release or update
+- Weekly/monthly product review
+- Owner wants a digest of inbound feedback from specific channels
+
+**Steps:**
+1. **Collect** — pull feedback from configured sources (WhatsApp group history via `memory/whatsapp/`, email threads, notes)
+2. **Categorize** — group by topic (UX, performance, feature request, bug) and sentiment (positive/negative/neutral)
+3. **Synthesize** — same format as standard mode, but sourced internally
+4. **Deliver** — send to owner via preferred channel
+
+**Output format:**
+- Top 3 themes (with count + sentiment)
+- Notable quotes (max 3)
+- Recommended action (if any)
+- Total feedback items processed
+
+**Config** (add to `.context`):
+```
+FEEDBACK_SOURCES=whatsapp,email
+PRODUCT_NAMES=Vibe,Sidekick
+```
+
+Works best with 5+ items. With fewer — still runs, but flag lower confidence in output.
+
+*Contributed by Mira Solane / Luma (Kate's PA), April 2026.*
+
+---
+
 ## Cost Notes
 
 - 3–5 `web_search` calls per research request — moderate cost
