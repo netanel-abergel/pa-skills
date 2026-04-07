@@ -12,3 +12,6 @@ TIMEZONE=Asia/Jerusalem
 
 # Path to reminders JSON file (relative to workspace root)
 REMINDERS_JSON=data/reminders.json
+
+# Path to reminders history file
+REMINDERS_HISTORY=data/reminders.history.json

@@ -91,13 +91,37 @@ Keep it short, human, and self-contained.
 
 ---
 
+## History & Cleanup
+
+Once a reminder fires, the script automatically:
+1. Appends it to `data/reminders.history.json` with a `fired_at` timestamp
+2. Removes it from `data/reminders.json`
+
+This keeps the active file small and fast, while preserving a full audit trail.
+
+```json
+// reminders.history.json entry
+{
+  "id": "call-mom-apr7",
+  "datetime": "2026-04-07T13:00:00",
+  "channel": "whatsapp",
+  "target": "+972XXXXXXXXX",
+  "message": "Hey — call mom 📞",
+  "fired_at": "2026-04-07T13:00:42"
+}
+```
+
 ## Listing Reminders
 
 ```bash
+# Pending
 cat data/reminders.json | jq '.[] | {id, datetime, message}'
+
+# History
+cat data/reminders.history.json | jq '.[] | {id, fired_at, message}'
 ```
 
-## Removing a Reminder
+## Removing a Pending Reminder
 
 ```bash
 # Remove by ID using jq
