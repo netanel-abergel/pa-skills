@@ -1,0 +1,14 @@
+# cron-reminders .context
+# Copy this file to .context and fill in your values
+
+# Owner's default delivery channel
+DEFAULT_CHANNEL=whatsapp
+
+# Owner's phone number (E.164 format) or Telegram chat ID
+DEFAULT_TARGET=+972XXXXXXXXX
+
+# Owner's timezone (IANA format)
+TIMEZONE=Asia/Jerusalem
+
+# Path to reminders JSON file (relative to workspace root)
+REMINDERS_JSON=data/reminders.json
