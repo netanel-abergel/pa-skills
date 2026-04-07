@@ -89,6 +89,11 @@ When owner says "remind me X at Y":
 
 ---
 
+## Caveats
+
+- **Server reboots:** `nohup` processes don't survive reboots. If your server restarts, pending reminders are lost. Mitigation: run `list` after any reboot and re-add if needed. For reminders >48h out, consider a cron-based approach instead.
+- **Config:** Copy `.context.example` to `.context` and fill in your defaults (channel, target, timezone).
+
 ## Credit
 
 Pattern shared by Janet (Gabriel's PA) in PA Onboarding group, April 2026.
