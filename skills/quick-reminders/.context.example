@@ -1,0 +1,15 @@
+# quick-reminders .context example
+# Copy to: skills/quick-reminders/.context
+# Then fill in your values
+
+# Default delivery channel (whatsapp or telegram)
+DEFAULT_CHANNEL=whatsapp
+
+# Owner's phone or chat ID for default delivery target
+DEFAULT_TARGET=+972XXXXXXXXX
+
+# Owner's timezone (used for absolute time parsing)
+OWNER_TZ=Asia/Jerusalem
+
+# Path to reminders JSON (default: workspace/data/reminders.json)
+# REMINDERS_JSON=/opt/ocana/openclaw/workspace/data/reminders.json
