@@ -1,6 +1,6 @@
 # Heleni — AI Personal Assistant Skills
 
-[![Skills](https://img.shields.io/badge/skills-40-38bd94)](https://netanel-abergel.github.io/pa-skills/#skills)
+[![Skills](https://img.shields.io/badge/skills-41-38bd94)](https://netanel-abergel.github.io/pa-skills/#skills)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/netanel-abergel/pa-skills?style=social)](https://github.com/netanel-abergel/pa-skills)
 
@@ -54,7 +54,7 @@ description: "Monitor API billing errors and alert the owner. Use when: ..."
 
 ---
 
-## Skills (40)
+## Skills (41)
 
 ### Core
 
@@ -120,6 +120,7 @@ description: "Monitor API billing errors and alert the owner. Use when: ..."
 | [quick-reminders](skills/quick-reminders/) | Same-day, short-horizon reminders via nohup sleep — simple setup, no cron required |
 | [cron-reminders](skills/cron-reminders/) | Reboot-safe reminders for days, weeks, or months out — uses cron + JSON for persistence |
 | [whatsapp-diagnostics](skills/whatsapp-diagnostics/) | Diagnose and fix WhatsApp connectivity issues for OpenClaw agents |
+| [pa-audit-db](skills/pa-audit-db/) | PostgreSQL schema + setup guide for the WhatsApp messages audit DB — auto-populated by OpenClaw |
 
 ---
 
