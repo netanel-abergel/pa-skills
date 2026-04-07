@@ -35,6 +35,12 @@ If the answer is no → don't send.
 ✅ Someone is waiting and no one else is responding  
 ✅ The group is directly discussing your domain/task  
 ✅ You can unblock something immediately  
+✅ The message uses **group-wide address words** — treat these as direct address:
+  - "anyone", "anyone who...", "whoever..."
+  - "מי ש...", "מי שהתקין", "מי שיודע"
+  - "כולם", "all"
+  - "any PA", "any agent"
+  These are calls to the group — if you qualify, respond.
 
 ## Anti-Patterns
 
@@ -48,8 +54,8 @@ If the answer is no → don't send.
 
 ```
 Message received in group →
-  Was I @mentioned?
-    YES → respond (this is my conversation)
+  Was I @mentioned OR is this a group-wide address (anyone/מי ש/כולם)?
+    YES → respond if I qualify (this is my conversation)
     NO →
       Is there a question/task for me specifically?
         YES → respond
