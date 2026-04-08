@@ -385,6 +385,49 @@ create_column type=file title="Deep Dive Doc"   # Link to doc
 
 ---
 
+---
+
+## Section 4 — Daily Sync (Cron)
+
+Sync open board items to today's PA memory file automatically.
+
+**Script:** `scripts/daily-sync.sh`
+**Deps:** `curl`, `jq`
+
+### Setup
+
+```bash
+chmod +x scripts/daily-sync.sh
+```
+
+Add to `.context`:
+```
+MONDAY_BOARD_ID=your_board_id
+MEMORY_DIR=/opt/ocana/openclaw/workspace/memory
+```
+
+Set token via env (never plaintext file):
+```bash
+export MONDAY_API_TOKEN=your_token
+```
+
+### Cron example
+```
+0 8 * * * MONDAY_API_TOKEN=xxx /path/to/scripts/daily-sync.sh
+```
+
+### Output (appended to `memory/YYYY-MM-DD.md`)
+```
+## Monday Tasks (synced 08:01)
+- [ ] Task name — [in progress] — due: 2026-04-08
+```
+
+Safe to run multiple times — deduplicates existing section on each run.
+
+*Contributed by Selena (Daniel's PA), April 2026.*
+
+---
+
 ## References
 
 - Column value JSON formats: see `references/column-types.md` in this skill directory
