@@ -84,6 +84,11 @@ Ask: "skill stats" / "skill usage" / "which skills am I using?" → triggers `sk
 
 | If the owner says... | Use skill |
 |---|---|
+| "who is X" / "phone for X" / "X's number" | contact-list |
+| "address for X" / "email for X" | contact-list |
+| "X's PA" / "find PA for X" | contact-list |
+| "group JID" / "JID for X" | contact-list |
+| "add contact" / "update contact" | contact-list |
 | "schedule a meeting with X" | meetings |
 | "summarize meeting notes" / "action items from meeting" | meetings |
 | "what's on my calendar today" | owner-briefing |
@@ -92,7 +97,7 @@ Ask: "skill stats" / "skill usage" / "which skills am I using?" → triggers `sk
 | "connect my calendar" / "can't write to calendar" | calendar-setup |
 | "connect Gmail" / "set up email" | calendar-setup |
 | "set up a new PA" / "onboard a new agent" | pa-onboarding |
-| "contact [person]'s PA" / "find PA phone number" | ai-pa |
+| "contact [person]'s PA" / "find PA phone number" | contact-list → ai-pa |
 | "set up monday.com" / "create a board item" / "monday question" | monday-for-agents |
 | "I made a mistake" / "owner corrected me" | self-learning |
 | "backup workspace" / "push to git" | maintenance |
@@ -127,7 +132,9 @@ Ask: "skill stats" / "skill usage" / "which skills am I using?" → triggers `sk
 What kind of task is this?
 │
 ├─ COMMUNICATION / COORDINATION
-│   ├─ Find a PA's contact → ai-pa
+│   ├─ Look up contact / phone / email / address → contact-list
+│   ├─ Find a PA's contact → contact-list (lookup) → ai-pa (coordination)
+│   ├─ Find a group JID → contact-list
 │   ├─ Schedule a meeting → meetings
 │   ├─ Summarize meeting notes → meetings
 │   └─ Broadcast to all PAs → ai-pa
@@ -161,7 +168,8 @@ What kind of task is this?
 
 | Skill | Category | When to Use |
 |---|---|---|
-| **ai-pa** | Coordination | Find PA contacts, group JIDs, coordination protocols |
+| **contact-list** | Lookup | Single source of truth: contacts, phones, emails, addresses, PAs, group JIDs |
+| **ai-pa** | Coordination | PA-to-PA coordination, scheduling between owners, broadcast to PAs |
 | **billing-monitor** | Health | Detect and respond to API billing failures |
 | **calendar-setup** | Setup | Calendar connection with write access + Gmail/email setup |
 | **eval** | Self-improvement | Full performance audit — scores tasks, checks PA health, reviews memory |
@@ -207,7 +215,7 @@ self-learning (log it) → eval (update score) → SOUL.md (add rule if pattern)
 
 ### Schedule a Meeting
 ```
-ai-pa (find the other PA's contact) → meetings (coordinate + book)
+contact-list (find the other PA's contact) → ai-pa (coordinate) → meetings (book)
 ```
 
 ### Weekly Maintenance
@@ -225,7 +233,7 @@ whatsapp (log decisions) → maintenance (push to GitHub)
 ## Where to Run (Complexity Guide)
 
 ### Run inline (main session)
-- ai-pa, billing-monitor, owner-briefing, supervisor, self-learning, maintenance
+- contact-list, ai-pa, billing-monitor, owner-briefing, supervisor, self-learning, maintenance
 
 ### Consider subagent for heavy operations
 - calendar-setup, meetings (scheduling flow), monday-for-agents (bulk ops)
@@ -239,7 +247,7 @@ whatsapp (log decisions) → maintenance (push to GitHub)
 
 | Skill | Minimum Model |
 |---|---|
-| ai-pa, billing-monitor, supervisor, maintenance, owner-briefing | Any |
+| contact-list, ai-pa, billing-monitor, supervisor, maintenance, owner-briefing | Any |
 | calendar-setup, pa-onboarding, whatsapp, memory-tiering | Small–Medium |
 | meetings, monday-for-agents, skill-scout | Medium |
 | eval (trend analysis), self-learning (writing rules) | Medium–Large |
