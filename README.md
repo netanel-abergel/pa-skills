@@ -1,7 +1,8 @@
 # Heleni — AI Personal Assistant Skills
 
-[![Skills](https://img.shields.io/badge/skills-41-38bd94)](https://netanel-abergel.github.io/pa-skills/#skills)
+[![Skills](https://img.shields.io/badge/skills-40-38bd94)](https://netanel-abergel.github.io/pa-skills/#skills)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-38bd94)](CONTRIBUTING.md)
 [![GitHub stars](https://img.shields.io/github/stars/netanel-abergel/pa-skills?style=social)](https://github.com/netanel-abergel/pa-skills)
 
 Open-source skill library for [OpenClaw](https://openclaw.ai) AI Personal Assistant agents.
@@ -54,7 +55,7 @@ description: "Monitor API billing errors and alert the owner. Use when: ..."
 
 ---
 
-## Skills (41)
+## Skills (40)
 
 ### Core
 
@@ -100,7 +101,6 @@ description: "Monitor API billing errors and alert the owner. Use when: ..."
 | [self-monitor](skills/self-monitor/) | Health monitoring and infrastructure checks |
 | [skill-analytics](skills/skill-analytics/) | Track skill usage across sessions — invocation logs, daily summaries, unused skill detection |
 | [heleni-best-practices](skills/heleni-best-practices/) | Daily sync of production lessons from the pa-skills website |
-| [skill-scout](skills/skill-scout/) | Automated daily discovery of new skills and PA automation ideas |
 | [memory-tiering](skills/memory-tiering/) | Multi-tiered memory management (HOT/WARM/COLD) with automated pruning |
 | [memory-architecture](skills/memory-architecture/) | Honcho-inspired deductive memory and session summaries |
 | [proactive-pa](skills/proactive-pa/) | Proactive PA behavior patterns — transforms reactive task-following into anticipatory execution |
@@ -182,22 +182,27 @@ pa-skills/
 
 ## Contributing
 
-1. Create a new directory: `skills/<skill-name>/`
-2. Add a `SKILL.md` with YAML frontmatter (`name`, `description`)
-3. Include a clear "Use when:" sentence in the description
-4. Update `skills/README.md` and this file
-5. Open a PR
+We welcome contributions! Whether it's a new skill, production caveats, or documentation improvements.
 
-### Skill design guidelines
+See **[CONTRIBUTING.md](CONTRIBUTING.md)** for the full guide, including:
+- How to create and structure a skill
+- The `.context` pattern for keeping skills portable
+- PR checklist and submission process
+- Skill design rules
 
-- **One domain = one skill.** Users think in domains, not tools.
-- **Keep skills focused.** Above ~35, routing accuracy degrades — merge overlapping skills and retire unused ones.
-- **Each skill needs one clear "Use when:" sentence** in the description.
-- **Universal rules go in SOUL.md**, not in skills. Skills are triggered on demand.
-- **Diagnostics = appendix.** Never a standalone skill.
+**Quick start:**
+
+```bash
+mkdir skills/<skill-name>
+# Create SKILL.md with YAML frontmatter
+# Update skills/README.md and root README.md
+# Open a PR
+```
+
+**Most valuable contributions:** real failure modes, version caveats, configs that didn't work as expected. _"Here's what happened when I actually ran it"_ beats _"here's what should work"_ every time.
 
 ---
 
 ## License
 
-Open source. Use, fork, and adapt for your own AI PA agents.
+[MIT](LICENSE) — use, fork, and adapt for your own AI PA agents.

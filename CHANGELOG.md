@@ -5,6 +5,23 @@ All notable changes to the pa-skills library will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- `CONTRIBUTING.md` — standalone contributing guide with skill template, design rules, and PR checklist
+- `LICENSE` — MIT license file
+- "PRs Welcome" badge in README
+- Contribute tab on the website with skill template, design rules, and PR checklist
+- 9 missing skills added to the website: chat-history-local, cron-reminders, openclaw-email-orientation, pa-audit-db, personal-crm, quick-reminders, stakeholder-update, whatsapp-diagnostics, whatsapp-voice
+- 9 missing skills added to `skills/README.md` with proper categorization
+
+### Fixed
+- Removed phantom `skill-scout` skill (listed in indexes but directory never existed)
+- Corrected skill count from 41 to 40 across README badge, skill tables, and website
+- Updated `skills/README.md` from 32 to 40 skills with reorganized categories
+
+### Changed
+- README contributing section now references `CONTRIBUTING.md` instead of inline instructions
+- Reorganized `skills/README.md` categories for clarity (merged fragmented sections)
+
+### Previously added
 - Open Graph and Twitter meta tags for better link previews
 - Favicon using Heleni hero image
 - Skill counter in the Skills tab search controls

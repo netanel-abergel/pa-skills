@@ -31,7 +31,7 @@ Each SKILL.md has a "Load Local Context" section.
 
 ---
 
-## Skills (32)
+## Skills (40)
 
 ### Core
 
@@ -43,6 +43,8 @@ Each SKILL.md has a "Load Local Context" section.
 | [pa-onboarding](pa-onboarding/) | Step-by-step setup wizard for new AI PAs on OpenClaw |
 | [eval](eval/) | Full PA performance evaluation: tasks, skills, network, memory |
 | [pa-eval](pa-eval/) | Structured PA scoring: weekly self-eval with owner feedback |
+| [pa-status](pa-status/) | PA network health dashboard: billing, calendar, active status |
+| [pa-ownership](pa-ownership/) | Autonomous task tracking with retry loops and proactive updates |
 
 ### Communication & Coordination
 
@@ -53,6 +55,10 @@ Each SKILL.md has a "Load Local Context" section.
 | [meetings](meetings/) | Schedule meetings via PA-to-PA + summarize notes/transcripts |
 | [meeting-notetaker](meeting-notetaker/) | Fetch and present meeting notes from monday.com Notetaker |
 | [meeting-scheduler](meeting-scheduler/) | Schedule meetings by coordinating with peer PAs |
+| [chat-history-local](chat-history-local/) | Search past WhatsApp/chat conversations stored in the audit log PostgreSQL database |
+| [personal-crm](personal-crm/) | Personal CRM on monday.com — tracks contacts, last interactions, next meetings, and pre-meeting briefings |
+| [stakeholder-update](stakeholder-update/) | Draft and send structured project or task updates to stakeholders |
+| [whatsapp-voice](whatsapp-voice/) | Transcribe WhatsApp voice messages using local Whisper CLI — Hebrew and English supported |
 
 ### Integrations
 
@@ -60,55 +66,37 @@ Each SKILL.md has a "Load Local Context" section.
 |-------|-------------|
 | [monday-for-agents](monday-for-agents/) | monday.com: boards, items, task tracking, project board templates |
 | [calendar-setup](calendar-setup/) | Connect Google Calendar (setup, troubleshoot, write permissions) |
+| [openclaw-email-orientation](openclaw-email-orientation/) | Explain how email and Google Calendar work for OpenClaw agents — credentials, setup, troubleshooting |
 | [youtube-watcher](youtube-watcher/) | Fetch YouTube transcripts for summarization and Q&A |
 
-### Routing & Storage
-
-| Skill | Description |
-|-------|-------------|
-| [storage-router](storage-router/) | Decide where to save: monday.com vs GitHub vs local |
-
-### Monitoring & Health
-
-| Skill | Description |
-|-------|-------------|
-| [billing-monitor](billing-monitor/) | Detect API billing errors and alert owner + admin |
-| [pa-status](pa-status/) | PA network health dashboard: billing, calendar, active status |
-
-### Analytics & Costs
-
-| Skill | Description |
-|-------|-------------|
-| [usage-costs](usage-costs/) | Token usage and cost reports: per session, per day, per week |
-| [skill-analytics](skill-analytics/) | Track skill usage, daily reports, find unused skills |
-
-### Self-Improvement
+### Self-Improvement & Memory
 
 | Skill | Description |
 |-------|-------------|
 | [self-learning](self-learning/) | Log corrections and apply lessons. Maintains HOT.md. |
 | [self-monitor](self-monitor/) | Infrastructure + security checks, disk/memory/service health |
-| [skill-scout](skill-scout/) | Weekly search for new skill ideas from the PA community |
 | [heleni-best-practices](heleni-best-practices/) | Daily sync of production lessons from pa-skills website |
-| [pa-ownership](pa-ownership/) | Autonomous task tracking with retry loops and proactive updates |
-
-### Memory & Context
-
-| Skill | Description |
-|-------|-------------|
+| [skill-analytics](skill-analytics/) | Track skill usage, daily reports, find unused skills |
 | [memory-architecture](memory-architecture/) | Honcho-inspired memory: working / session / long-term tiers |
 | [memory-tiering](memory-tiering/) | HOT/WARM/COLD memory compaction and archiving |
 | [proactive-pa](proactive-pa/) | Proactive PA behavior: heartbeats, autonomous checks, initiative |
 
-### Setup & Maintenance
+### Operations
 
 | Skill | Description |
 |-------|-------------|
-| [git-backup](git-backup/) | Backup workspace to GitHub. Handles token, init, push. |
 | [maintenance](maintenance/) | Workspace backup (every 6h) + OpenClaw updates (weekly) |
+| [billing-monitor](billing-monitor/) | Detect API billing errors and alert owner + admin |
+| [usage-costs](usage-costs/) | Token usage and cost reports: per session, per day, per week |
+| [git-backup](git-backup/) | Backup workspace to GitHub. Handles token, init, push. |
+| [storage-router](storage-router/) | Decide where to save: monday.com vs GitHub vs local |
 | [dynamic-temperature](dynamic-temperature/) | LLM temperature selection by task type |
 | [spawn-subagent](spawn-subagent/) | Spawn isolated subagents for long/blocking tasks |
 | [research-synthesizer](research-synthesizer/) | Multi-source research: parallel searches, dedup, cited answer |
+| [quick-reminders](quick-reminders/) | Same-day, short-horizon reminders via nohup sleep — simple setup, no cron required |
+| [cron-reminders](cron-reminders/) | Reboot-safe reminders for days, weeks, or months out — uses cron + JSON for persistence |
+| [whatsapp-diagnostics](whatsapp-diagnostics/) | Diagnose and fix WhatsApp connectivity issues for OpenClaw agents |
+| [pa-audit-db](pa-audit-db/) | PostgreSQL schema + setup guide for the WhatsApp messages audit DB — auto-populated by OpenClaw |
 
 ---
 

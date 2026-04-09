@@ -428,6 +428,35 @@ Safe to run multiple times — deduplicates existing section on each run.
 
 ---
 
+## Section 5 — Inviting Users & Sharing Documents
+
+### Step 1: Check if User Already Exists
+- Check in Admin → Users whether the email already exists
+- If yes → skip to Step 3
+- If no → Step 2
+
+### Step 2: Invite to Account
+- Admin → Users → Invite Members
+- Enter email + role (Member / Viewer)
+- User receives an email with a join link
+
+### Step 3: Access to a Specific Document
+- Open the document
+- Click Share (top right)
+- Check if the document is set to Private / Public to account
+- If Private: add the user manually by searching their name
+- If Public to account: once they're in the account, they have automatic access
+
+### Step 4: Direct Sharing
+- Send the user the direct link to the document after they've been added
+
+### Important Rules
+- Invite to account ≠ access to a private document
+- Always confirm with the owner before adding an external user
+- Check document privacy settings before inviting
+
+---
+
 ## References
 
 - Column value JSON formats: see `references/column-types.md` in this skill directory

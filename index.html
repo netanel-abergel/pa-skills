@@ -270,6 +270,7 @@ footer a{color:var(--accent)}
   <button class="tab-btn" data-tab="skills" onclick="switchTab('skills')">Skills</button>
   <button class="tab-btn" data-tab="learnings" onclick="switchTab('learnings')">Learnings</button>
   <button class="tab-btn" data-tab="install" onclick="switchTab('install')">Install</button>
+  <button class="tab-btn" data-tab="contribute" onclick="switchTab('contribute')">Contribute</button>
   <button class="tab-btn" data-tab="faq" onclick="switchTab('faq')">FAQ</button>
 </div>
 
@@ -284,7 +285,7 @@ footer a{color:var(--accent)}
       <!-- Quick stats -->
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center">
-          <div style="font-size:24px;font-weight:800;color:var(--accent)">32</div>
+          <div style="font-size:24px;font-weight:800;color:var(--accent)">40</div>
           <div style="font-size:11px;color:var(--text-dim);margin-top:2px">Skills</div>
         </div>
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center">
@@ -649,6 +650,79 @@ footer a{color:var(--accent)}
   </div>
 </div>
 
+<!-- TAB: CONTRIBUTE -->
+<div class="tab-panel" id="tab-contribute">
+  <div class="section-prompt">cat CONTRIBUTING.md</div>
+  <div class="section-title">Contribute a Skill</div>
+  <div class="section-sub">// every skill in this library was born from a real problem &mdash; yours could be next</div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:36px">
+    <div class="story-block" style="border-left-color:var(--accent)">
+      <div class="story-label">// option 1</div>
+      <div class="story-title">Add a New Skill</div>
+      <div class="story-text">If your AI PA needs something that doesn't exist here, build it and share it. Create a <code>skills/&lt;skill-name&gt;/SKILL.md</code> with YAML frontmatter, include a clear "Use when:" sentence, and open a PR.</div>
+    </div>
+    <div class="story-block" style="border-left-color:var(--amber)">
+      <div class="story-label">// option 2</div>
+      <div class="story-title">Add Production Caveats</div>
+      <div class="story-text">Already using a skill? Add what broke, what surprised you, and what workaround you found. A <code>## Caveats</code> section with real failure modes is <strong>more valuable than a new feature</strong>.</div>
+    </div>
+    <div class="story-block" style="border-left-color:var(--blue)">
+      <div class="story-label">// option 3</div>
+      <div class="story-title">Report Issues &amp; Improve Docs</div>
+      <div class="story-text">Found a bug? Fix typos, clarify steps, add examples. Small improvements compound. Use the issue templates for structured reports.</div>
+    </div>
+  </div>
+
+  <div class="story-block" style="margin-bottom:24px">
+    <div class="story-label">// skill template</div>
+    <div class="story-title">SKILL.md Format</div>
+    <div class="story-text" style="font-family:var(--mono);font-size:12px;line-height:1.8;white-space:pre-wrap">---
+name: skill-name
+description: "What it does. Use when: the PA needs to..."
+---
+
+# Skill Name
+
+## Step 1 — ...
+
+## Step 2 — ...
+
+## Caveats
+
+_None documented yet — add yours after running in production._</div>
+  </div>
+
+  <div style="margin-bottom:24px">
+    <div class="section-title" style="font-size:20px;margin-bottom:12px">Design Rules</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px">
+      <div class="learning-card"><div class="learning-title">One domain = one skill</div><div class="learning-desc">Users think in domains, not tools. Keep each skill focused on a single responsibility.</div></div>
+      <div class="learning-card"><div class="learning-title">Keep SKILL.md generic</div><div class="learning-desc">No hardcoded IDs, phone numbers, or internal names. Agent-specific data goes in <code>.context</code> files (gitignored).</div></div>
+      <div class="learning-card"><div class="learning-title">Include a Caveats section</div><div class="learning-desc">Document real failure modes, version requirements, and gotchas. A skill without caveats teaches what <em>should</em> work; caveats teach how to survive reality.</div></div>
+      <div class="learning-card"><div class="learning-title">Clear "Use when:" sentence</div><div class="learning-desc">Every skill description must include one clear sentence describing when the PA should activate it.</div></div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:24px">
+    <div class="section-title" style="font-size:20px;margin-bottom:12px">PR Checklist</div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;font-size:13px;color:var(--text-dim);line-height:2">
+      <div><span style="color:var(--accent);margin-right:8px">[ ]</span> SKILL.md has YAML frontmatter (name, description)</div>
+      <div><span style="color:var(--accent);margin-right:8px">[ ]</span> Description includes a clear "Use when:" sentence</div>
+      <div><span style="color:var(--accent);margin-right:8px">[ ]</span> Skill directory is under skills/&lt;skill-name&gt;/</div>
+      <div><span style="color:var(--accent);margin-right:8px">[ ]</span> skills/README.md updated with the new skill</div>
+      <div><span style="color:var(--accent);margin-right:8px">[ ]</span> Root README.md skill table updated</div>
+      <div><span style="color:var(--accent);margin-right:8px">[ ]</span> CHANGELOG.md updated</div>
+      <div><span style="color:var(--accent);margin-right:8px">[ ]</span> Tested with at least one LLM</div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:12px;flex-wrap:wrap">
+    <a class="btn btn-primary" href="https://github.com/netanel-abergel/pa-skills/blob/main/CONTRIBUTING.md" target="_blank">Full Contributing Guide</a>
+    <a class="btn btn-outline" href="https://github.com/netanel-abergel/pa-skills/issues/new?template=new-skill-request.md" target="_blank">Request a Skill</a>
+    <a class="btn btn-outline" href="https://github.com/netanel-abergel/pa-skills/issues/new?template=bug-report.md" target="_blank">Report a Bug</a>
+  </div>
+</div>
+
 <!-- TAB: FAQ -->
 <div class="tab-panel" id="tab-faq">
   <div class="section-prompt">man faq</div>
@@ -689,7 +763,7 @@ function switchTab(tab) {
 
 // Handle hash on load
 const hash = location.hash.replace('#','');
-if (['heleni','guide','skills','learnings','install','faq'].includes(hash)) switchTab(hash);
+if (['heleni','guide','skills','learnings','install','contribute','faq'].includes(hash)) switchTab(hash);
 
 const SKILLS = [
   {icon:'🌐',slug:'ai-pa',title:'AI-PA Network',cat:'communication',desc:'Multi-agent PA coordination — contact peer PAs, delegate tasks, share context across the network.'},
@@ -708,7 +782,8 @@ const SKILLS = [
   {icon:'🚀',slug:'proactive-pa',title:'Proactive PA',cat:'productivity',desc:'Proactive behavior patterns — transforms reactive task-following into anticipatory execution. Alert tiers, initiative guardrails, silence strategy.'},
   {icon:'📈',slug:'skill-analytics',title:'Skill Analytics',cat:'monitoring',desc:'Track skill usage across sessions — invocation logs, daily summaries, unused skill detection, and optimization recommendations.'},
   {icon:'🗂️',slug:'skill-master',title:'Skill Master',cat:'productivity',desc:'Meta-skill for routing. Decision tree, keyword triggers, and multi-skill composition guidance.'},
-  {icon:'🔎',slug:'skill-scout',title:'Skill Scout',cat:'productivity',desc:'Daily automated discovery — scans memory for unmet needs, searches web for new OpenClaw skills.'},
+  {icon:'💬',slug:'chat-history-local',title:'Chat History Local',cat:'communication',desc:'Search past WhatsApp/chat conversations stored in the audit log PostgreSQL database.'},
+  {icon:'⏰',slug:'cron-reminders',title:'Cron Reminders',cat:'productivity',desc:'Reboot-safe reminders for days, weeks, or months out — uses cron + JSON for persistence.'},
   {icon:'📡',slug:'supervisor',title:'Supervisor',cat:'monitoring',desc:'Central status dashboard: active tasks, open issues, pending follow-ups, system health in one report.'},
   {icon:'📺',slug:'youtube-watcher',title:'YouTube Watcher',cat:'integration',desc:'Fetch and read transcripts from YouTube videos. Summarize, answer questions, extract information.'},
   {icon:'🌡️',slug:'dynamic-temperature',title:'Dynamic Temperature',cat:'productivity',desc:'Dynamic LLM temperature selection by task type — precision for scheduling and commands, warmth for communication, creativity for expression.'},
@@ -724,6 +799,13 @@ const SKILLS = [
   {icon:'🚦',slug:'spawn-subagent',title:'Spawn Subagent',cat:'productivity',desc:'Spawn isolated subagents for long-running, complex, or blocking tasks without stalling the main session.'},
   {icon:'🗄️',slug:'storage-router',title:'Storage Router',cat:'productivity',desc:'Decide where to save any piece of information — monday.com, local file, or MEMORY.md — before saving anything.'},
   {icon:'💰',slug:'usage-costs',title:'Usage Costs',cat:'monitoring',desc:'Track and report API usage costs across models and providers. Budget alerts, daily/weekly summaries, and cost optimization recommendations.'},
+  {icon:'📧',slug:'openclaw-email-orientation',title:'Email Orientation',cat:'setup',desc:'Explain how email and Google Calendar work for OpenClaw agents — credentials, setup, and troubleshooting.'},
+  {icon:'🗃️',slug:'pa-audit-db',title:'PA Audit DB',cat:'monitoring',desc:'PostgreSQL schema + setup guide for the WhatsApp messages audit DB — auto-populated by OpenClaw.'},
+  {icon:'👤',slug:'personal-crm',title:'Personal CRM',cat:'communication',desc:'Personal CRM on monday.com — tracks contacts, last interactions, next meetings, and pre-meeting briefings.'},
+  {icon:'⏱️',slug:'quick-reminders',title:'Quick Reminders',cat:'productivity',desc:'Same-day, short-horizon reminders via nohup sleep — simple setup, no cron required.'},
+  {icon:'📢',slug:'stakeholder-update',title:'Stakeholder Update',cat:'communication',desc:'Draft and send structured project or task updates to stakeholders.'},
+  {icon:'🔧',slug:'whatsapp-diagnostics',title:'WhatsApp Diagnostics',cat:'monitoring',desc:'Diagnose and fix WhatsApp connectivity issues for OpenClaw agents.'},
+  {icon:'🎙️',slug:'whatsapp-voice',title:'WhatsApp Voice',cat:'communication',desc:'Transcribe WhatsApp voice messages using local Whisper CLI — Hebrew and English supported.'},
 ];
 
 const CATEGORIES = [
