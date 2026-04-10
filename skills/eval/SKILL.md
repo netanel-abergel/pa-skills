@@ -9,6 +9,62 @@ Structured evaluation of everything the agent manages.
 
 ---
 
+## ⚡ Execution Architecture (Anti-Timeout)
+
+Eval is split into 3 independent subagents that run in parallel.
+Each subagent handles one domain, returns a short result block, and exits.
+Main agent collects results and formats the final report.
+
+**On-demand (user asks):** Always run fresh — never read from cache.
+**Cron/heartbeat:** Run async, save to `memory/eval-cache.json`, report only if issues found.
+
+### Subagent Split
+| Subagent | Domain | Expected Time |
+|---|---|---|
+| SA-1 | System health (vertex, WhatsApp, DB, backup) | <10s |
+| SA-2 | PA network health (contact-list.md) | <10s |
+| SA-3 | Tasks + memory + skills audit | <10s |
+
+### How to Run (on-demand)
+```
+1. Spawn SA-1, SA-2, SA-3 simultaneously (sessions_spawn, runtime=subagent)
+2. Each returns a JSON block with its section
+3. Main agent merges and formats the final report
+4. Send to owner
+```
+
+### Subagent Task Templates
+
+**SA-1 — System Health:**
+```
+Run system health check:
+1. vertex-ctl status
+2. openclaw status (WhatsApp connected?)
+3. git -C /opt/ocana/openclaw/workspace log -1 --format="%ar"
+4. python3: check PA_DB_URL → psql count
+Return JSON: {"vertex": "RUNNING/DOWN", "whatsapp": "connected/disconnected", "backup": "Xm ago", "db": "X msgs"}
+```
+
+**SA-2 — PA Network:**
+```
+Read /opt/ocana/openclaw/workspace/contact-list.md
+Find all PA entries (lines with "PA:" or under WhatsApp Groups / PAs section)
+Count total PAs, check for any notes about issues/offline/billing
+Return JSON: {"total": N, "online": N, "issues": [{"pa": "name", "issue": "description"}]}
+```
+
+**SA-3 — Tasks + Memory + Skills:**
+```
+Check:
+1. wc -l /opt/ocana/openclaw/workspace/MEMORY.md
+2. ls /opt/ocana/openclaw/workspace/skills | wc -l
+3. Check today's daily note exists
+4. grep tasks.md for open/done count
+Return JSON: {"memory_lines": N, "skills": N, "daily_note": true/false, "tasks_open": N, "tasks_done": N}
+```
+
+---
+
 ## When to Use
 
 Trigger phrases:
@@ -120,16 +176,8 @@ grep "\[ \]" "$TASKS_FILE" | grep -v "$(date +%Y-%m-%d)" | grep -v "$(date -u -d
 ### Step 3 — PA Network Health
 
 ```bash
-BILLING_FILE="$HOME/.openclaw/workspace/memory/billing-status.json"
-
-echo "PA Network Status:"
-python3 << 'PYEOF'
-import json
-data = json.load(open('/opt/ocana/openclaw/workspace/memory/billing-status.json'))
-for pa in data['issues']:
-    status = "✅" if pa['status'] == 'resolved' else "⚠️"
-    print(f"  {status} {pa['pa']} ({pa['owner']}): {pa['status']}")
-PYEOF
+# PA network is tracked in contact-list.md (not billing-status.json)
+grep -i "PA:" /opt/ocana/openclaw/workspace/contact-list.md | head -30
 ```
 
 ### Step 4 — Skills Audit
@@ -177,29 +225,75 @@ else
 fi
 ```
 
-### Step 6 — Memory Health
+### Step 6 — Memory Health (All 4 Layers)
 
 ```bash
 TODAY=$(date -u +%Y-%m-%d)
-WORKSPACE="$HOME/.openclaw/workspace"
+WORKSPACE="/opt/ocana/openclaw/workspace"
 
-# Check daily notes exist
-[ -f "$WORKSPACE/memory/$TODAY.md" ] \
-  && echo "Daily notes: ✅" \
-  || echo "Daily notes: ❌ not created yet"
-
-# Check MEMORY.md size (warn if >200 lines)
+# Layer 1: MEMORY.md (long-term rules)
 MEMORY_LINES=$(wc -l < "$WORKSPACE/MEMORY.md" 2>/dev/null || echo 0)
 if [ "$MEMORY_LINES" -gt 200 ]; then
-  echo "MEMORY.md: ⚠️ Large ($MEMORY_LINES lines) — consider pruning"
+  echo "Layer 1 MEMORY.md: ⚠️ Large ($MEMORY_LINES lines) — consider pruning"
+elif [ "$MEMORY_LINES" -gt 0 ]; then
+  echo "Layer 1 MEMORY.md: ✅ ($MEMORY_LINES lines)"
 else
-  echo "MEMORY.md: ✅ ($MEMORY_LINES lines)"
+  echo "Layer 1 MEMORY.md: ❌ empty or missing"
 fi
 
-# Count learnings this week
-LEARNINGS=$(grep -c "^##" "$WORKSPACE/.learnings/LEARNINGS.md" 2>/dev/null || echo 0)
-echo "Total learnings logged: $LEARNINGS"
+# Layer 2: Daily notes
+[ -f "$WORKSPACE/memory/daily/$TODAY.md" ] \
+  && echo "Layer 2 Daily notes: ✅ ($TODAY exists)" \
+  || echo "Layer 2 Daily notes: ❌ not created yet"
+
+# Layer 3: PostgreSQL (WhatsApp history)
+python3 << 'PYEOF'
+import os, subprocess
+db_url = os.environ.get('PA_DB_URL', '')
+if not db_url:
+    print('Layer 3 PostgreSQL: ❌ PA_DB_URL not set')
+else:
+    try:
+        result = subprocess.run(
+            ['psql', db_url, '-c', 'SELECT COUNT(*) FROM messages;', '-t'],
+            capture_output=True, text=True, timeout=5
+        )
+        count = result.stdout.strip()
+        if count.isdigit() and int(count) > 0:
+            print(f'Layer 3 PostgreSQL: ✅ ({count} messages)')
+        else:
+            print(f'Layer 3 PostgreSQL: ⚠️ connected but empty ({count})')
+    except Exception as e:
+        print(f'Layer 3 PostgreSQL: ❌ {e}')
+PYEOF
+
+# Layer 4: SQLite semantic (vector memory)
+# IMPORTANT: correct path is /opt/ocana/openclaw/memory/main.sqlite (NOT workspace)
+python3 << 'PYEOF'
+try:
+    import sqlite3, sqlite_vec
+    db = sqlite3.connect('/opt/ocana/openclaw/memory/main.sqlite')
+    db.enable_load_extension(True)
+    sqlite_vec.load(db)
+    db.enable_load_extension(False)
+    files = db.execute('SELECT COUNT(*) FROM files').fetchone()[0]
+    chunks = db.execute('SELECT COUNT(*) FROM chunks').fetchone()[0]
+    vectors = db.execute('SELECT COUNT(*) FROM chunks_vec').fetchone()[0]
+    cache = db.execute('SELECT COUNT(*) FROM embedding_cache').fetchone()[0]
+    if chunks > 1 and vectors > 1:
+        print(f'Layer 4 Semantic SQLite: ✅ ({files} files, {chunks} chunks, {vectors} vectors, {cache} cached embeddings)')
+    else:
+        print(f'Layer 4 Semantic SQLite: ⚠️ low data ({chunks} chunks, {vectors} vectors) — may not be indexed')
+except Exception as e:
+    print(f'Layer 4 Semantic SQLite: ❌ {e}')
+PYEOF
 ```
+
+**Memory layer legend:**
+- Layer 1: MEMORY.md — curated rules and context
+- Layer 2: Daily notes — raw session log
+- Layer 3: PostgreSQL — full WhatsApp history (2,700+ msgs)
+- Layer 4: SQLite+vec — semantic/vector search across workspace files
 
 ---
 
@@ -300,3 +394,15 @@ Save to `.learnings/eval/YYYY-MM-DD.md` with: scores table, owner feedback, task
 - **Task Completion Rate:** `completed / assigned × 100%` — Target: >90%
 - **Accuracy Rate:** `(tasks - corrections) / tasks × 100%` — Target: >95%
 - **Memory Retention:** Ask about something discussed 7+ days ago — Target: >80% recall
+
+---
+
+## Skill Usage (from gateway logs)
+
+```bash
+# Which skills were used in recent sessions
+for f in /tmp/openclaw/openclaw-*.log; do
+  echo "=== $(basename $f) ==="
+  grep -o "skills/[a-z_-]*/SKILL\.md" "$f" 2>/dev/null | sort | uniq -c | sort -rn | head -10
+done
+```
