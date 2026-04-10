@@ -16,6 +16,52 @@ The single source of truth for what the agent is currently tracking.
 
 ---
 
+## ⚡ Execution Architecture (Anti-Timeout)
+
+Supervisor is split into 2 subagents to avoid main thread timeouts.
+
+**On-demand (user asks):** Always run fresh — never read from cache.
+**Heartbeat:** Skip heavy checks — read from `memory/supervisor-cache.json` if <30min old.
+
+### Subagent Split
+| Subagent | Domain | Expected Time |
+|---|---|---|
+| SA-1 | System health + PA network + billing | <10s |
+| SA-2 | Group activity + DM follow-ups + tasks | <10s |
+
+### How to Run (on-demand)
+```
+1. Spawn SA-1 and SA-2 simultaneously (sessions_spawn, runtime=subagent)
+2. Each returns a structured text block
+3. Main agent merges and formats the report
+4. Send to owner
+```
+
+### Subagent Task Templates
+
+**SA-1 — System + Network:**
+```
+Run:
+1. vertex-ctl status
+2. git -C /opt/ocana/openclaw/workspace log -1 --format="%ar"
+3. Read /opt/ocana/openclaw/workspace/memory/billing-status.json
+4. Read /opt/ocana/openclaw/workspace/data/pa-directory.json → count active/issues
+Return plain text block for the SYSTEM HEALTH and PA NETWORK sections of the supervisor report.
+```
+
+**SA-2 — Groups + Tasks:**
+```
+Run:
+1. tail -1 each file in /opt/ocana/openclaw/workspace/memory/whatsapp/groups/*/context.md
+2. grep WAITING /opt/ocana/openclaw/workspace/memory/whatsapp/dms/*/context.md
+3. cat /opt/ocana/openclaw/workspace/memory/tasks.md
+Return plain text block for GROUP ACTIVITY, PENDING FOLLOW-UPS, and ACTIVE TASKS sections.
+```
+
+---
+
+---
+
 ## When to Use
 
 Trigger phrases:
