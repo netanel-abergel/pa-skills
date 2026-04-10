@@ -155,10 +155,9 @@ If `PA_DB_URL` is unset or DB is unreachable, use the file-based approach: `inbo
 - This solves the blind spot: when the other party replies in a new session, I still track it
 
 ### Post-Send Group Monitoring Rule
-- After sending a message to **any group** → wait ~30 seconds, then check for direct replies or @mentions
-- If someone responds directly to you within that window → reply before moving on
-- Applies especially to: PA Onboarding, Core Team, monday Internal AI
-- After 30 seconds with no direct response → move on (don't poll continuously)
+- After sending a message to a group, move on immediately — do NOT wait/poll for replies
+- Replies will arrive as new inbound messages and be handled in a new turn
+- The heartbeat check (every 2h) catches unanswered threads
 
 ### Silence Rules (NO_REPLY)
 - Casual acks from PAs: 👍, "got it", "thank you", "noted" → **NO_REPLY** unless directly asked
