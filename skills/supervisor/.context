@@ -1,0 +1,12 @@
+# supervisor — Local Context (not synced to pa-skills)
+
+OWNER_PHONE=+972548834688
+OWNER_NAME="Netanel Abergel"
+
+# Data files
+WORKSPACE=/opt/ocana/openclaw/workspace
+TASKS_FILE=/opt/ocana/openclaw/workspace/memory/tasks.md
+BILLING_STATUS_FILE=/opt/ocana/openclaw/workspace/memory/billing-status.json
+PA_LIST_FILE=/opt/ocana/openclaw/workspace/PA_LIST.md
+PA_DIRECTORY_JSON=/opt/ocana/openclaw/workspace/data/pa-directory.json
+WHATSAPP_MEMORY_DIR=/opt/ocana/openclaw/workspace/memory/whatsapp
