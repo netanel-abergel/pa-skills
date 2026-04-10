@@ -1,0 +1,13 @@
+# usage-costs — Local Context (not synced to pa-skills)
+
+OWNER_PHONE=+972548834688
+
+# Pricing (claude-sonnet-4-6, 2026-04)
+PRICING_INPUT=3.00        # per 1M tokens
+PRICING_OUTPUT=15.00      # per 1M tokens
+PRICING_CACHE_READ=0.30   # per 1M tokens
+PRICING_CACHE_WRITE=3.75  # per 1M tokens
+
+# Data files
+TOKEN_HISTORY=/opt/ocana/openclaw/workspace/data/token-history.jsonl
+CRON_RUNS_DIR=/opt/ocana/openclaw/cron/runs
