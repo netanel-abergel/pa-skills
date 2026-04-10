@@ -1,0 +1,19 @@
+# pa-onboarding — Local Context (not synced to pa-skills)
+
+OWNER_PHONE=+972548834688
+AGENT_PHONE=+972555193968
+
+# PA coordination group (for announcing new PAs)
+JID_PA_ONBOARDING=120363408613668489@g.us
+
+# PA directory files
+PA_LIST_FILE=/opt/ocana/openclaw/workspace/PA_LIST.md
+PA_DIRECTORY_JSON=/opt/ocana/openclaw/workspace/data/pa-directory.json
+
+# GitHub
+GITHUB_ACCOUNT=netanel-abergel
+PA_SKILLS_REPO=https://github.com/netanel-abergel/pa-skills
+
+# Credentials path pattern for new agents
+MONDAY_TOKEN_PATH=/root/.credentials/monday-api-token.txt
+GOG_CREDS_PATH=/opt/ocana/openclaw/.gog/credentials.json
