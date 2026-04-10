@@ -12,6 +12,46 @@ Any small model. Data collection is CLI-based. Formatting is simple.
 
 ---
 
+## ⚡ Execution Architecture (Anti-Timeout)
+
+Briefing is split into 2 parallel subagents. Never run all sections in a single LLM call.
+
+| Subagent | Domain | Expected Time |
+|---|---|---|
+| SA-1 | Calendar events (Google Calendar API) | <15s |
+| SA-2 | Open tasks (monday.com or tasks.md) | <10s |
+
+### How to Run
+```
+1. Spawn SA-1 and SA-2 simultaneously (sessions_spawn, runtime=subagent, lightContext=true)
+2. Wait for both to complete
+3. Main agent merges results and formats the briefing
+4. Send to owner via WhatsApp
+```
+
+### SA-1 Task Template — Calendar
+```
+Fetch today's Google Calendar events for netanelab@monday.com using direct API.
+Credentials: /opt/ocana/openclaw/.gog/credentials.json (use owner account with refresh_token flow)
+OAuth token URL: https://oauth2.googleapis.com/token
+Calendar API: https://www.googleapis.com/calendar/v3/calendars/netanelab%40monday.com/events
+Time range: today 00:00–24:00 UTC
+Return plain text list: "• HH:MM — Title (Xmin/Xh)" or "• No events today"
+```
+
+### SA-2 Task Template — Tasks
+```
+Read /opt/ocana/openclaw/workspace/memory/tasks.md
+Filter: only open tasks ([ ] not [x])
+Return plain text list: "• task name" or "• None — all clear!"
+```
+
+### On failure of any subagent
+Send the briefing anyway — mark the failed section as "(unavailable)".
+Never skip the whole briefing because one section failed.
+
+---
+
 ## When to Send (Decision Rules)
 
 - **Weekday (Mon–Fri):** Send at the scheduled time.
