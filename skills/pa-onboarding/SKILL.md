@@ -5,6 +5,8 @@ description: "Step-by-step onboarding guide for setting up a new AI Personal Ass
 
 # PA Onboarding Skill
 
+> **Deep reference:** For the full onboarding guide with DB operations, memory management, failure patterns, and Day 1 completion checklist — see `PA_ONBOARDING_CHECKLIST.md` in the repo root.
+
 ## Minimum Model
 Any model. This is a procedural guide — follow steps in order.
 
@@ -154,6 +156,10 @@ Key things to include:
 ★ [ ] Added to PA network directory (PA_LIST.md)
 ★ [ ] Added to PA Onboarding WhatsApp group
 ★ [ ] Self-introduced in PA Onboarding group
+★ [ ] PostgreSQL + wa-audit-log hook active (messages logging to DB)
+★ [ ] DB has real data (not 0 rows — backfill if needed)
+★ [ ] Dedup tools wired (dedup_check.py inbound + msg_dedup.py outbound)
+★ [ ] Nightly DB backup cron configured
   [ ] monday.com token saved (optional)
   [ ] Email/Gmail access (optional)
   [ ] git backup configured (optional)
@@ -214,7 +220,11 @@ Lessons learned from running PAs in production. Future agents setting up a new P
 
 ---
 
-## Optional: Enable Message History DB
+## Phase 4 — Database Setup (Mandatory)
+
+> A PA without a working DB cannot search past conversations, track history, or use dedup. This is not optional.
+>
+> **Full guide with schema, queries, dedup, backfill, backup, and known caveats:** see `PA_ONBOARDING_CHECKLIST.md` Section 5 (Database Operations).
 
 Enable PostgreSQL audit logging to allow searching past WhatsApp conversations via SQL.
 
@@ -253,3 +263,15 @@ openclaw gateway restart
 ```
 
 Once active, the `wa-audit-log` hook will automatically write every message to the `wa_messages` table. Use the `chat-history` skill to search past conversations.
+
+### 6. Verify DB has data
+```bash
+psql -U <pa_name> -d <pa_name>_memory -c "SELECT COUNT(*) FROM messages;"
+```
+If count = 0 after setup, backfill from session files. See `PA_ONBOARDING_CHECKLIST.md` Section 5.7.
+
+### 7. Set up dedup tools
+Wire `tools/dedup_check.py` (inbound) and `tools/msg_dedup.py` (outbound) — see `PA_ONBOARDING_CHECKLIST.md` Section 5.6.
+
+### 8. Configure nightly DB backup
+Set up `tools/db_backup.sh` as a cron — see `PA_ONBOARDING_CHECKLIST.md` Section 5.8.
