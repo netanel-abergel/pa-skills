@@ -74,6 +74,23 @@ Approved Updates → MEMORY.md
 Auto-Cleanup (archive old files)
 ```
 
+## Dreaming Integration (OpenClaw 2026.4.5+)
+
+Dreaming runs nightly at 3 AM UTC and auto-promotes strong daily memory signals to MEMORY.md.
+
+**Impact on this skill:**
+- Manual promotion of recurring patterns is no longer needed — Dreaming handles it
+- The nightly self-review crons (23:00) should **not** promote to MEMORY.md automatically — let Dreaming score first
+- COLD tier (MEMORY.md) may grow faster now — monitor and prune monthly
+- Review `DREAMS.md` after first 2 weeks to validate promotion quality
+
+**What still requires manual action:**
+- Owner corrections → MEMORY.md immediately
+- Critical rules that must load every session → MEMORY.md manually
+- Pruning stale entries Dreaming promoted → manual cleanup
+
+---
+
 ### What to Do (Periodically, Every 7 Days)
 
 1. Scan recent `memory/YYYY-MM-DD.md` files (last 7 days)
