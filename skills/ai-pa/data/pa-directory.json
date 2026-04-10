@@ -1,0 +1,26 @@
+{
+  "source": "PA_LIST.md is the single source of truth. This file is a programmatic mirror — update from PA_LIST.md.",
+  "last_synced": "2026-04-08",
+  "pas": [
+    { "name": "Heleni", "phone": "+972555193968", "owner": "Netanel Abergel", "owner_phone": "+972548834688", "owner_role": "Director R&D", "owner_email": "netanelab@monday.com", "status": "active" },
+    { "name": "Selena Vox", "phone": "+972555193808", "owner": "Daniel Lereya", "owner_phone": "+972545911021", "owner_role": "CTPO", "owner_email": "daniel.l@monday.com", "status": "active" },
+    { "name": "Kira", "phone": "+972537210135", "owner": "Orly Stern Izhaki", "owner_phone": "+972529426200", "owner_role": "VP Product", "owner_email": "orlyiz@monday.com", "status": "active" },
+    { "name": "Adam", "phone": "+972537209898", "owner": "Lilach", "owner_phone": "", "owner_role": "monday.com leadership", "owner_email": "", "status": "active" },
+    { "name": "Hagit / Nia", "phone": "+972537210098", "owner": "Sergei Liakhovetsky", "owner_phone": "+972526148968", "owner_role": "VP R&D", "owner_email": "sergeili@monday.com", "status": "active" },
+    { "name": "Jarvis / Jatvin", "phone": "+972555193914", "owner": "Liron Streichman", "owner_phone": "", "owner_role": "VP R&D", "owner_email": "lironsht@monday.com", "status": "active" },
+    { "name": "Drew", "phone": "+972555193909", "owner": "Dor Yehuda", "owner_phone": "+972585555966", "owner_role": "monday.com", "owner_email": "", "status": "active" },
+    { "name": "Edward", "phone": "+972555193939", "owner": "Ido Karlen", "owner_phone": "", "owner_role": "Director / Infra Lead", "owner_email": "", "status": "active" },
+    { "name": "Martha", "phone": "+972559317594", "owner": "Ohad Frankfurt", "owner_phone": "+972542428388", "owner_role": "monday.com leadership", "owner_email": "ohadfr@monday.com", "status": "active" },
+    { "name": "Midgee", "phone": "+972529086394", "owner": "Doron Sinai", "owner_phone": "+972547691235", "owner_role": "monday.com", "owner_email": "", "status": "active" },
+    { "name": "Janet", "phone": "+972555193907", "owner": "Gabriel Amram", "owner_phone": "+972505250303", "owner_role": "monday.com", "owner_email": "", "status": "active" },
+    { "name": "Jeffrey / Smith", "phone": "+972555193913", "owner": "Ziv Monday", "owner_phone": "+972535310971", "owner_role": "monday.com", "owner_email": "", "status": "active" },
+    { "name": "Ruth", "phone": "+972555193921", "owner": "Tomer Brook", "owner_phone": "+972525290870", "owner_role": "monday.com", "owner_email": "", "status": "active" },
+    { "name": "Dorbot", "phone": "+972559434156", "owner": "Dor Cohen", "owner_phone": "+972546100066", "owner_role": "monday.com", "owner_email": "dorco@monday.com", "status": "active" },
+    { "name": "Alfred", "phone": "+972555193891", "owner": "Guy Atzmon", "owner_phone": "+972542010180", "owner_role": "VP Product Design", "owner_email": "guyat@monday.com", "status": "active" },
+    { "name": "Laika", "phone": "+19406175722", "owner": "Omri Cohen", "owner_phone": "+972547756778", "owner_role": "VP Product", "owner_email": "omrico@monday.com", "status": "active" },
+    { "name": "Yennefar", "phone": "+972529382314", "owner": "Neta Fishman", "owner_phone": "+972509666833", "owner_role": "Program Manager", "owner_email": "", "status": "active" },
+    { "name": "Luma", "phone": "+972522057076", "owner": "Kate Nir", "owner_phone": "+972526610247", "owner_role": "Agent Builder", "owner_email": "kateni@monday.com", "status": "active" },
+    { "name": "Ted", "phone": "+447438340667", "owner": "Chen Salomon", "owner_phone": "+447570393649", "owner_role": "monday.com", "owner_email": "chensa@monday.com", "status": "active" },
+    { "name": "Valkirie", "phone": "", "owner": "Ruslan Semenov", "owner_phone": "+447939664974", "owner_role": "Director R&D", "owner_email": "ruslanse@monday.com", "status": "setup" }
+  ]
+}
