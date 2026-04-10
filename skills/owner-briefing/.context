@@ -1,0 +1,22 @@
+# owner-briefing — Local Context (not synced to pa-skills)
+
+OWNER_NAME="Netanel Abergel"
+OWNER_PHONE=+972548834688
+OWNER_EMAIL=netanelab@monday.com
+OWNER_TIMEZONE=Asia/Jerusalem
+
+# Calendar
+CALENDAR_ID=netanelab@monday.com
+GOG_CREDS=/opt/ocana/openclaw/.gog/credentials.json
+GOG_ACCOUNT_NAME=owner
+
+# monday.com
+MONDAY_TOKEN_FILE=/root/.credentials/monday-api-token.txt
+MONDAY_BOARD_PA_ROLLOUT=18407159006
+
+# Briefing cron name
+CRON_NAME=morning-briefing
+CRON_SCHEDULE="30 7 * * 1-5"
+
+# Delivery
+DELIVERY_CHANNEL=whatsapp
