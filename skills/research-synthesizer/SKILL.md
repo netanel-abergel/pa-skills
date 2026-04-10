@@ -239,49 +239,39 @@ If the topic is inherently Israeli (local news, Israeli law, etc.) → weight He
 4. **Deep questions → decompose first** (Step 0b). Simple facts → skip decomposition.
 5. **Max ~400 words** — be concise, not exhaustive
 6. **One clean doc, not multiple drafts** — get it right before publishing
-3. **Direct answer first** — no preamble, no "I will now search..."
-4. **Hebrew in, Hebrew out** — match the user's language
-5. **Flag uncertainty** — if sources conflict or data is stale, say so
-6. **No raw dumps** — synthesize, don't copy-paste snippets
-7. **React 👍** when owner requests research, **✅** when delivered
-8. After delivering research — write summary to `memory/whatsapp/dms/<PHONE-sanitized>/context.md` if topic was important
+7. **Direct answer first** — no preamble, no "I will now search..."
+8. **Hebrew in, Hebrew out** — match the user's language
+9. **Flag uncertainty** — if sources conflict or data is stale, say so
+10. **No raw dumps** — synthesize, don't copy-paste snippets
+11. **React 👍** when owner requests research, **✅** when delivered
+12. After delivering research — write summary to `memory/whatsapp/dms/<PHONE-sanitized>/context.md` if topic was important
+
+### ⚠️ Anti-Bias Rule (CRITICAL)
+
+When researching competitors or doing comparative analysis:
+- **❌ Never assume OUR product is superior** — especially when the owner uses it
+- **❌ Never dismiss competitors without verification** — statements like "no competitor does X" require actual evidence
+- **✅ Treat all products equally** — same depth of research for every tool
+- **✅ Credit competitors explicitly** when they do something better or equally well
+- **✅ Use G2, Reddit, real user reviews** — not just marketing pages
+- **✅ If you can't verify a claim → don't make it**
+
+### ⚖️ Symmetry Rule (from Kate Nir, 2026-04-08)
+
+**If you used Product A hands-on → you must use Product B hands-on too.**
+You cannot compare first-hand experience with marketing copy. Either:
+- Use both hands-on (browser, trial account, real flow), OR
+- Compare both using the same external sources (G2, Reddit, reviews)
+
+Mixing levels of evidence = biased output. Always.
 
 ---
 
----
+Example of bias to avoid:
+> ❌ "No competitor sends notes directly to board items — this is unique to monday"
+> ✅ "monday syncs notes to board items natively. Notion AI Meetings, tl;dv, and Fireflies also offer project management integrations — verify depth before claiming uniqueness."
 
-## Feedback Mode (Inbound Synthesis)
-
-> **When NOT to use this mode:** If you need web research, use the standard flow above. This mode is for synthesizing *inbound feedback already received* — from WhatsApp groups, emails, notes.
-
-**Trigger:** Owner asks "what are users saying about X?", "summarize feedback on Y", "any patterns in the complaints?"
-
-**When to use:**
-- After a product release or update
-- Weekly/monthly product review
-- Owner wants a digest of inbound feedback from specific channels
-
-**Steps:**
-1. **Collect** — pull feedback from configured sources (WhatsApp group history via `memory/whatsapp/`, email threads, notes)
-2. **Categorize** — group by topic (UX, performance, feature request, bug) and sentiment (positive/negative/neutral)
-3. **Synthesize** — same format as standard mode, but sourced internally
-4. **Deliver** — send to owner via preferred channel
-
-**Output format:**
-- Top 3 themes (with count + sentiment)
-- Notable quotes (max 3)
-- Recommended action (if any)
-- Total feedback items processed
-
-**Config** (add to `.context`):
-```
-FEEDBACK_SOURCES=whatsapp,email
-PRODUCT_NAMES=Vibe,Sidekick
-```
-
-Works best with 5+ items. With fewer — still runs, but flag lower confidence in output.
-
-*Contributed by Mira Solane / Luma (Kate's PA), April 2026.*
+When the owner or stakeholder uses a product you're researching — **apply extra skepticism to positive claims about that product.**
 
 ---
 
