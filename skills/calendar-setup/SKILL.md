@@ -123,6 +123,33 @@ gog auth remove owner@company.com
 gog auth add owner@company.com --services gmail,calendar,drive,contacts
 ```
 
+**Alternative — use refresh token directly (no browser needed):**
+
+Access tokens expire after ~1 hour. If the PA is in a new session and gets 401/auth errors, use the refresh token to get a fresh access token without re-authenticating:
+
+```python
+import json, requests
+
+creds = json.load(open('/opt/ocana/openclaw/.gog/credentials.json'))
+acc = creds['accounts']['owner']  # or 'agent' — whichever account
+
+resp = requests.post('https://oauth2.googleapis.com/token', data={
+    'client_id': acc['client_id'],
+    'client_secret': acc['client_secret'],
+    'refresh_token': acc['refresh_token'],
+    'grant_type': 'refresh_token'
+})
+access_token = resp.json()['access_token']
+# access_token is valid for ~1 hour — use immediately
+```
+
+**When to use this:**
+- New session started and gog CLI returns auth errors
+- No browser available for interactive re-auth
+- PA is running in automated/cron context
+
+**Key rule:** Refresh tokens don't expire (unless revoked). Access tokens do (~1h). Always use refresh_token → access_token flow when running in background sessions.
+
 ---
 
 ### Multiple calendars (work + personal)
