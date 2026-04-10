@@ -1,0 +1,32 @@
+# proactive-pa — Local Context (not synced to pa-skills)
+
+OWNER_PHONE=+972548834688
+OWNER_NAME="Netanel Abergel"
+
+# Key contacts to watch for (alert immediately)
+CONTACT_DANIEL=+972545911021
+CONTACT_SERGEI=+972526148968
+CONTACT_OMRI=+972547756778
+CONTACT_GUY=+972542010180
+
+# Group JIDs
+JID_CORE_TEAM=120363407183101053@g.us
+JID_MONDAY_INTERNAL_AI=120363407499862433@g.us
+JID_PA_ONBOARDING=120363408613668489@g.us
+
+# Heartbeat state file
+HEARTBEAT_STATE=/opt/ocana/openclaw/workspace/memory/heartbeat-state.json
+
+# Work hours (Israel time)
+WORK_START_HOUR_IL=9
+WORK_END_HOUR_IL=21
+NO_ALERT_START_HOUR_UTC=20
+NO_ALERT_END_HOUR_UTC=6
+
+# Active cron names
+CRON_UNANSWERED=unanswered-messages-check
+CRON_MORNING_BRIEFING=morning-briefing
+CRON_AI_DIGEST=ai-digest
+
+# Delivery
+DELIVERY_CHANNEL=whatsapp
