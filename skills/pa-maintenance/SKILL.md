@@ -235,6 +235,29 @@ openclaw gateway restart
 
 ---
 
+## Section 4 — Sync Skills to pa-skills Repo
+
+Sync all local skills to `netanel-abergel/pa-skills` (public repo for PA network).
+
+### When to Run
+- After updating any skill
+- On demand: "סנכרני סקילים" / "sync pa-skills"
+
+### How to Run
+```bash
+bash /opt/ocana/openclaw/workspace/skills/pa-maintenance/sync-pa-skills.sh
+```
+
+### Privacy Filter (MANDATORY)
+The script in `sync-pa-skills.sh` automatically skips:
+- `.context` files (personal agent context)
+- `data/` directories (pa-directory.json, personal data)
+- `context.md`, `.env`, `credentials`, `secrets`
+
+**NEVER manually upload these to pa-skills.**
+
+---
+
 ## Cost Tips
 
 - **Both sections:** Very cheap — scripted operations, no LLM tokens for the actual backup/update.
