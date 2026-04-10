@@ -1,0 +1,14 @@
+# billing-monitor — Local Context (not synced to pa-skills)
+
+OWNER_PHONE=+972548834688
+ADMIN_PHONE=+972548834688
+
+# Log file
+LOG_DIR=/opt/ocana/openclaw/workspace/logs
+BILLING_LOG=/opt/ocana/openclaw/workspace/logs/billing-incidents.log
+
+# Fallback config
+BILLING_FALLBACK_CONFIG=/opt/ocana/openclaw/workspace/config/billing-fallback.json
+
+# Note: Netanel uses a proxy — billing-health-check cron REMOVED (not relevant)
+# Only alert on actual API failure detected during real usage
