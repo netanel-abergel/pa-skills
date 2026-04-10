@@ -1,6 +1,6 @@
 ---
 name: self-learning
-description: "Continuous self-improvement through systematic logging, pattern detection, and behavioral updates. Use when: the owner corrects you, a task fails, you discover a better approach, you notice a recurring pattern, or during weekly reflection sessions. Builds on .learnings/ files to drive durable behavioral change."
+description: "Continuous self-improvement through systematic logging, pattern detection, and behavioral updates. Use when: the owner corrects you, a task fails, you discover a better approach, you notice a recurring pattern, or during weekly reflection sessions. Builds on .learnings/ files to drive durable behavioral change. Daily loop: Log → Pattern 2x → HOT.md → 30 days clean → SOUL.md. Skill-specific learnings → update relevant SKILL.md directly."
 ---
 
 # Self-Learning Skill
@@ -90,7 +90,42 @@ Usage:
 
 ---
 
-## Part 2 — Weekly Reflection
+## Part 2 — Daily Learning Loop (Promoted from weekly)
+
+Run every night via `heleni-internal-self-review` cron (23:00 Israel).
+
+### Flow
+```
+New event → Log immediately (Part 1)
+  ↓
+Every night: scan for 2x+ patterns
+  ↓
+Promote to HOT.md (active behavioral correction)
+  ↓
+30 days clean → promote to SOUL.md permanently
+  ↓
+Skill-specific? → update relevant SKILL.md
+```
+
+### Promotion Rules
+| Source | Destination | Trigger |
+|---|---|---|
+| LEARNINGS.md | HOT.md | Same mistake 2+ times |
+| HOT.md | SOUL.md | 30+ days no recurrence |
+| LEARNINGS.md | SKILL.md | Skill-specific learning |
+| LEARNINGS.md | MEMORY.md section 13 | System-level pattern |
+
+### HOT.md Format
+```markdown
+# HOT.md — Rules I Keep Breaking
+_Read before every reply. Max 20 lines._
+
+- [Rule — short, imperative] (broken N times, last: YYYY-MM-DD)
+```
+
+**Key constraint:** HOT.md max 20 lines. If over — the behavior isn't improving. Fix the root cause, don't add more rules.
+
+## Part 2 — Weekly Reflection (deprecated, replaced by daily loop above)
 
 Run every 7 days. Find patterns across log entries.
 
