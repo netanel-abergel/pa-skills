@@ -94,6 +94,10 @@ Usage:
 
 Run every night via `heleni-internal-self-review` cron (23:00 Israel).
 
+> **2026.4.10 Note:** Dreaming (memory-core, 3 AM IL) now auto-promotes MEMORY.md entries from daily signals.
+> The nightly self-review cron should **NOT** promote to MEMORY.md — let Dreaming score first.
+> This cron handles: HOT.md behavioral rules only. MEMORY.md = Dreaming's job.
+
 ### Flow
 ```
 New event → Log immediately (Part 1)
@@ -105,6 +109,8 @@ Promote to HOT.md (active behavioral correction)
 30 days clean → promote to SOUL.md permanently
   ↓
 Skill-specific? → update relevant SKILL.md
+  ↓
+System-level pattern? → write to daily note → Dreaming picks it up
 ```
 
 ### Promotion Rules
@@ -113,7 +119,8 @@ Skill-specific? → update relevant SKILL.md
 | LEARNINGS.md | HOT.md | Same mistake 2+ times |
 | HOT.md | SOUL.md | 30+ days no recurrence |
 | LEARNINGS.md | SKILL.md | Skill-specific learning |
-| LEARNINGS.md | MEMORY.md section 13 | System-level pattern |
+| LEARNINGS.md | daily note only | System-level pattern (Dreaming promotes to MEMORY.md) |
+| Owner correction | MEMORY.md **immediately** | Critical/urgent — don't wait for Dreaming |
 
 ### HOT.md Format
 ```markdown
