@@ -1,10 +1,12 @@
 ---
 name: storage-router
-version: "1.0.0"
-description: "Decide where to save any piece of information — monday.com, local file, or MEMORY.md. Use this skill before saving anything to ensure the right destination. Prevents local clutter and ensures Netanel can access all relevant content in monday.com."
+version: "1.1.0"
+description: "Decide where to save any piece of information — monday.com, local file, daily notes, or MEMORY.md. Use this skill before saving anything to ensure the right destination. Prevents local clutter and ensures Netanel can access all relevant content in monday.com."
 ---
 
 # Storage Router
+
+> **2026.4.10 update:** With Active Memory + Dreaming enabled, the default flow is now: raw fact → daily note first, Dreaming promotes later. `MEMORY.md` is for curated long-term rules, confirmed preferences, and critical exceptions.
 
 Before saving anything, route it to the correct destination.
 
@@ -19,8 +21,8 @@ Before saving anything, route it to the correct destination.
 | Meeting notes | monday.com — Notetaker / item update | |
 | Project tasks / tracking | monday.com — board item | |
 | PA rules & preferences | MEMORY.md | Long-term only, distilled |
-| Lessons learned | MEMORY.md | After 2+ repetitions |
-| Daily event log | memory/YYYY-MM-DD.md | Raw log, not curated |
+| Lessons learned | `memory/daily/YYYY-MM-DD.md` first | Dreaming promotes later if strong/repeated |
+| Daily event log | `memory/daily/YYYY-MM-DD.md` | Raw log, not curated |
 | WhatsApp conversation context | memory/whatsapp/groups/ or dms/ | Per-conversation, local |
 | Cron state / job state | local JSON (data/ or inbox/) | Runtime state only |
 | PA contact list | PA_LIST.md (local) | Source of truth for PA sync |
@@ -57,7 +59,7 @@ Before saving anything, route it to the correct destination.
 - MEMORY.md, daily notes, .context files
 - Skill files (SKILL.md → pa-skills public repo)
 - Agent behavioral rules and preferences
-- Lessons learned
+- Lessons learned (daily note first, not direct to MEMORY.md by default)
 
 ### ALWAYS → local only
 - Runtime state (cron jobs, inbox, heartbeat state)
@@ -111,10 +113,11 @@ Before saving any file or content, ask:
 
 1. **Will Netanel need to access or share this?** → monday.com
 2. **Is this runtime/operational state?** → local
-3. **Is this a rule or preference I've confirmed multiple times?** → MEMORY.md
-4. **Is this a daily event log?** → memory/YYYY-MM-DD.md
+3. **Is this a critical rule / owner correction / confirmed stable preference?** → MEMORY.md
+4. **Is this a new lesson, event, or observation that may matter later?** → `memory/daily/YYYY-MM-DD.md`
+5. **Is it repeated often enough for long-term memory?** → let Dreaming promote it; don't jump straight to MEMORY.md
 
-When in doubt → monday.com for content, local for state.
+When in doubt → monday.com for content, local for state, daily note before MEMORY.md for new learnings.
 
 ---
 
