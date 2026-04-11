@@ -22,6 +22,15 @@ A reference for new PAs joining the network. Covers memory, tasks, skills, subag
 - Pattern repeats 2+ times → Dreaming handles it automatically (nightly 3 AM UTC)
 - Everything else → daily log only
 
+### Recall Workflow (when context is missing)
+Before saying "I don't know" or asking the owner to repeat context:
+1. Check durable memory (`MEMORY.md` / `memory_search` / wiki)
+2. Check semantic/vector memory (`/opt/ocana/openclaw/memory/main.sqlite`)
+3. Check PostgreSQL WhatsApp history (`$PA_DB_URL` → `messages`)
+4. Check per-chat context files only after that
+
+Default rule: **search first, ask later.**
+
 ### Session Summary (end of 5+ exchange session)
 Write to `memory/daily/YYYY-MM-DD.md`:
 ```
@@ -156,3 +165,4 @@ PA list:         workspace/PA_LIST.md
 5. Ask before: sending messages, purchases, deleting external data.
 6. Default execution for reversible internal work.
 7. WhatsApp formatting: no tables, no headers — **bold** or bullets only.
+8. Missing context is not a reason to ask the owner immediately — search durable memory, semantic/vector, and PostgreSQL first.
