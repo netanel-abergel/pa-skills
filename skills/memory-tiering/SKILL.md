@@ -5,114 +5,92 @@ description: Automated multi-tiered memory management (HOT, WARM, COLD). Use thi
 
 # Memory Tiering Skill 🧠⚖️
 
-This skill implements a dynamic, three-tiered memory architecture to optimize context usage and retrieval efficiency.
+> **2026.4.10 Update:** OpenClaw now has two native memory systems — **Active Memory** (runs before every reply) and **Dreaming** (nightly consolidation at 3 AM IL). This skill covers what they DON'T handle — see section below.
 
-## The Three Tiers
+## What Native Systems Now Cover (don't duplicate)
 
-1.  **🔥 HOT (memory/hot/HOT_MEMORY.md)**:
-    *   **Focus**: Current session context, active tasks, temporary credentials, immediate goals.
-    *   **Management**: Updated frequently. Pruned aggressively once tasks are completed.
-2.  **🌡️ WARM (memory/warm/WARM_MEMORY.md)**:
-    *   **Focus**: User preferences (Hui's style, timezone), core system inventory, stable configurations, recurring interests.
-    *   **Management**: Updated when preferences change or new stable tools are added.
-3.  **❄️ COLD (MEMORY.md)**:
-    *   **Focus**: Long-term archive, historical decisions, project milestones, distilled lessons.
-    *   **Management**: Updated during archival phases. Detail is replaced by summaries.
+| Task | Who does it |
+|---|---|
+| Pull relevant context before each reply | Active Memory plugin (automatic) |
+| Promote strong signals to MEMORY.md nightly | Dreaming / memory-core (automatic) |
+| HOT.md pattern promotion after 2x mistakes | self-learning skill |
 
-## Workflow: `Organize-Memory`
+## What This Skill Still Handles
 
-Whenever a memory reorganization is triggered (manual or post-compaction), follow these steps:
+- Manual pruning when MEMORY.md grows >200 lines
+- Archiving old `memory/daily/YYYY-MM-DD.md` files (30-day retention)
+- Force-promoting critical owner corrections immediately (don't wait for Dreaming)
+- Reviewing DREAMS.md after first 2 weeks to validate promotion quality
+- Post-compaction reorganization
 
-### Step 1: Ingest & Audit
-- Read all three tiers and recent daily logs (`memory/YYYY-MM-DD.md`).
-- Identify "Dead Context" (completed tasks, resolved bugs).
+## The Three Tiers (for manual ops)
 
-### Step 2: Tier Redistribution
-- **Move to HOT**: Anything requiring immediate attention in the next 2-3 turns.
-- **Move to WARM**: New facts about the user or system that are permanent.
-- **Move to COLD**: Completed high-level project summaries.
+1.  **🔥 HOT (`memory/hot/HOT_MEMORY.md`)** — current session, active tasks
+2.  **🌡️ WARM (`memory/warm/WARM_MEMORY.md`)** — stable preferences, configs
+3.  **❄️ COLD (`MEMORY.md`)** — long-term, distilled, curated
 
-### Step 3: Pruning & Summarization
-- Remove granular details from COLD.
-- Ensure credentials in HOT point to their root files rather than storing raw secrets (if possible).
+## Workflow: `Organize-Memory` (Manual / Post-Compaction)
 
-### Step 4: Verification
-- Ensure no critical information was lost during the move.
-- Verify that `HOT` is now small enough for efficient context use.
+### Step 1: Check native systems first
+```bash
+openclaw memory status --deep   # see what Dreaming already promoted
+/dreaming status                  # check last run
+```
+
+### Step 2: Ingest & Audit
+- Read MEMORY.md + last 7 `memory/daily/YYYY-MM-DD.md` files
+- Identify Dead Context: completed tasks, resolved issues, stale facts
+
+### Step 3: Prune & Redistribute
+- Remove stale COLD entries (if Dreaming already promoted better versions)
+- Force-add critical owner corrections → MEMORY.md immediately (don't wait for Dreaming)
+- Archive daily notes older than 30 days → `memory/archive/YYYY-MM/`
+
+### Step 4: Verify
+- MEMORY.md should be <200 lines after cleanup
+- Check `DREAMS.md` — are Dreaming's promotions accurate? Prune bad ones.
 
 ## Usage Trigger
-- Trigger manually with: "Run memory tiering" or "整理记忆层级".
-- Trigger automatically after any `/compact` command.
+- Trigger manually: "Run memory tiering" or when MEMORY.md >200 lines
+- Trigger automatically after any `/compact` command
 
 ---
 
-## Automated Maintenance (Merged from memory-maintenance skill)
+## Dreaming Integration (OpenClaw 2026.4.9+)
 
-The memory-maintenance skill provided a scheduled automation layer for memory upkeep. Key concepts integrated here:
+Dreaming is **already enabled** (`memory-core` plugin, `0 3 * * *` IL timezone).
 
-### Why Maintenance Matters
+**What Dreaming does automatically:**
+- Light phase: ingests daily notes + session transcripts
+- Deep phase: scores & promotes strong signals → MEMORY.md (weighted: relevance 0.30, frequency 0.24, recency 0.15)
+- REM phase: extracts themes and patterns
 
-Without regular maintenance:
-- Daily notes pile up and become unsearchable
-- Important decisions get buried in old sessions
-- Context windows fill with irrelevant history
-- You repeat the same context-setting every day
-
-### Maintenance Workflow
-
+**Manual CLI for inspection/intervention:**
+```bash
+openclaw memory status --deep          # what's queued for promotion
+openclaw memory promote                # preview what would promote
+openclaw memory promote --apply        # force apply now
+openclaw memory promote-explain "term" # why something would/wouldn't promote
+/dreaming status                        # last run summary
 ```
-Daily Session Notes (memory/YYYY-MM-DD.md)
-    ↓
-Review (scheduled or on heartbeat)
-    ↓
-Structured Suggestions
-    ↓
-Human Review (approve/reject)
-    ↓
-Approved Updates → MEMORY.md
-    ↓
-Auto-Cleanup (archive old files)
-```
-
-## Dreaming Integration (OpenClaw 2026.4.5+)
-
-Dreaming runs nightly at 3 AM UTC and auto-promotes strong daily memory signals to MEMORY.md.
-
-**Impact on this skill:**
-- Manual promotion of recurring patterns is no longer needed — Dreaming handles it
-- The nightly self-review crons (23:00) should **not** promote to MEMORY.md automatically — let Dreaming score first
-- COLD tier (MEMORY.md) may grow faster now — monitor and prune monthly
-- Review `DREAMS.md` after first 2 weeks to validate promotion quality
 
 **What still requires manual action:**
-- Owner corrections → MEMORY.md immediately
-- Critical rules that must load every session → MEMORY.md manually
-- Pruning stale entries Dreaming promoted → manual cleanup
-
----
-
-### What to Do (Periodically, Every 7 Days)
-
-1. Scan recent `memory/YYYY-MM-DD.md` files (last 7 days)
-2. Identify decisions, lessons, and insights worth keeping long-term
-3. Update `MEMORY.md` with distilled learnings — remove outdated entries
-4. Archive or clean up old daily notes
+- Owner corrections → MEMORY.md **immediately** (don't wait for Dreaming)
+- Critical session-startup rules → MEMORY.md **manually**
+- Pruning bad/stale Dreaming promotions → manual cleanup
+- MEMORY.md growing >200 lines → prune manually
 
 ### Safety Rules
-
-- **Content changes** (updating MEMORY.md): require explicit review — never auto-apply
-- **Safe maintenance** (archiving old files): can run automatically
-- **Risky operations** (rename, delete): require confirmation
-- **Prefer `trash` over `rm`**: recoverable beats gone forever
+- Content changes (MEMORY.md): require explicit review — never auto-apply
+- Archiving old files: safe to run automatically
+- `trash` > `rm` always
 
 ### Retention Policy
-
-- Daily notes: keep 30 days, then archive to `memory/archive/YYYY-MM/`
-- Archive files: keep 90 days, then delete
-- MEMORY.md: prune if >200 lines — keep only what's still relevant
+- Daily notes: keep 30 days → archive to `memory/archive/YYYY-MM/`
+- Archive: keep 90 days → delete
+- MEMORY.md: prune if >200 lines
 
 ### Health Indicators
-
-- ✅ Healthy: MEMORY.md <200 lines, daily notes exist, weekly reflection done
-- ⚠️ Warning: MEMORY.md 200–300 lines, daily notes missing for 2+ days
-- ❌ Critical: MEMORY.md >300 lines (too bloated to be useful), no daily notes in 7+ days
+- ✅ Healthy: MEMORY.md <200 lines, DREAMS.md updated nightly, daily notes exist
+- ⚠️ Warning: MEMORY.md 200–300 lines, Dreaming didn't run in 48h
+- ❌ Critical: MEMORY.md >300 lines, no Dreaming output in 7 days
