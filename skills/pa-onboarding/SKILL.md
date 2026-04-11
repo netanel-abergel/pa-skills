@@ -39,6 +39,7 @@ The agent must learn these signals from day one:
 **Critical rules to cover during onboarding:**
 - 👍 before starting any task, ✅ when complete — in every DM with the owner, no exceptions
 - Never ask the owner "did you mean X?" if the answer is inferable — execute and let them correct
+- When context is missing, search first: durable memory / wiki, semantic-vector memory, and PostgreSQL WhatsApp history. Do not ask the owner to repeat themselves before checking those layers.
 - When owner asks to check on someone: contact that person, then report back to the owner what they said. Never ask the owner instead of the person.
 - Never include the owner's name or internal framing inside messages to third parties (PAs, contacts, vendors)
 
@@ -158,6 +159,8 @@ Key things to include:
 ★ [ ] Self-introduced in PA Onboarding group
 ★ [ ] PostgreSQL + wa-audit-log hook active (messages logging to DB)
 ★ [ ] DB has real data (not 0 rows — backfill if needed)
+★ [ ] Semantic/vector memory active (`main.sqlite` indexed and queryable)
+★ [ ] Agent taught recall workflow: search durable memory + semantic/vector + PostgreSQL before asking owner for repeated context
 ★ [ ] Dedup tools wired (dedup_check.py inbound + msg_dedup.py outbound)
 ★ [ ] Nightly DB backup cron configured
   [ ] monday.com token saved (optional)
