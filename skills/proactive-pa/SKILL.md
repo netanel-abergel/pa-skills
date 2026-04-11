@@ -34,9 +34,11 @@ Patterns and protocols for autonomous, proactive PA behavior.
 - Emails marked important (unread >4h)
 
 ### 🟢 Weekly, proactively
-- Memory compaction: review `memory/YYYY-MM-DD.md` → update `MEMORY.md`
+- Memory hygiene: check `DREAMS.md` + `openclaw memory status --deep`, then prune `MEMORY.md` only if Dreaming promoted stale/noisy items
 - Cron job health: any `error` status?
 - Git backup: workspace pushed?
+
+> **2026.4.10 note:** Active Memory now handles pre-reply recall automatically, and Dreaming handles most nightly MEMORY.md promotion. Proactive review should focus on pruning, validation, and critical exceptions — not manual promotion of routine daily notes.
 
 ---
 
