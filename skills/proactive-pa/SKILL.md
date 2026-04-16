@@ -44,6 +44,8 @@ Patterns and protocols for autonomous, proactive PA behavior.
 
 ## Heartbeat Protocol
 
+Priority rule: if there is a queued owner message waiting, answer it before sending any heartbeat output. Owner DM beats heartbeat every time.
+
 During heartbeats, rotate through these checks (2-4x per day):
 
 ```
@@ -88,7 +90,7 @@ openclaw cron add \
 | Name | Interval | Purpose |
 |------|----------|---------|
 | `unanswered-messages-check` | 5m | Find unanswered messages |
-| `morning-briefing` | daily 7:30 IL | Morning summary to Netanel |
+| `morning-briefing` | daily 7:00 IL | Morning summary to Netanel |
 | `ai-digest` | daily 8:00 IL | AI news to Internal AI group |
 | `billing-health-check` | hourly | API key / billing status |
 

@@ -21,9 +21,11 @@ Main agent collects results and formats the final report.
 ### Subagent Split
 | Subagent | Domain | Expected Time |
 |---|---|---|
-| SA-1 | System health (vertex, WhatsApp, DB, backup) | <10s |
-| SA-2 | PA network health (contact-list.md) | <10s |
-| SA-3 | Tasks + memory + skills audit | <10s |
+| SA-1 | System health (vertex, WhatsApp, DB, backup) | <15s |
+| SA-2 | PA network health (contact-list.md) | <15s |
+| SA-3 | Tasks + memory + skills audit | <15s |
+
+**Timeout:** Spawn all subagents with `runTimeoutSeconds=60`. Do NOT use `openclaw status` — it is slow and causes SIGKILL. Use only fast targeted commands (see templates below).
 
 ### How to Run (on-demand)
 ```
@@ -37,12 +39,12 @@ Main agent collects results and formats the final report.
 
 **SA-1 — System Health:**
 ```
-Run system health check:
-1. vertex-ctl status
-2. openclaw status (WhatsApp connected?)
+Run system health check using ONLY fast targeted commands (do NOT run openclaw status):
+1. /opt/ocana/bifrost/vertex-ctl.sh status 2>&1 | head -3
+2. curl -s --max-time 5 http://127.0.0.1:18789/ | head -1 || echo 'gateway unreachable'
 3. git -C /opt/ocana/openclaw/workspace log -1 --format="%ar"
-4. python3: check PA_DB_URL → psql count
-Return JSON: {"vertex": "RUNNING/DOWN", "whatsapp": "connected/disconnected", "backup": "Xm ago", "db": "X msgs"}
+4. python3 -c "import os,subprocess; db=os.environ.get('PA_DB_URL',''); r=subprocess.run(['psql',db,'-c','SELECT COUNT(*) FROM messages;','-t'],capture_output=True,text=True,timeout=5) if db else None; print(r.stdout.strip() if r else 'no DB')"
+Return JSON: {"vertex": "RUNNING/DOWN", "gateway": "reachable/unreachable", "backup": "X ago", "db": "X msgs"}
 ```
 
 **SA-2 — PA Network:**

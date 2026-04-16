@@ -35,6 +35,7 @@ Event happens → Log it immediately → Weekly: find patterns → Promote to co
 | Forgot past context | LEARNINGS.md | `memory_gap` |
 
 **Rule:** Log the event before replying to the owner. Don't delay.
+If the correction changes a reusable workflow, update the affected skill or checklist in the same turn.
 
 ### Log Format
 

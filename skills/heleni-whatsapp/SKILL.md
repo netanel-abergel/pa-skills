@@ -135,6 +135,17 @@ When DB mode is active, the `wa-audit-log` hook writes every message to `wa_mess
 ### File fallback
 If `PA_DB_URL` is unset or DB is unreachable, use the file-based approach: `inbox/pending.json` and `memory/whatsapp/` context files (existing behavior below).
 
+### Recall & Missing Context Rule
+For questions like "what happened", "what did X say", "what did we decide", or "אין לי הקשר": do not rely on context files alone.
+
+Check in this order when relevant:
+1. durable memory / wiki
+2. semantic-vector memory
+3. PostgreSQL WhatsApp history
+4. local `memory/whatsapp/` files as supporting context
+
+If only one layer was checked, say that explicitly. Do not ask the owner to repeat context before checking the first three layers.
+
 ---
 
 ## Production Behavioral Rules (MANDATORY)

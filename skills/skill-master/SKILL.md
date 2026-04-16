@@ -40,6 +40,7 @@ echo "{\"ts\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"skill\":\"SKILL_NAME\",\"trig
 | "billing error" / "API out of credits" | billing-monitor |
 | "connect calendar" / "connect Gmail" | calendar-setup |
 | "set up a new PA" / "onboard agent" | pa-onboarding |
+| "personal trainer" / "client check-in" / "workout program" / "fitness clients" | personal-trainer |
 | "monday.com" / "create board item" / "track this" | monday-for-agents |
 | "backup workspace" / "push to git" / "update openclaw" | pa-maintenance |
 | "save this" / "where to save" | storage-router |
@@ -65,4 +66,4 @@ echo "{\"ts\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"skill\":\"SKILL_NAME\",\"trig
 
 > **Privacy review (before push):** Scan for internal names, phone numbers, JIDs, board IDs. Replace with placeholders.
 
-> **Skill count:** 28 active. Sweet spot: 15-25. Above 30 = routing breaks.
+> **Skill count:** 29 active. Sweet spot: 15-25. Above 30 = routing breaks.

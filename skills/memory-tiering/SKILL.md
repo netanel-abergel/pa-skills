@@ -22,6 +22,7 @@ description: Automated multi-tiered memory management (HOT, WARM, COLD). Use thi
 - Force-promoting critical owner corrections immediately (don't wait for Dreaming)
 - Reviewing DREAMS.md after first 2 weeks to validate promotion quality
 - Post-compaction reorganization
+- Enforcing store boundaries: daily notes = raw-first log, `MEMORY.md` = durable rules only, project docs = project-scoped
 
 ## The Three Tiers (for manual ops)
 

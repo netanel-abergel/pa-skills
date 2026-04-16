@@ -22,7 +22,13 @@ End-to-end meeting coordination: find availability, contact the other PA, book t
 
 ### Step 1 — Understand the Request
 
-Before acting, confirm:
+Before acting, build a lightweight meeting contract:
+- **Goal** — why this meeting should happen
+- **Decision needed** — what should be clearer by the end
+- **Constraints** — duration, timeframe, format, key attendees
+- **Acceptance criteria** — what makes the scheduling/prep successful
+
+Then confirm:
 - **Who** to meet with
 - **Duration** (default: 30 min if not specified)
 - **Timeframe** ("this week", "next week", "mornings only", etc.)

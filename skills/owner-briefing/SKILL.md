@@ -284,7 +284,7 @@ openclaw message send --to OWNER_PHONE --message "$BRIEFING"
   "jobs": [
     {
       "id": "morning-briefing",
-      "schedule": "30 7 * * 1-5",
+      "schedule": "0 7 * * *",
       "timezone": "Asia/Jerusalem",
       "task": "Generate and send the owner's morning briefing: calendar events, urgent emails, and open tasks. Use owner-briefing skill.",
       "delivery": {
@@ -297,8 +297,8 @@ openclaw message send --to OWNER_PHONE --message "$BRIEFING"
 }
 ```
 
-- Runs Monday–Friday at 07:30 in the owner's timezone.
-- Change `"30 7"` to adjust time.
+- Runs daily at 07:00 in the owner's timezone.
+- Change `"0 7"` to adjust time.
 - Change `"timezone"` to match the owner's location.
 
 ---

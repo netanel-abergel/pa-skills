@@ -137,7 +137,7 @@ Key things to include:
 | Issue | Likely Cause | Fix |
 |---|---|---|
 | Agent doesn't respond | WhatsApp not properly linked | Re-scan QR code |
-| Messages count = 0 | Gateway ingest issue | Run `openclaw gateway restart` |
+| Status = "Connected and listening" but Messages count = 0 | Ingest/binding/runtime layer issue, not WhatsApp/user config | Run `openclaw gateway restart`; if still 0, escalate platform-side |
 | Calendar connected but read-only | Wrong share permission | Owner re-shares with "Make changes" |
 | Billing error | API key out of credits | Top up or switch model |
 | eSIM not activating | Data-only plan | Get SMS-capable plan |

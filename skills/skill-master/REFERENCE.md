@@ -72,6 +72,7 @@ What kind of task is this?
 | **monday-for-agents** | Operations | All monday.com operations: API, MCP, boards, items |
 | **owner-briefing** | Operations | Daily morning/evening summaries |
 | **pa-onboarding** | Setup | Full new agent setup from zero |
+| **personal-trainer** | Operations | Personal trainer client ops: check-ins, workout delivery, progress reminders, lead follow-up |
 | **self-learning** | Self-improvement | Log corrections and apply lessons; maintain HOT.md |
 | **self-monitor** | Health | Infrastructure + security checks, disk/memory/service health |
 | **skill-master** | Routing | Pick the right skill (this file) |
@@ -126,7 +127,7 @@ heleni-whatsapp (weekly digest) -> owner-briefing (include highlights) -> pa-mai
 - contact-list, ai-pa, billing-monitor, owner-briefing, supervisor, self-learning, pa-maintenance, silence-strategy, commitment-tracker, whatsapp-voice, chat-history-local, heleni-whatsapp, openclaw-token-optimizer
 
 ### Consider subagent for heavy operations
-- calendar-setup, meetings (scheduling flow), monday-for-agents (bulk ops), personal-crm (bulk sync)
+- calendar-setup, meetings (scheduling flow), monday-for-agents (bulk ops), personal-crm (bulk sync), personal-trainer (multi-client follow-up)
 
 ### Spawn subagent (recommended)
 - pa-onboarding (20+ steps), eval (full monthly analysis), batch operations, skill-scout, research-synthesizer (parallel web searches)
@@ -139,7 +140,7 @@ heleni-whatsapp (weekly digest) -> owner-briefing (include highlights) -> pa-mai
 |---|---|
 | contact-list, ai-pa, billing-monitor, supervisor, pa-maintenance, owner-briefing, silence-strategy, commitment-tracker | Any |
 | calendar-setup, pa-onboarding, heleni-whatsapp, chat-history-local, memory-tiering, whatsapp-voice, openclaw-token-optimizer | Small-Medium |
-| meetings, monday-for-agents, skill-scout, personal-crm | Medium |
+| meetings, monday-for-agents, skill-scout, personal-crm, personal-trainer | Medium |
 | eval (trend analysis), self-learning (writing rules), research-synthesizer | Medium-Large |
 
 ---
@@ -151,7 +152,7 @@ When a new skill is added:
 2. Add trigger phrases to **Quick Lookup** in SKILL.md.
 3. Update the **Decision Tree** if it fits a new category.
 4. Add to any relevant **Multi-Skill Workflows**.
-5. Check skill count -- stay under 32 active skills. Current count: 28.
+5. Check skill count -- stay under 32 active skills. Current count: 29.
 6. Add the skill name to the `KNOWN_SKILLS` list in `skill-analytics/SKILL.md`.
 
 ---

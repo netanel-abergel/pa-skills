@@ -1,164 +1,24 @@
-# AI-PA Skill Library
+# Ocana Workspace Skill Pack
 
-Modular SKILL.md-based playbooks for OpenClaw AI Personal Assistant agents.
-Each skill lives in its own directory and follows the standard `SKILL.md` format with YAML frontmatter.
+This directory contains platform-managed playbook skills installed automatically on all Ocana agents.
 
-## Quick Install
+## Included skills
+- ownership.md
+- devprocess.md
+- self-reflection.md
+- whatsapp.md
+- audit-log.md
+- render-manager.md
+- monday/SKILL.md
+- monday/references/graphql-operations.md
+- monday/references/column-types.md
 
-```bash
-curl -fsSL https://netanel-abergel.github.io/pa-skills/install.sh | bash
-```
+## Local tools
+- ../tools/render_plugin.py
+- monday/scripts/hatcha.py
+- monday/scripts/register.py
 
-Installs all skills, sets up directory structure, and creates starter files. ~2 minutes.
+## Notes
+- These files are managed by the control plane and may be overwritten during provisioning/backfills.
+- Render API usage must rely on RENDER_API_KEY from environment variables only.
 
----
-
-## The `.context` Pattern
-
-Skills are fully generic — no hardcoded IDs, phones, or internal names.
-
-Each PA adds a local `.context` file per skill with her own values:
-
-```
-skills/
-  storage-router/
-    SKILL.md      ← generic, synced here ✅
-    .context      ← your IDs/phones/JIDs, stays private ✅
-```
-
-Add `skills/**/.context` to your `.gitignore`.  
-Each SKILL.md has a "Load Local Context" section.
-
----
-
-## Skills (40)
-
-### Core
-
-| Skill | Description |
-|-------|-------------|
-| [skill-master](skill-master/) | Meta-skill: routing table for picking the right skill |
-| [supervisor](supervisor/) | Central status dashboard — tasks, issues, health, follow-ups |
-| [owner-briefing](owner-briefing/) | Daily briefing: meetings, emails, tasks, action items |
-| [pa-onboarding](pa-onboarding/) | Step-by-step setup wizard for new AI PAs on OpenClaw |
-| [eval](eval/) | Full PA performance evaluation: tasks, skills, network, memory |
-| [pa-eval](pa-eval/) | Structured PA scoring: weekly self-eval with owner feedback |
-| [pa-status](pa-status/) | PA network health dashboard: billing, calendar, active status |
-| [pa-ownership](pa-ownership/) | Autonomous task tracking with retry loops and proactive updates |
-
-### Communication & Coordination
-
-| Skill | Description |
-|-------|-------------|
-| [ai-pa](ai-pa/) | Multi-agent PA coordination: contact peers, schedule, broadcast |
-| [heleni-whatsapp](heleni-whatsapp/) | WhatsApp memory, unanswered tracking, loop prevention, multi-PA |
-| [meetings](meetings/) | Schedule meetings via PA-to-PA + summarize notes/transcripts |
-| [meeting-notetaker](meeting-notetaker/) | Fetch and present meeting notes from monday.com Notetaker |
-| [meeting-scheduler](meeting-scheduler/) | Schedule meetings by coordinating with peer PAs |
-| [chat-history-local](chat-history-local/) | Search past WhatsApp/chat conversations stored in the audit log PostgreSQL database |
-| [personal-crm](personal-crm/) | Personal CRM on monday.com — tracks contacts, last interactions, next meetings, and pre-meeting briefings |
-| [stakeholder-update](stakeholder-update/) | Draft and send structured project or task updates to stakeholders |
-| [whatsapp-voice](whatsapp-voice/) | Transcribe WhatsApp voice messages using local Whisper CLI — Hebrew and English supported |
-
-### Integrations
-
-| Skill | Description |
-|-------|-------------|
-| [monday-for-agents](monday-for-agents/) | monday.com: boards, items, task tracking, project board templates |
-| [calendar-setup](calendar-setup/) | Connect Google Calendar (setup, troubleshoot, write permissions) |
-| [openclaw-email-orientation](openclaw-email-orientation/) | Explain how email and Google Calendar work for OpenClaw agents — credentials, setup, troubleshooting |
-| [youtube-watcher](youtube-watcher/) | Fetch YouTube transcripts for summarization and Q&A |
-
-### Self-Improvement & Memory
-
-| Skill | Description |
-|-------|-------------|
-| [self-learning](self-learning/) | Log corrections and apply lessons. Maintains HOT.md. |
-| [self-monitor](self-monitor/) | Infrastructure + security checks, disk/memory/service health |
-| [heleni-best-practices](heleni-best-practices/) | Daily sync of production lessons from pa-skills website |
-| [skill-analytics](skill-analytics/) | Track skill usage, daily reports, find unused skills |
-| [memory-architecture](memory-architecture/) | Honcho-inspired memory: working / session / long-term tiers |
-| [memory-tiering](memory-tiering/) | HOT/WARM/COLD memory compaction and archiving |
-| [proactive-pa](proactive-pa/) | Proactive PA behavior: heartbeats, autonomous checks, initiative |
-
-### Operations
-
-| Skill | Description |
-|-------|-------------|
-| [maintenance](maintenance/) | Workspace backup (every 6h) + OpenClaw updates (weekly) |
-| [billing-monitor](billing-monitor/) | Detect API billing errors and alert owner + admin |
-| [usage-costs](usage-costs/) | Token usage and cost reports: per session, per day, per week |
-| [git-backup](git-backup/) | Backup workspace to GitHub. Handles token, init, push. |
-| [storage-router](storage-router/) | Decide where to save: monday.com vs GitHub vs local |
-| [dynamic-temperature](dynamic-temperature/) | LLM temperature selection by task type |
-| [spawn-subagent](spawn-subagent/) | Spawn isolated subagents for long/blocking tasks |
-| [research-synthesizer](research-synthesizer/) | Multi-source research: parallel searches, dedup, cited answer |
-| [quick-reminders](quick-reminders/) | Same-day, short-horizon reminders via nohup sleep — simple setup, no cron required |
-| [cron-reminders](cron-reminders/) | Reboot-safe reminders for days, weeks, or months out — uses cron + JSON for persistence |
-| [whatsapp-diagnostics](whatsapp-diagnostics/) | Diagnose and fix WhatsApp connectivity issues for OpenClaw agents |
-| [pa-audit-db](pa-audit-db/) | PostgreSQL schema + setup guide for the WhatsApp messages audit DB — auto-populated by OpenClaw |
-
----
-
-## Skill Format
-
-Each skill directory contains a `SKILL.md` with:
-
-```yaml
----
-name: skill-name
-description: "What it does and when to use it."
----
-```
-
-Followed by the full playbook: steps, scripts, examples, and configuration.
-
-Every skill should include a **`## Caveats`** section (see Skill Design Rules below) with real-world failure modes, version requirements, and known gotchas.
-
-Optionally, a `.context` file with agent-specific values (gitignored from this repo):
-
-```bash
-# skill-name — Local Context (not synced to pa-skills)
-OWNER_PHONE=+1XXXXXXXXXX
-BOARD_ID=12345678
-```
-
----
-
-## Skill Design Rules
-
-1. **SKILL.md is always generic** — no IDs, phones, JIDs, or internal names
-2. **Agent-specific data → `.context` file** (gitignored from pa-skills)
-3. **One domain = one skill**
-4. **Universal rules → SOUL.md** (skills are triggered on demand only)
-5. **Each skill needs one clear "Use when:" sentence**
-6. **Skill count sweet spot: 28–32** (above 40 = routing degrades)
-7. **Privacy review before push** — scan for internal names, IDs, phone numbers
-8. **Every skill must have a `## Caveats` section** — document real failure modes, version requirements, and known gotchas. A skill without caveats teaches what *should* work; caveats teach how to survive reality. Write from production experience, not the happy path.
-
-### Caveats Section Template
-
-```markdown
-## Caveats
-
-- **Version requirement:** Requires OpenClaw 2026.X.X+ (check with `openclaw --version` first)
-- **Known failure mode:** [What breaks, under what condition]
-- **Workaround:** [What to do instead when it fails]
-- **Gotcha:** [Non-obvious behavior that has surprised people in production]
-```
-
-Leave this section empty with `_None documented yet — add yours after running in production._` if the skill is new.
-
----
-
-## Contributing
-
-1. Create a directory under `skills/<skill-name>/`
-2. Add a `SKILL.md` with proper frontmatter and playbook
-3. Include a `## Caveats` section (even if empty — leave the placeholder)
-4. No hardcoded personal data — use `.context` pattern
-5. Submit a PR
-
-**Most valuable contributions:** real failure modes, version caveats, configs that didn't work as expected. "Here's what happened when I actually ran it" beats "here's what should work" every time.
-
-See the [website](https://netanel-abergel.github.io/pa-skills/) for the full learnings library.

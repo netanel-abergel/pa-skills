@@ -230,7 +230,7 @@ def generate_optimized_agents_md():
 
 **When user mentions memory/history:**
 - Read `MEMORY.md`
-- Read `memory/YYYY-MM-DD.md` (today only)
+- Read `memory/daily/YYYY-MM-DD.md` (today only)
 
 **When user asks about workflows/processes:**
 - Read `AGENTS.md` (this file)
@@ -283,7 +283,7 @@ def generate_optimized_agents_md():
 
 ## 💾 Memory (Lazy Loading)
 
-**Daily notes:** `memory/YYYY-MM-DD.md`
+**Daily notes:** `memory/daily/YYYY-MM-DD.md`
 - ✅ Load TODAY when user asks about recent work
 - ❌ Don't load YESTERDAY unless explicitly needed
 - ❌ Don't load older logs automatically

@@ -214,6 +214,54 @@ gog auth remove owner@company.com
 
 ---
 
+## Direct API — Preferred Method (no browser needed)
+
+**When to use:** gog CLI auth is broken/expired, no browser on server, or running in automated context.
+
+**Helper script:** `scripts/gog-token.sh` — generates a fresh access token from stored credentials.
+
+```bash
+# Get token and use immediately
+source scripts/gog-token.sh owner
+
+# Use $GOG_ACCESS_TOKEN directly in API calls:
+curl -s "https://www.googleapis.com/calendar/v3/calendars/primary/events?singleEvents=true&orderBy=startTime&timeMin=2026-04-13T00:00:00Z&timeMax=2026-04-13T23:59:59Z" \
+  -H "Authorization: Bearer $GOG_ACCESS_TOKEN"
+```
+
+Or in Python:
+```python
+import json, requests
+
+creds = json.load(open('/opt/ocana/openclaw/.gog/credentials.json'))
+acc = creds['accounts']['owner']
+
+resp = requests.post('https://oauth2.googleapis.com/token', data={
+    'client_id': acc['client_id'],
+    'client_secret': acc['client_secret'],
+    'refresh_token': acc['refresh_token'],
+    'grant_type': 'refresh_token'
+})
+access_token = resp.json()['access_token']
+
+# Then call any Google API:
+events = requests.get(
+    'https://www.googleapis.com/calendar/v3/calendars/primary/events',
+    params={'singleEvents': 'true', 'orderBy': 'startTime',
+            'timeMin': '2026-04-13T00:00:00Z', 'timeMax': '2026-04-13T23:59:59Z'},
+    headers={'Authorization': f'Bearer {access_token}'}
+).json().get('items', [])
+```
+
+**Key facts (verified in production, April 2026):**
+- Refresh tokens don't expire unless revoked — access tokens expire after ~1h
+- `gog auth status` may show `token_valid: false` but refresh still works
+- `GOG_ACCOUNT=owner` with `gog` CLI may fail with 401 even when refresh token is valid — use direct API call instead
+- Always use `/opt/ocana/openclaw/.gog/credentials.json` account `owner` as source of truth
+- `gog auth login` is broken on this host (no browser) — never suggest it
+
+---
+
 ## Direct API Fallback (when gog CLI fails)
 
 When `gog auth login` or `gog auth add` fail (e.g. no browser access on a server), use the credentials file directly:
