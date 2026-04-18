@@ -2,6 +2,17 @@
 
 All notable changes to the pa-skills library will be documented in this file.
 
+## [2026-04-18]
+
+### Added
+- Graduation gate in `memory-tiering` — dream promotions require score >= 0.70, 2+ recalls, and rationale before landing in MEMORY.md
+- Skill manifest (`skills/_manifest.json`) — lightweight index of all 34 skills for fast routing
+- Skill failure tracking in `self-learning` — auto-flags skills after 3+ failures in 14 days
+
+### Changed
+- `skill-master` now routes via `_manifest.json` before falling back to full REFERENCE.md
+- Updated skill descriptions on the website to reflect new features
+
 ## [Unreleased]
 
 ### Added
