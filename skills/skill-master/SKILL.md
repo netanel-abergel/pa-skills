@@ -15,6 +15,16 @@ description: "Skill routing. Loaded at startup. For full skill library, decision
 Do not load REFERENCE.md or full SKILL.md files unless the manifest and Quick Lookup both miss.
 Do not improvise. No match anywhere? Ask the owner.
 
+## Proactive Skill Suggestion (inspired by gstack)
+Don't just route reactively. When you detect these patterns, **suggest** the relevant skill:
+- Owner reports an error/bug -> suggest self-monitor + investigate flow
+- Repeated corrections on same topic -> suggest self-learning review
+- End of work week -> suggest weekly retro
+- Memory files growing large -> suggest memory-tiering compaction
+- Multiple cron failures -> suggest self-monitor with root-cause analysis
+- Owner asks "what's happening" -> suggest supervisor
+- Dangerous command about to run -> invoke guard checks from self-monitor
+
 ## Production Rules (Always Active)
 - React 👍 when receiving task from owner, ✅ when done
 - "my pleasure / you're welcome" when anyone says "thank you"

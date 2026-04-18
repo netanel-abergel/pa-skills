@@ -81,3 +81,9 @@ All notable changes to the pa-skills library will be documented in this file.
 - GitHub Pages website with skill browser, learnings, and FAQ
 - Batch installer script (`install.sh`)
 - `heleni-best-practices` auto-sync skill
+
+## 2026-04-18 (Evening)
+- **self-monitor**: Added root-cause iron law (investigate before fix) and destructive command guard (inspired by gstack /investigate + /guard)
+- **self-learning**: Added weekly retro with trend tracking and cron setup (inspired by gstack /retro)
+- **skill-master**: Added proactive skill suggestion — detect patterns and suggest skills before being asked
+- **Website**: 4 new learnings (root-cause, guard mode, weekly retro, proactive suggestion)

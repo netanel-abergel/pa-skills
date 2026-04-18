@@ -110,18 +110,55 @@ echo "Disk: ${DISK}% | Mem: ${MEM}% | Load: ${LOAD}"
 [ "$MEM" -gt 95 ] && echo "⚠️ Memory critical!"
 ```
 
+## Root Cause Iron Law (inspired by gstack /investigate)
+
+**Never apply a fix without identifying the root cause first.**
+
+When an issue is detected:
+1. **Investigate** -- collect evidence (logs, metrics, timeline)
+2. **Analyze** -- identify the root cause, not just the symptom
+3. **Hypothesize** -- state the cause in one sentence before acting
+4. **Fix** -- apply the smallest targeted fix
+5. **Verify** -- confirm the fix resolved the root cause, not just the symptom
+
+If root cause is unclear after 2 attempts:
+- Log what you tried and what you observed
+- Escalate to owner with evidence, not guesses
+- Do NOT apply speculative fixes that could mask the real issue
+
+**Anti-patterns:**
+- Restarting a service without checking why it died
+- Clearing disk without checking what filled it
+- Killing a process without checking what caused high usage
+
+## Destructive Command Guard (inspired by gstack /guard)
+
+Before executing any of these commands, **stop and verify**:
+
+| Pattern | Risk | Required Check |
+|---------|------|----------------|
+| `rm -rf` | Data loss | Verify path is correct, not `/`, not home |
+| `DROP TABLE` / `DROP DATABASE` | Data loss | Confirm backup exists |
+| `git push --force` | History loss | Confirm branch and remote |
+| `kill -9` | Corruption | Try graceful stop first |
+| `chmod 777` | Security | Use minimal permissions instead |
+| `truncate` / `> file` | Data loss | Confirm file is a log, not config |
+| `docker system prune -a` | Image loss | List what will be removed first |
+
+Subagents MUST NOT execute destructive commands. Return the command to main session for approval.
+
 ## Proactive Actions
 
 **When issues detected:**
 
 | Issue | Auto-Action | Alert? |
 |-------|------------|--------|
-| Disk > 90% | Clean temp files, old logs | Yes |
-| Key process down | Attempt restart | Yes |
-| Cron 3+ failures | Generate report | Yes |
-| Memory > 95% | List top processes | Yes |
+| Disk > 90% | Investigate what grew, then clean | Yes |
+| Key process down | Check logs first, then restart | Yes |
+| Cron 3+ failures | Root cause analysis, then report | Yes |
+| Memory > 95% | Identify leak/offender, then act | Yes |
 
-**Auto-fixable (safe):**
+**Auto-fixable (safe, only after root cause check):**
 ```bash
 # Clean old logs (> 7 days)
 find /var/log -name "*.log" -mtime +7 -delete 2>/dev/null

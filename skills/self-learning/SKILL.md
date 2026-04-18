@@ -102,6 +102,51 @@ During pattern review, count `skill_failure` entries per skill in the last 14 da
 - Fix the skill → remove the FLAGGED section
 - If the skill is unfixable → document the limitation and stop routing to it for those cases
 
+## Weekly Retro (inspired by gstack /retro)
+
+Every Sunday (or when owner asks "what did we ship"), generate a structured weekly retrospective:
+
+### Data Sources
+- Git log from workspace repo (last 7 days)
+- `.learnings/` entries from the week
+- Daily memory notes (`memory/daily/`)
+- Cron execution history
+
+### Retro Format
+```markdown
+## Weekly Retro — YYYY-MM-DD
+
+### Shipped
+- [commit/action]: what was delivered
+
+### Patterns
+- Recurring issues or wins from the week
+
+### Learnings Applied
+- Which learnings led to concrete skill/workflow changes
+
+### Failures
+- What broke, root cause, fix status
+
+### Next Week
+- Top 3 priorities based on patterns
+```
+
+### Trend Tracking
+Store retros in `memory/retros/YYYY-WXX.md` (e.g., `2026-W16.md`).
+Compare with previous week's retro when generating:
+- Are the same issues recurring? Flag them.
+- Did last week's priorities get addressed?
+- Is failure count trending up or down?
+
+### Cron Setup
+Add as a Sunday cron (low-cost model, ~60s):
+```
+Schedule: 0 10 * * 0 Asia/Jerusalem
+Model: haiku
+Prompt: "Run weekly retro. Check git log, learnings, daily notes from past 7 days. Write retro to memory/retros/. DM summary to owner."
+```
+
 ## Cost tips
 
 - Use short factual entries.
