@@ -10,14 +10,6 @@
     ]
   },
   {
-    "name": "api-gateway",
-    "description": "Connect to 100+ APIs (Google Workspace, Microsoft 365, GitHub, Notion, Slack, Airtable, HubSpot, etc.) with managed OAuth. Use this skill when users want to interact with external services. Securit...",
-    "triggers": [
-      "users want to interact with external services",
-      "connect to APIs with OAuth"
-    ]
-  },
-  {
     "name": "billing-monitor",
     "description": "Monitor for API billing errors and alert the owner and admin immediately. Use when: an API billing error is detected, a peer PA reports a billing error, or during routine health checks. Handles det...",
     "triggers": [
