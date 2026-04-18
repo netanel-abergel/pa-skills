@@ -1,7 +1,5 @@
 ---
 name: skill-master
-requires_skills:
-  - skill-analytics
 description: "Skill routing. Loaded at startup. For full skill library, decision tree, and workflows see REFERENCE.md."
 ---
 
@@ -10,10 +8,12 @@ description: "Skill routing. Loaded at startup. For full skill library, decision
 ## How to Use
 1. Read the request
 2. Match in **Quick Lookup** below
-3. Not found? Read `skills/skill-master/REFERENCE.md` for decision tree
-4. Log the selection (see Analytics below), then load that skill's SKILL.md
+3. Not found? Check `skills/_manifest.json` (lightweight — name + description + triggers for all 34 skills)
+4. Still not found? Read `skills/skill-master/REFERENCE.md` for decision tree
+5. Log the selection (see Analytics below), then load that skill's SKILL.md
 
-Do not improvise. No match and REFERENCE.md doesn't help? Ask the owner.
+Do not load REFERENCE.md or full SKILL.md files unless the manifest and Quick Lookup both miss.
+Do not improvise. No match anywhere? Ask the owner.
 
 ## Production Rules (Always Active)
 - React 👍 when receiving task from owner, ✅ when done
@@ -47,7 +47,6 @@ echo "{\"ts\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"skill\":\"SKILL_NAME\",\"trig
 | "token usage" / "how much did today cost" | usage-costs |
 | "what was discussed in [group]" | heleni-whatsapp |
 | "search past messages" / "what did X say" | chat-history-local |
-| "skill usage" / "skill stats" | skill-analytics |
 | "security check" / "health check" | self-monitor |
 | "PA network status" / "how are PAs doing" | supervisor |
 | "how am I doing" / "run eval" | eval |
@@ -60,10 +59,10 @@ echo "{\"ts\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"skill\":\"SKILL_NAME\",\"trig
 | "transcribe voice message" | whatsapp-voice |
 | Said "I'll send" / "I'll report" in a reply | commitment-tracker |
 | "I made a mistake" / "owner corrected me" | self-learning |
-| "find new skill ideas" | skill-scout |
+| "find new skill ideas" / "create a skill" / "improve a skill" | skill-creator |
 
 > **Storage rule:** Before saving content, run `storage-router`. Research -> monday.com. State/config -> local.
 
 > **Privacy review (before push):** Scan for internal names, phone numbers, JIDs, board IDs. Replace with placeholders.
 
-> **Skill count:** 29 active. Sweet spot: 15-25. Above 30 = routing breaks.
+> **Skill count:** 34 active. Above 30, keep routing tight and prefer the most specific skill first.

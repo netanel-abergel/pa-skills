@@ -20,7 +20,7 @@ description: Automated multi-tiered memory management (HOT, WARM, COLD). Use thi
 - Manual pruning when MEMORY.md grows >200 lines
 - Archiving old `memory/daily/YYYY-MM-DD.md` files (30-day retention)
 - Force-promoting critical owner corrections immediately (don't wait for Dreaming)
-- Reviewing DREAMS.md after first 2 weeks to validate promotion quality
+- **Graduation gate** — reviewing and filtering dream promotions before they land in MEMORY.md
 - Post-compaction reorganization
 - Enforcing store boundaries: daily notes = raw-first log, `MEMORY.md` = durable rules only, project docs = project-scoped
 
@@ -80,6 +80,34 @@ openclaw memory promote-explain "term" # why something would/wouldn't promote
 - Critical session-startup rules → MEMORY.md **manually**
 - Pruning bad/stale Dreaming promotions → manual cleanup
 - MEMORY.md growing >200 lines → prune manually
+
+## Graduation Gate (inspired by agentic-stack)
+
+Dreaming stages candidates. Nothing graduates to MEMORY.md without passing this gate:
+
+### Minimum Requirements
+- **Score >= 0.70** (weighted relevance + frequency + recency)
+- **Recalls >= 2** (the signal was retrieved and used at least twice)
+- **Status = staged** (raw candidates with status=staged only)
+- **Content is a rule, preference, or durable fact** — not a raw conversation fragment, not a debug log, not a confidence=0.00 dream corpus entry
+
+### Rejection Criteria (auto-reject)
+- Confidence = 0.00 or status != staged
+- Content is a raw session transcript or chat log (contains `Candidate: User:` or `Candidate: Assistant:` or `evidence: memory/.dreams/`)
+- Duplicate of an existing MEMORY.md entry (same semantic content)
+- Content is ephemeral (specific timestamps, one-off events, resolved issues)
+
+### Review Process
+1. Run `openclaw memory promote` to list candidates
+2. For each candidate, check against minimum requirements and rejection criteria
+3. **Accept** only with a one-line rationale: why this is durable and useful
+4. **Reject** with a one-line reason: why this doesn't belong
+5. Rewrite accepted content into clean, concise rule format before adding to MEMORY.md
+6. Never paste raw dream output directly into MEMORY.md
+
+### Post-Review Cleanup
+- After review, clear processed candidates from DREAMS.md staging area
+- Log review outcome in `memory/daily/YYYY-MM-DD.md`: `[HH:MM] Dream review: accepted N, rejected M`
 
 ### Safety Rules
 - Content changes (MEMORY.md): require explicit review — never auto-apply

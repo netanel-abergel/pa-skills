@@ -1,394 +1,109 @@
 ---
 name: self-learning
-description: "Continuous self-improvement through systematic logging, pattern detection, and behavioral updates. Use when: the owner corrects you, a task fails, you discover a better approach, you notice a recurring pattern, or during weekly reflection sessions. Builds on .learnings/ files to drive durable behavioral change. Daily loop: Log → Pattern 2x → HOT.md → 30 days clean → SOUL.md. Skill-specific learnings → update relevant SKILL.md directly."
+description: "Continuous self-improvement through systematic logging, pattern detection, and behavioral updates. Use when: the owner corrects you, a task fails, you discover a better approach, or you notice a recurring pattern. Store raw learnings in .learnings/, update the specific skill or workflow that caused the issue when appropriate, and avoid vague promises to do better."
 ---
 
-# Self-Learning Skill
+# Self-Learning
 
-## Minimum Model
-Any model for logging. Use a medium model for writing behavioral rules to SOUL.md.
+Use this skill to turn corrections and failures into concrete local improvements.
 
----
+## Scope
 
-## The Learning Loop
+Default storage is:
+- `.learnings/LEARNINGS.md` for reusable lessons
+- `.learnings/ERRORS.md` for failures and breakages
+- `.learnings/FEATURE_REQUESTS.md` for missing capabilities
 
-```
-Event happens → Log it immediately → Weekly: find patterns → Promote to config → Verify next week
-```
+Prefer updating the specific local skill or workflow that caused the issue.
+Do not change core identity/bootstrap files unless the owner explicitly asks for that level of system change.
 
----
+## Immediate loop
 
-## Part 1 — Log Events (Do Immediately)
+1. Log the event before closing the task.
+2. State the root cause in one sentence.
+3. Apply the smallest durable fix you can make now.
+4. If no concrete fix is possible, say why and what evidence would unblock it.
 
-### When to Log
+## When to log
 
 | Trigger | File | Category |
 |---|---|---|
-| Owner corrects you | LEARNINGS.md | `correction` |
-| Task fails | ERRORS.md | — |
-| Better approach found | LEARNINGS.md | `best_practice` |
-| Owner asks for missing capability | FEATURE_REQUESTS.md | — |
-| Information was outdated | LEARNINGS.md | `knowledge_gap` |
-| Same mistake twice | LEARNINGS.md | `pattern` |
-| Owner praises something | LEARNINGS.md | `positive_signal` |
-| Acted outside role | LEARNINGS.md | `scope_error` |
-| Forgot past context | LEARNINGS.md | `memory_gap` |
+| Owner correction | `LEARNINGS.md` | `correction` |
+| Task failure | `ERRORS.md` | `failure` |
+| Skill produced bad output | `ERRORS.md` | `skill_failure` |
+| Better approach discovered | `LEARNINGS.md` | `best_practice` |
+| Missing capability | `FEATURE_REQUESTS.md` | `feature_request` |
+| Repeated mistake | `LEARNINGS.md` | `pattern` |
+| Good result worth repeating | `LEARNINGS.md` | `positive_signal` |
 
-**Rule:** Log the event before replying to the owner. Don't delay.
-If the correction changes a reusable workflow, update the affected skill or checklist in the same turn.
-
-### Log Format
+## Entry format
 
 ```markdown
-## [YYYY-MM-DD] | category | short title
-
-**Trigger:** What happened
-**Context:** What I was trying to do
-**What went wrong / what worked:**
-**Root cause:**
-**Correct behavior going forward:**
-**Applied to:** [SOUL.md / AGENTS.md / TOOLS.md / none yet]
+## YYYY-MM-DD | category | short title
+- Trigger: what happened
+- Context: what you were trying to do
+- Root cause: why it happened
+- Durable fix: file/process/skill you changed, or `none yet`
+- Verification: how to tell the problem is gone
 ```
 
-### Quick Log Script
+## Promotion rules
 
-```bash
-#!/bin/bash
-set -e
+Promote a learning when it is specific and repeatable.
 
-LEARNINGS_DIR="$HOME/.openclaw/workspace/.learnings"
-mkdir -p "$LEARNINGS_DIR"
+- If the issue belongs to one skill, update that skill's `SKILL.md`.
+- If the issue belongs to a reusable local workflow, update the nearest local checklist/script.
+- If the issue depends on missing credentials, external systems, or policy decisions, log it and stop. Do not invent a fake fix.
 
-LOG_FILE="$LEARNINGS_DIR/LEARNINGS.md"
-DATE=$(date +%Y-%m-%d)
+## Pattern review
 
-# First arg: category (default: correction)
-CATEGORY="${1:-correction}"
+During reflection or cleanup work:
 
-# Second arg: short title
-TITLE="${2:-Short description}"
+1. Scan `.learnings/` for repeated categories or titles.
+2. Group duplicates.
+3. Make one concrete change per pattern.
+4. Add a short verification note to the newest entry.
 
-# Append a new entry to the log
-cat >> "$LOG_FILE" << EOF
+## Quality bar
 
-## [$DATE] | $CATEGORY | $TITLE
+A learning is only complete when at least one of these is true:
+- a local skill was improved
+- a broken instruction was removed
+- a missing prerequisite was documented clearly
+- a recurring mistake was converted into a shorter, safer workflow
 
-**Trigger:**
-**Context:**
-**What went wrong:**
-**Root cause:**
-**Correct behavior:**
-**Applied to:** none yet
-EOF
+Not enough:
+- "be more careful"
+- generic promises
+- long postmortems without a file or process change
 
-echo "Logged to $LOG_FILE"
-```
+## Skill Failure Tracking (inspired by agentic-stack)
 
-Usage:
-```bash
-./quick-log.sh "correction" "Sent message without confirming with owner"
-```
+Track when a skill fails or produces bad output. After a threshold, flag it for review.
 
----
-
-## Part 2 — Daily Learning Loop (Promoted from weekly)
-
-Run every night via `heleni-internal-self-review` cron (23:00 Israel).
-
-> **2026.4.10 Note:** Dreaming (memory-core, 3 AM IL) now auto-promotes MEMORY.md entries from daily signals.
-> The nightly self-review cron should **NOT** promote to MEMORY.md — let Dreaming score first.
-> This cron handles: HOT.md behavioral rules only. MEMORY.md = Dreaming's job.
-
-### Flow
-```
-New event → Log immediately (Part 1)
-  ↓
-Every night: scan for 2x+ patterns
-  ↓
-Promote to HOT.md (active behavioral correction)
-  ↓
-30 days clean → promote to SOUL.md permanently
-  ↓
-Skill-specific? → update relevant SKILL.md
-  ↓
-System-level pattern? → write to daily note → Dreaming picks it up
-```
-
-### Promotion Rules
-| Source | Destination | Trigger |
-|---|---|---|
-| LEARNINGS.md | HOT.md | Same mistake 2+ times |
-| HOT.md | SOUL.md | 30+ days no recurrence |
-| LEARNINGS.md | SKILL.md | Skill-specific learning |
-| LEARNINGS.md | daily note only | System-level pattern (Dreaming promotes to MEMORY.md) |
-| Owner correction | MEMORY.md **immediately** | Critical/urgent — don't wait for Dreaming |
-
-### HOT.md Format
-```markdown
-# HOT.md — Rules I Keep Breaking
-_Read before every reply. Max 20 lines._
-
-- [Rule — short, imperative] (broken N times, last: YYYY-MM-DD)
-```
-
-**Key constraint:** HOT.md max 20 lines. If over — the behavior isn't improving. Fix the root cause, don't add more rules.
-
-## Part 2 — Weekly Reflection (deprecated, replaced by daily loop above)
-
-Run every 7 days. Find patterns across log entries.
-
-### Pattern Detection Script
-
-```bash
-#!/bin/bash
-set -e
-
-LEARNINGS_FILE="$HOME/.openclaw/workspace/.learnings/LEARNINGS.md"
-
-# Exit cleanly if no file yet
-if [ ! -f "$LEARNINGS_FILE" ]; then
-  echo "No learnings file at $LEARNINGS_FILE"
-  exit 0
-fi
-
-echo "=== Corrections (most common) ==="
-grep "correction" "$LEARNINGS_FILE" \
-  | sed 's/.*| //' \
-  | sort \
-  | uniq -c \
-  | sort -rn \
-  | head -10
-
-echo ""
-echo "=== All Categories ==="
-grep -oP '\| \K\w+(?= \|)' "$LEARNINGS_FILE" \
-  | sort \
-  | uniq -c \
-  | sort -rn
-```
-
-### Weekly Reflection Template
+### How to track
+When a skill fails or gives wrong results, log it in `.learnings/ERRORS.md` with category `skill_failure`:
 
 ```markdown
-# Weekly Reflection — YYYY-MM-DD
-
-## Stats
-- Corrections logged: X
-- Errors logged: X
-- Best practices logged: X
-
-## Top Patterns (appeared 2+ times)
-1.
-2.
-
-## Priority Fixes Applied This Week
-- [ ] Updated SOUL.md:
-- [ ] Updated AGENTS.md:
-- [ ] Updated TOOLS.md:
-
-## Positive Signals (do more of this)
--
+## YYYY-MM-DD | skill_failure | <skill-name>: short description
+- Trigger: what the user asked
+- Skill: <skill-name>
+- Root cause: why the skill failed
+- Durable fix: what was changed, or `none yet`
 ```
 
----
+### Auto-flag threshold
+During pattern review, count `skill_failure` entries per skill in the last 14 days:
+- **3+ failures in 14 days** → flag the skill for rewrite/review
+- Add a `## FLAGGED FOR REVIEW` section at the top of that skill's SKILL.md
+- Notify owner in the next daily summary: "Skill X failed 3+ times in 2 weeks, flagged for review"
 
-## Part 3 — Promote Learnings to Config
+### Resolution
+- Fix the skill → remove the FLAGGED section
+- If the skill is unfixable → document the limitation and stop routing to it for those cases
 
-After identifying a pattern, update the right config file.
+## Cost tips
 
-### Where to Promote
-
-| Learning Type | Promote To |
-|---|---|
-| Communication rule | SOUL.md → Communication section |
-| Behavior pattern | SOUL.md → Execution rules |
-| Workspace convention | AGENTS.md |
-| Tool-specific note | TOOLS.md |
-| Contact / credentials | MEMORY.md |
-| Recurring task improvement | HEARTBEAT.md |
-
-**Rule:** If the same mistake appears 2+ times → promote it. Once is a log; twice is a rule.
-
-### Promote Script
-
-```bash
-#!/bin/bash
-set -e
-
-SOUL_FILE="$HOME/.openclaw/workspace/SOUL.md"
-LEARNINGS_FILE="$HOME/.openclaw/workspace/.learnings/LEARNINGS.md"
-DATE=$(date +%Y-%m-%d)
-
-# Replace this placeholder with the actual rule text before running
-RULE="[Replace this with the actual rule text]"
-
-# Verify SOUL.md exists
-if [ ! -f "$SOUL_FILE" ]; then
-  echo "ERROR: SOUL.md not found at $SOUL_FILE"
-  exit 1
-fi
-
-# Append the new learned rule to SOUL.md
-printf "\n## Learned Rule — %s\n- %s\n" "$DATE" "$RULE" >> "$SOUL_FILE"
-echo "Added rule to SOUL.md"
-
-# Mark the entry as applied in LEARNINGS.md (Linux and macOS compatible)
-if [ -f "$LEARNINGS_FILE" ]; then
-  if sed --version 2>/dev/null | grep -q GNU; then
-    # Linux (GNU sed)
-    sed -i "s/Applied to: none yet/Applied to: SOUL.md ($DATE)/" "$LEARNINGS_FILE"
-  else
-    # macOS (BSD sed)
-    sed -i '' "s/Applied to: none yet/Applied to: SOUL.md ($DATE)/" "$LEARNINGS_FILE"
-  fi
-  echo "Marked as applied in LEARNINGS.md"
-fi
-```
-
----
-
-## Part 4 — Verify (Next Week)
-
-Check: did the behavior actually change?
-
-```markdown
-## Verification Check — YYYY-MM-DD
-
-| Learning | Applied? | Behavior Changed? | Notes |
-|---|---|---|---|
-| [Title] | ✅ | ✅ | Working |
-| [Title] | ✅ | ❌ | Needs a stronger rule |
-```
-
-If behavior didn't change → revise the rule with more explicit wording and re-apply.
-
----
-
-## Monthly Combined Report
-
-```bash
-#!/bin/bash
-LEARNINGS_DIR="$HOME/.openclaw/workspace/.learnings"
-
-echo "=== Monthly Learning Report ==="
-
-LEARNINGS_FILE="$LEARNINGS_DIR/LEARNINGS.md"
-ERRORS_FILE="$LEARNINGS_DIR/ERRORS.md"
-FEATURES_FILE="$LEARNINGS_DIR/FEATURE_REQUESTS.md"
-
-# Helper: count matching lines (returns 0 if file missing)
-count_matches() {
-  local file="$1"
-  local pattern="$2"
-  grep -c "$pattern" "$file" 2>/dev/null || echo 0
-}
-
-# Print counts per file
-if [ -f "$LEARNINGS_FILE" ]; then
-  echo "Corrections: $(count_matches "$LEARNINGS_FILE" 'correction')"
-  echo "Positive signals: $(count_matches "$LEARNINGS_FILE" 'positive_signal')"
-fi
-
-if [ -f "$ERRORS_FILE" ]; then
-  echo "Error entries: $(wc -l < "$ERRORS_FILE")"
-fi
-
-if [ -f "$FEATURES_FILE" ]; then
-  echo "Feature requests: $(count_matches "$FEATURES_FILE" '^##')"
-fi
-```
-
----
-
-## Cost Tips
-
-- **Cheap:** Logging a single correction — very few tokens.
-- **Expensive:** Writing nuanced behavioral rules — use a medium model for this step.
-- **Batch:** Review all weekly logs at once during the monthly reflection, not one by one.
-- **Small model OK:** Pattern detection is mostly grep — no model needed for that step.
-
----
-
-## Phase 2: Reflection (Merged from self-reflection skill)
-
-When the owner wants to improve how you operate, follow this structured process. Goal: turn vague dissatisfaction into specific, technical changes.
-
-### Reflection Process
-
-**1. Understand the Problem (2–3 questions max)**
-Ask focused questions to pin down:
-- What specifically is wrong? (Get a concrete example)
-- What would "good" look like? (Expected vs actual behavior)
-- How important is this? (Tweak vs fundamental change)
-
-If the complaint is clear enough, skip to step 2.
-
-**2. Deep System Scan**
-Read ALL relevant parts before changing anything:
-- Core identity: SOUL.md, AGENTS.md, USER.md, MEMORY.md, TOOLS.md
-- All active skills (custom + bundled + workspace)
-- Configuration (model, tools, channels, heartbeat, cron jobs)
-
-Read broadly, change surgically.
-
-**3. Diagnose & Propose**
-Present findings:
-1. Root cause — what causes the unwanted behavior
-2. Proposed changes — specific files and edits
-3. Side effects — anything else affected
-4. Alternatives — if multiple approaches exist
-
-**4. Implement (after approval)**
-- Edit workspace files (persona, memory, etc.)
-- Edit/create/modify skills
-- Update config and cron jobs
-- Every change must be technically concrete. "I'll be more careful" is NOT a valid change.
-
-**5. Verify & Document**
-- Test the change if possible
-- Document what changed and why
-- Commit workspace changes
-
-**Key principles:**
-- Scan everything, change only what's needed
-- No fake fixes — if no technical change is possible, say so
-- Compound improvements — each reflection makes the system permanently better
-
----
-
-## Part 4 — HOT.md (Rules You Keep Breaking)
-
-Inspired by [Jarvis](https://jarvis.ripper234.com/learn.html).
-
-### What It Is
-
-`HOT.md` is a short file (≤20 lines) read **before every reply**. It contains only rules you've broken 2+ times. Not documentation — active behavioral correction.
-
-### When to Create / Update
-
-- A rule appears in Part 1 logs **twice or more** → promote to HOT.md
-- HOT.md grows beyond 20 lines → you have a discipline problem, not a documentation problem. Fix the behavior, don't add more lines.
-- A rule stays unbroken for 30+ days → move it to SOUL.md permanently, remove from HOT.md
-
-### Format
-
-```markdown
-# HOT.md — Rules I Keep Breaking
-_Read before every reply. Max 20 lines. If it's not here, it doesn't count._
-
-- [Rule 1 — short, imperative] (broken N times)
-- [Rule 2] (broken N times)
-```
-
-### Promotion Flow
-
-```
-Log (Part 1) → Pattern 2x (Part 3 weekly) → HOT.md → 30 days clean → SOUL.md permanent
-```
-
-### Key Rule
-
-**If it should apply to EVERY interaction → SOUL.md.**  
-**If you keep forgetting it → HOT.md first, SOUL.md after 30 clean days.**
-
-This is also why `dynamic-temperature` and `proactive-pa` were merged into SOUL.md — rules for every interaction don't belong in skills.
+- Use short factual entries.
+- Batch pattern review; do not re-scan logs after every single correction.
+- Prefer editing one skill precisely over writing large reflective notes.
