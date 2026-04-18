@@ -1,60 +1,57 @@
 [
   {
     "name": "ai-pa",
-    "description": "AI Personal Assistant network skill for multi-agent PA coordination. Use when: contacting another PA, coordinating with peer agents, scheduling meetings between owners, broadcasting messages to PA gro",
+    "description": "AI Personal Assistant network skill for multi-agent PA coordination. Use when: contacting another PA, coordinating with peer agents, scheduling meetings between owners, broadcasting messages to PA ...",
     "triggers": [
       "contacting another PA",
       "coordinating with peer agents",
       "scheduling meetings between owners",
-      "broadcasting messages to PA groups",
-      "or looking up contacts from the local PA directory. Reads contact data from data/pa-directory.json in the workspace.\""
+      "broadcasting messages to PA"
     ]
   },
   {
     "name": "api-gateway",
-    "description": "|",
-    "triggers": []
+    "description": "Connect to 100+ APIs (Google Workspace, Microsoft 365, GitHub, Notion, Slack, Airtable, HubSpot, etc.) with managed OAuth. Use this skill when users want to interact with external services. Securit...",
+    "triggers": [
+      "users want to interact with external services",
+      "connect to APIs with OAuth"
+    ]
   },
   {
     "name": "billing-monitor",
-    "description": "Monitor for API billing errors and alert the owner and admin immediately. Use when: an API billing error is detected, a peer PA reports a billing error, or during routine health checks. Handles detect",
+    "description": "Monitor for API billing errors and alert the owner and admin immediately. Use when: an API billing error is detected, a peer PA reports a billing error, or during routine health checks. Handles det...",
     "triggers": [
       "an API billing error is detected",
       "a peer PA reports a billing error",
-      "or during routine health checks. Handles detection",
-      "notification",
-      "and fallback model switching. Model-agnostic: works with any LLM provider (Anthropic"
+      "or during routine health checks"
     ]
   },
   {
     "name": "calendar-setup",
-    "description": "Step-by-step setup and troubleshooting for connecting an owner's Google Calendar to an OpenClaw agent with read and write access. Use when: setting up calendar access for the first time, fixing read-o",
+    "description": "Step-by-step setup and troubleshooting for connecting an owner's Google Calendar to an OpenClaw agent with read and write access. Use when: setting up calendar access for the first time, fixing rea...",
     "triggers": [
       "setting up calendar access for the first time",
-      "fixing read-only access",
-      "re-authenticating a broken Google connection",
-      "or explaining the difference between the owner's Google account and the agent's Google account.\""
+      "fixing rea"
     ]
   },
   {
     "name": "chat-history-local",
-    "description": "Search past WhatsApp/chat conversations stored in the audit log PostgreSQL database. Use when the user asks about past conversations, what was discussed, what someone said, finding a specific message,",
+    "description": "Search past WhatsApp/chat conversations stored in the audit log PostgreSQL database. Use when the user asks about past conversations, what was discussed, what someone said, finding a specific messa...",
     "triggers": [
       "the user asks about past conversations",
       "what was discussed",
       "what someone said",
-      "finding a specific message",
-      "or referencing previous discussions. Also use to reply to or quote specific past messages.\""
+      "finding a specific messa"
     ]
   },
   {
     "name": "commitment-tracker",
-    "description": "Enforce immediate execution of any commitment made in a reply. Use this skill before finalizing ANY reply that contains a promise to act — phrases like \"אדווח\", \"אעדכן\", \"אשלח\", \"אחזור אליך\", \"I'll se",
+    "description": "Enforce immediate execution of any commitment made in a reply. Use this skill before finalizing ANY reply that contains a promise to act — phrases like \"אדווח\", \"אעדכן\", \"אשלח\", \"אחזור אליך\", \"I'll...",
     "triggers": []
   },
   {
     "name": "contact-list",
-    "description": "Single source of truth for contacts, PAs, and WhatsApp groups stored in contact-list.md at the workspace root. Use when: looking up a phone number, email, address, PA assignment, or group JID, and whe",
+    "description": "Single source of truth for contacts, PAs, and WhatsApp groups stored in contact-list.md at the workspace root. Use when: looking up a phone number, email, address, PA assignment, or group JID, and ...",
     "triggers": [
       "looking up a phone number",
       "email",
@@ -65,26 +62,22 @@
   },
   {
     "name": "eval",
-    "description": "Evaluate everything the PA agent manages — tasks, skills, PA network health, billing, calendar connections, and memory quality. Use when: owner asks for an evaluation, wants to know what's working and",
+    "description": "Evaluate everything the PA agent manages — tasks, skills, PA network health, billing, calendar connections, and memory quality. Use when: owner asks for an evaluation, wants to know what's working ...",
     "triggers": [
       "owner asks for an evaluation",
-      "wants to know what's working and what isn't",
-      "or requests a performance report. Combines supervisor status with quality scoring.\""
+      "wants to know what's working"
     ]
   },
   {
     "name": "heleni-whatsapp",
-    "description": "Complete WhatsApp management for OpenClaw agents: per-conversation memory (groups + DMs), unanswered message tracking, loop prevention, and multi-PA coordination. Use when: tracking conversation conte",
+    "description": "Complete WhatsApp management for OpenClaw agents: per-conversation memory (groups + DMs), unanswered message tracking, loop prevention, and multi-PA coordination. Use when: tracking conversation co...",
     "triggers": [
-      "tracking conversation context",
-      "recalling past decisions",
-      "finding unanswered messages",
-      "or preventing echo/duplicate message loops.\""
+      "tracking conversation co"
     ]
   },
   {
     "name": "meetings",
-    "description": "All-in-one meetings skill. Section 1: Schedule a meeting by coordinating with another PA, finding free slots, and sending a calendar invite. Section 2: Paste meeting notes or transcript → get summary,",
+    "description": "All-in-one meetings skill. Section 1: Schedule a meeting by coordinating with another PA, finding free slots, and sending a calendar invite. Section 2: Paste meeting notes or transcript → get summa...",
     "triggers": []
   },
   {
@@ -94,139 +87,121 @@
   },
   {
     "name": "monday",
-    "description": ">",
+    "description": "Manage Monday.com boards, items, columns, groups, updates, and subitems via the GraphQL API. Self-registers on Monday.com using HATCHA agent verification (reverse CAPTCHA). Use when the user asks t...",
     "triggers": [
-      "the user asks to create",
-      "read",
-      "update",
-      "or query Monday.com work items",
-      "track projects"
+      "create Monday.com items",
+      "read Monday.com boards",
+      "update Monday.com work items",
+      "query Monday.com data"
     ]
   },
   {
     "name": "monday-for-agents",
-    "description": "Set up a monday.com account for an OpenClaw agent and work with monday.com boards, items, and updates via the GraphQL API or MCP server. Use when: creating a monday.com workspace for a PA, connecting ",
+    "description": "Set up a monday.com account for an OpenClaw agent and work with monday.com boards, items, and updates via the GraphQL API or MCP server. Use when: creating a monday.com workspace for a PA, connecti...",
     "triggers": [
       "creating a monday.com workspace for a PA",
-      "connecting the PA to monday.com",
-      "querying boards and items",
-      "creating or updating items",
-      "or troubleshooting monday.com API access. Covers GraphQL cookbook"
+      "connecti"
     ]
   },
   {
     "name": "ocana-agent-ops",
-    "description": "Create and troubleshoot Ocana agents. Use when creating a new Ocana agent, refreshing/repairing management token auth, diagnosing `ocana_agent_create` failures, checking `gatewayReachable`, handling a",
+    "description": "Create and troubleshoot Ocana agents. Use when creating a new Ocana agent, refreshing/repairing management token auth, diagnosing `ocana_agent_create` failures, checking `gatewayReachable`, handlin...",
     "triggers": [
       "creating a new Ocana agent",
       "refreshing/repairing management token auth",
       "diagnosing `ocana_agent_create` failures",
       "checking `gatewayReachable`",
-      "handling agents stuck in `provisioning`"
+      "handlin"
     ]
   },
   {
     "name": "openclaw-email-orientation",
-    "description": "Explain how email and Google Calendar work for OpenClaw agents, including the distinction between agent email and owner email, how gog and the Google Workspace skill are used, where related credential",
-    "triggers": [
-      "someone asks how an OpenClaw agent accesses Gmail/Google Workspace/Calendar",
-      "where credentials are stored",
-      "how to use the agent inbox",
-      "how to give the agent write access to the owner's calendar",
-      "or how to guide another agent/user through the email or calendar setup model."
-    ]
+    "description": "Explain how email and Google Calendar work for OpenClaw agents, including the distinction between agent email and owner email, how gog and the Google Workspace skill are used, where related credent...",
+    "triggers": []
   },
   {
     "name": "openclaw-token-optimizer",
-    "description": "Reduce OpenClaw token usage and API costs through smart model routing, heartbeat optimization, budget tracking, and native 2026.2.15 features (session pruning, bootstrap size limits, cache TTL alignme",
-    "triggers": [
-      "token costs are high",
-      "API rate limits are being hit",
-      "or hosting multiple agents at scale. The 4 executable scripts (context_optimizer",
-      "model_router",
-      "heartbeat_optimizer"
-    ]
+    "description": "Reduce OpenClaw token usage and API costs through smart model routing, heartbeat optimization, budget tracking, and native 2026.2.15 features (session pruning, bootstrap size limits, cache TTL alig...",
+    "triggers": []
   },
   {
     "name": "owner-briefing",
-    "description": "Generate and send a daily briefing to your owner covering today's meetings, urgent emails, open tasks, and anything that needs attention. Use when: it's the start of the owner's day, when asked for a ",
+    "description": "Generate and send a daily briefing to your owner covering today's meetings, urgent emails, open tasks, and anything that needs attention. Use when: it's the start of the owner's day, when asked for...",
     "triggers": [
       "it's the start of the owner's day",
-      "when asked for a summary",
-      "or on a scheduled cron job.\""
+      "when asked for"
     ]
   },
   {
     "name": "pa-maintenance",
-    "description": "Unified workspace maintenance skill. Covers: (1) backing up the workspace to GitHub git repo, and (2) updating OpenClaw and skills. Use when: asked to backup, push to git, update openclaw, update skil",
+    "description": "Unified workspace maintenance skill. Covers: (1) backing up the workspace to GitHub git repo, and (2) updating OpenClaw and skills. Use when: asked to backup, push to git, update openclaw, update s...",
     "triggers": [
       "asked to backup",
       "push to git",
       "update openclaw",
-      "update skills",
-      "or run maintenance.\""
+      "update s"
     ]
   },
   {
     "name": "pa-onboarding",
-    "description": "Step-by-step onboarding guide for setting up a new AI Personal Assistant on OpenClaw. Use when: a new PA is being created, someone asks how to set up an agent, or guiding a user through the full setup",
+    "description": "Step-by-step onboarding guide for setting up a new AI Personal Assistant on OpenClaw. Use when: a new PA is being created, someone asks how to set up an agent, or guiding a user through the full se...",
     "triggers": [
       "a new PA is being created",
       "someone asks how to set up an agent",
-      "or guiding a user through the full setup process from account creation to first response.\""
+      "or guiding a user through the full se"
     ]
   },
   {
     "name": "personal-crm",
-    "description": "Personal CRM built on monday.com. Tracks contacts, last interactions, next meetings, and topics. Runs daily to update from Calendar + email. Delivers pre-meeting briefings as part of morning-briefing.",
-    "triggers": [
-      "someone asks about a contact",
-      "before a meeting",
-      "or during daily CRM sync.\""
-    ]
+    "description": "Personal CRM built on monday.com. Tracks contacts, last interactions, next meetings, and topics. Runs daily to update from Calendar + email. Delivers pre-meeting briefings as part of morning-briefi...",
+    "triggers": []
   },
   {
     "name": "personal-trainer",
-    "description": "Personal trainer operations: client check-ins, workout-program delivery, progress reminders, session reminders, lead follow-up, and workout tracking. Use when an owner is a coach/personal trainer or w",
+    "description": "Personal trainer operations: client check-ins, workout-program delivery, progress reminders, session reminders, lead follow-up, and workout tracking. Use when an owner is a coach/personal trainer o...",
     "triggers": [
-      "an owner is a coach/personal trainer or when managing fitness clients and training routines.\""
+      "an owner is a coach/personal trainer o"
     ]
   },
   {
     "name": "proactive-pa",
-    "description": "|-",
+    "description": "Proactive Personal Assistant behavior patterns. Transforms the agent from a reactive task-follower into a proactive partner that anticipates needs, surfaces insights autonomously, and continuously ...",
     "triggers": [
       "setting up autonomous behaviors",
       "heartbeat routines",
       "cron-based proactive checks",
-      "or when the agent should take initiative without being asked.\n  Triggers on: be proactive",
-      "check autonomously"
+      "agent should take initiative"
     ]
   },
   {
     "name": "research-synthesizer",
-    "description": "Multi-source research synthesizer. Takes a question, runs 3-5 parallel web searches with varied phrasings, deduplicates, and returns a cited, concise answer. For Hebrew questions, searches in both Heb",
+    "description": "Multi-source research synthesizer. Takes a question, runs 3-5 parallel web searches with varied phrasings, deduplicates, and returns a cited, concise answer. For Hebrew questions, searches in both ...",
     "triggers": []
   },
   {
     "name": "self-learning",
-    "description": "Continuous self-improvement through systematic logging, pattern detection, and behavioral updates. Use when: the owner corrects you, a task fails, you discover a better approach, or you notice a recur",
+    "description": "Continuous self-improvement through systematic logging, pattern detection, and behavioral updates. Use when: the owner corrects you, a task fails, you discover a better approach, or you notice a re...",
     "triggers": [
       "the owner corrects you",
       "a task fails",
       "you discover a better approach",
-      "or you notice a recurring pattern. Store raw learnings in .learnings/",
-      "update the specific skill or workflow that caused the issue when appropriate"
+      "or you notice a re"
     ]
   },
   {
     "name": "self-monitor",
-    "description": ">",
-    "triggers": []
+    "description": "Proactive self-monitoring of infrastructure, services, and health. Tracks disk/memory/load, service health, cron job status, recent errors. Auto-fixes safe issues. Triggers on: health check, heartb...",
+    "triggers": [
+      "health check",
+      "heartbeat",
+      "monitor status",
+      "service status",
+      "infrastructure check"
+    ]
   },
   {
     "name": "silence-strategy",
-    "description": "Know when NOT to speak in group chats. Use this skill before replying in any group conversation to decide if a response adds unique value or is just noise. Prevents unsolicited jumping-in, echo respon",
+    "description": "Know when NOT to speak in group chats. Use this skill before replying in any group conversation to decide if a response adds unique value or is just noise. Prevents unsolicited jumping-in, echo res...",
     "triggers": []
   },
   {
@@ -236,58 +211,56 @@
   },
   {
     "name": "spec-lite",
-    "description": "Lightweight task contract for non-trivial work. Use when a request will take more than 10-15 minutes, has multiple steps, affects external delivery, or needs an explicit definition of done. Turns a va",
+    "description": "Lightweight task contract for non-trivial work. Use when a request will take more than 10-15 minutes, has multiple steps, affects external delivery, or needs an explicit definition of done. Turns a...",
     "triggers": [
       "a request will take more than 10-15 minutes",
       "has multiple steps",
       "affects external delivery",
-      "or needs an explicit definition of done. Turns a vague ask into a mini spec: goal",
-      "constraints"
+      "or needs an explicit definition of done. Turns a"
     ]
   },
   {
     "name": "storage-router",
-    "description": "Decide where to save any piece of information — monday.com, local file, daily notes, or MEMORY.md. Use this skill before saving anything to ensure the right destination. Prevents local clutter and ens",
+    "description": "Decide where to save any piece of information — monday.com, local file, daily notes, or MEMORY.md. Use this skill before saving anything to ensure the right destination. Prevents local clutter and ...",
     "triggers": []
   },
   {
     "name": "supervisor",
-    "description": "Central status dashboard for the PA agent. Use when: owner asks 'what's the status', 'what are you working on', 'what's happening', or any status/overview question. Aggregates active tasks, open issue",
+    "description": "Central status dashboard for the PA agent. Use when: owner asks 'what's the status', 'what are you working on', 'what's happening', or any status/overview question. Aggregates active tasks, open is...",
     "triggers": [
-      "owner asks 'what's the status'",
-      "'what are you working on'",
-      "'what's happening'",
+      "owner asks 'what's the status",
+      "'what are you working on",
+      "'what's happening",
       "or any status/overview question. Aggregates active tasks",
-      "open issues"
+      "open is"
     ]
   },
   {
     "name": "usage-costs",
-    "description": "Report AI token usage and estimated costs. Use when: owner asks about costs today/yesterday/this week, per session, or per model. Shows main session, cron jobs, and subagents. Answers: 'how much did t",
+    "description": "Report AI token usage and estimated costs. Use when: owner asks about costs today/yesterday/this week, per session, or per model. Shows main session, cron jobs, and subagents. Answers: 'how much di...",
     "triggers": [
       "owner asks about costs today/yesterday/this week",
       "per session",
       "or per model. Shows main session",
       "cron jobs",
-      "and subagents. Answers: 'how much did today cost?'"
+      "and subagents. Answers: 'how much di"
     ]
   },
   {
     "name": "whatsapp-diagnostics",
-    "description": "Diagnose and fix WhatsApp connectivity issues for OpenClaw agents. Use when: a PA is not responding, WhatsApp shows connected but messages don't arrive, the agent is online but not replying, or troubl",
+    "description": "Diagnose and fix WhatsApp connectivity issues for OpenClaw agents. Use when: a PA is not responding, WhatsApp shows connected but messages don't arrive, the agent is online but not replying, or tro...",
     "triggers": [
       "a PA is not responding",
       "WhatsApp shows connected but messages don't arrive",
       "the agent is online but not replying",
-      "or troubleshooting a new agent setup.\""
+      "or tro"
     ]
   },
   {
     "name": "whatsapp-voice",
-    "description": "Transcribe WhatsApp voice messages using local Whisper CLI. Use when: owner or contact sends an audio/ogg voice message. Combines Whisper transcription + CRM update + task creation. Works offline for ",
+    "description": "Transcribe WhatsApp voice messages using local Whisper CLI. Use when: owner or contact sends an audio/ogg voice message. Combines Whisper transcription + CRM update + task creation. Works offline f...",
     "triggers": [
-      "owner or contact sends an audio/ogg voice message. Combines Whisper transcription + CRM update + task creation. Works offline for short clips",
-      "uses OpenAI API for long clips. Hebrew and English supported.\""
+      "owner"
     ]
   },
   {
@@ -296,9 +269,7 @@
     "triggers": [
       "you need to summarize a video",
       "answer questions about its content",
-      "or extract information from it.\nauthor: michael gathara\nversion: 1.0.0\ntriggers:\n  - \"watch youtube\"\n  - \"summarize video\"\n  - \"video transcript\"\n  - \"youtube summary\"\n  - \"analyze video\"\nmetadata: {\"clawdbot\":{\"emoji\":\"📺\"",
-      "\"requires\":{\"bins\":[\"yt-dlp\"]}",
-      "\"install\":[{\"id\":\"brew\""
+      "or extract information from it"
     ]
   }
 ]
