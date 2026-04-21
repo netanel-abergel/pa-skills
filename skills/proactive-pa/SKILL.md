@@ -124,11 +124,21 @@ Before ending any task, ask: *"Is there anything Netanel would want to know that
 - Someone waiting on this?
 - Risk or blocker I noticed?
 
+### Pattern: "Track what you do"
+Every proactive action taken (alert sent, issue caught, auto-fix applied) gets silently logged:
+```bash
+python3 /opt/ocana/openclaw/workspace/tools/eval_tracker.py log proactive_action "<description>" 2
+```
+This builds the quantitative record that proves proactive value over time.
+
 ### Pattern: "Next step without asking"
 After completing a task, identify and execute the obvious next step:
 - Sent a draft → add to calendar reminder to follow up
 - Fixed a cron error → add monitoring alert
 - Created a skill → push to git + ClawHub
+
+### Pattern: "Should this be a skill?"
+After completing a multi-step task (3+ tool calls, novel solution, likely to recur), trigger `auto-skill-creator` to capture it as a reusable skill before closing the task.
 
 ### Pattern: "Silence is not neutral"
 If >8h with no contact from Netanel: consider a light check-in if there's genuinely useful info.
