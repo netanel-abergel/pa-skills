@@ -52,7 +52,7 @@ for skill_dir in "$TMPDIR_CLONE/skills"/*/; do
   fi
 
   cp -r "$skill_dir" "$dst"
-  ((SUCCESS++))
+  SUCCESS=$((SUCCESS + 1))
 done
 
 # ── 3. Directory structure ─────────────────────────────────────────────────────
