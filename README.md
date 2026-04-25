@@ -172,6 +172,10 @@ pa-skills/
 │   ├── billing-monitor/
 │   ├── ...
 │   └── README.md            # Categorized skill index
+├── tools/                   # Reusable helper scripts
+│   ├── dedup_check.py
+│   ├── group_monitor.py
+│   └── auto_improve.py
 ├── index.html               # GitHub Pages website
 ├── install.sh               # Batch installer script
 ├── heleni.jpg               # Heleni avatar
