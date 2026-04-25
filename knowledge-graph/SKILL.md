@@ -37,6 +37,7 @@ Create `.graphifyignore` in your workspace root to exclude noise:
 node_modules/
 .git/
 media/
+.tmp/
 tmp/
 graphify-out/
 pa-skills/
@@ -49,6 +50,7 @@ skills-external/
 
 **Critical:** If you have both `pa-skills/knowledge-graph/` and `skills/knowledge-graph/`
 on disk, add `pa-skills/` to `.graphifyignore` to avoid duplicate nodes in the graph.
+If your repo clone lives under `.tmp/pa-skills/`, exclude `.tmp/` too or the duplicate noise will still leak in.
 
 ## Components
 
