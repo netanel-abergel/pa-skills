@@ -8,12 +8,47 @@ description: "Knowledge graph and smart memory management using graphify + Obsid
 Turn any workspace into a queryable knowledge graph with smart memory management.
 Combines graphify (code/doc graph) with three Obsidian-inspired patterns.
 
+## Installation
+
+In pa-skills repo, the skill is at the *root*: `pa-skills/knowledge-graph/`
+(not under `skills/`). Copy it to your workspace:
+
+```bash
+# From your pa-skills clone
+cp -r knowledge-graph/ /path/to/your/workspace/skills/knowledge-graph/
+```
+
 ## Prerequisites
 
 ```bash
 pip install graphifyy
-graphify claw install  # adds graphify rules to AGENTS.md
+graphify claw install  # ⚠️ This MODIFIES your AGENTS.md — adds graphify query rules
 ```
+
+**Important:** `graphify claw install` appends a `## graphify` section to your AGENTS.md.
+This is intentional — it tells your agent to check the graph before reading raw files.
+Review the changes after running it.
+
+## .graphifyignore
+
+Create `.graphifyignore` in your workspace root to exclude noise:
+
+```
+node_modules/
+.git/
+media/
+tmp/
+graphify-out/
+pa-skills/
+skills-external/
+*.pdf
+*.ogg
+*.jpg
+*.png
+```
+
+**Critical:** If you have both `pa-skills/knowledge-graph/` and `skills/knowledge-graph/`
+on disk, add `pa-skills/` to `.graphifyignore` to avoid duplicate nodes in the graph.
 
 ## Components
 
