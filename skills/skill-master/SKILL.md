@@ -8,7 +8,7 @@ description: "Skill routing. Loaded at startup. For full skill library, decision
 ## How to Use
 1. Read the request
 2. Match in **Quick Lookup** below
-3. Not found? Check `skills/_manifest.json` (lightweight — name + description + triggers for all 34 skills)
+3. Not found? Check `skills/_manifest.json` (lightweight — name + description + triggers for all active skills)
 4. Still not found? Read `skills/skill-master/REFERENCE.md` for decision tree
 5. Log the selection (see Analytics below), then load that skill's SKILL.md
 
@@ -67,12 +67,20 @@ echo "{\"ts\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"skill\":\"SKILL_NAME\",\"trig
 | "research X" / "find out about X" | research-synthesizer |
 | "should I reply?" | silence-strategy |
 | "transcribe voice message" | whatsapp-voice |
+| "deep recall" / "did we discuss" / "what happened with" | deep-recall |
+| "$ownership" / "execute with ownership" | ownership |
+| "$devprocess" / "build this properly" / "use coding agent workflow" | devprocess |
+| "reflect on this" / "fix how you operate" / "turn this into a durable fix" | self-reflection |
+| "this should be a skill" / "save this as a skill" | auto-skill-creator |
+| "knowledge graph" / "graphify" / "wiki compile" | knowledge-graph |
+| "publish this" / "share this as a webpage" | publish-to-mdpage |
+| "connect to X API" / "OAuth" / "external service integration" | api-gateway |
+| "LinkedIn post" / "personal brand" / "Substack draft" | self-brand |
 | Said "I'll send" / "I'll report" in a reply | commitment-tracker |
 | "I made a mistake" / "owner corrected me" | self-learning |
-| "find new skill ideas" / "create a skill" / "improve a skill" | skill-creator |
 
 > **Storage rule:** Before saving content, run `storage-router`. Research -> monday.com. State/config -> local.
 
 > **Privacy review (before push):** Scan for internal names, phone numbers, JIDs, board IDs. Replace with placeholders.
 
-> **Skill count:** 34 active. Above 30, keep routing tight and prefer the most specific skill first.
+> **Skill count:** 43 active. Above 30, keep routing tight and prefer the most specific skill first.

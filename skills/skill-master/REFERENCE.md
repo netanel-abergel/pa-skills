@@ -40,6 +40,11 @@ What kind of task is this?
 +- RESEARCH
 |   +- Multi-source research question -> research-synthesizer
 |
++- PUBLISHING / INTEGRATIONS
+|   +- Share markdown as webpage -> publish-to-mdpage
+|   +- Connect to external API / OAuth service -> api-gateway
+|   +- Knowledge graph / wiki / graphify -> knowledge-graph
+|
 +- COST OPTIMIZATION
 |   +- Reduce token costs -> openclaw-token-optimizer
 |   +- Usage/cost report -> usage-costs
@@ -50,8 +55,10 @@ What kind of task is this?
 +- SELF-IMPROVEMENT
     +- Owner corrected me -> self-learning
     +- Performance review / audit -> eval
-    +- Find new skill ideas -> skill-scout
+    +- Reflect on behavior and make a durable fix -> self-reflection
+    +- Turn a repeated solution into a reusable skill -> auto-skill-creator
     +- Memory compaction -> memory-tiering
+    +- Deep recall / prior-conversation reconstruction -> deep-recall
 ```
 
 ---
@@ -62,33 +69,40 @@ What kind of task is this?
 |---|---|---|
 | **contact-list** | Lookup | Single source of truth: contacts, phones, emails, addresses, PAs, group JIDs |
 | **ai-pa** | Coordination | PA-to-PA coordination, scheduling between owners, broadcast to PAs |
+| **api-gateway** | Integration | Managed OAuth/API integrations with external services |
+| **auto-skill-creator** | Self-improvement | Turn repeated complex solutions into reusable skills |
 | **billing-monitor** | Health | Detect and respond to API billing failures |
 | **calendar-setup** | Setup | Calendar connection with write access + Gmail/email setup |
+| **chat-history-local** | Memory | Search past WhatsApp conversations via DB or context files |
+| **commitment-tracker** | Accountability | Enforce immediate execution of any commitment made in a reply |
+| **deep-recall** | Memory | Reconstruct prior context across memory, sessions, and message history |
+| **devprocess** | Build workflow | Plan, delegate, test, screenshot, review, and ship engineering work |
 | **eval** | Self-improvement | Full performance audit -- scores tasks, checks PA health, reviews memory |
-| **heleni-whatsapp** | Memory | Per-conversation context, unanswered tracking, loop prevention. DB mode via `PA_DB_URL`. |
-| **pa-maintenance** | Infrastructure | Workspace git backup (every 6h) + OpenClaw updates (weekly) |
+| **heleni-whatsapp** | Memory | Per-conversation context, unanswered tracking, loop prevention |
+| **knowledge-graph** | Memory / docs | Graphify, wiki compilation, cross-linking, and graph health |
 | **meetings** | Operations | Schedule meetings AND summarize meeting notes/transcripts |
 | **memory-tiering** | Memory | HOT/WARM/COLD memory compaction and archiving |
 | **monday-for-agents** | Operations | All monday.com operations: API, MCP, boards, items |
 | **owner-briefing** | Operations | Daily morning/evening summaries |
+| **ownership** | Product loop | Autonomous build-ship-verify iteration loop |
+| **pa-maintenance** | Infrastructure | Workspace backup, updates, session cleanup, pa-skills sync |
 | **pa-onboarding** | Setup | Full new agent setup from zero |
-| **personal-trainer** | Operations | Personal trainer client ops: check-ins, workout delivery, progress reminders, lead follow-up |
-| **self-learning** | Self-improvement | Log corrections and apply lessons; maintain HOT.md |
-| **self-monitor** | Health | Infrastructure + security checks, disk/memory/service health |
-| **skill-master** | Routing | Pick the right skill (this file) |
-| **skill-scout** | Discovery | Weekly search for new skill ideas |
-| **supervisor** | Operations | Network-wide status dashboard -- all PAs, tasks, system health |
-| **chat-history-local** | Memory | Search past WhatsApp conversations via DB (psycopg2) or context files |
-| **youtube-watcher** | Utility | Fetch and summarize YouTube video transcripts |
-| **skill-analytics** | Analytics | Track skill usage, generate daily reports, find unused skills |
-| **storage-router** | Routing | Decide where to save content: monday.com vs local vs MEMORY.md |
-| **usage-costs** | Analytics | Token usage and cost reports: per session, per day, per week |
-| **commitment-tracker** | Accountability | Enforce immediate execution of any commitment made in a reply |
-| **openclaw-token-optimizer** | Cost | Reduce token usage via smart model routing, heartbeat optimization, context pruning |
 | **personal-crm** | Operations | Contact tracking on monday.com -- last interactions, next meetings, pre-meeting briefings |
-| **research-synthesizer** | Research | Multi-source web research with dedup -- 3-5 parallel searches, cited answer under 400 words |
-| **silence-strategy** | Behavior | Decide when NOT to speak in group chats -- prevents noise, echo responses |
+| **personal-trainer** | Operations | Personal trainer client ops: check-ins, workout delivery, progress reminders, lead follow-up |
+| **publish-to-mdpage** | Publishing | Turn markdown into a shareable web page |
+| **research-synthesizer** | Research | Multi-source web research with dedup and citations |
+| **self-brand** | Content | Netanel personal brand system across LinkedIn/Substack/etc. |
+| **self-learning** | Self-improvement | Log corrections and apply lessons |
+| **self-monitor** | Health | Infrastructure + security checks, disk/memory/service health |
+| **self-reflection** | Self-improvement | Turn owner feedback into concrete system changes |
+| **silence-strategy** | Behavior | Decide when NOT to speak in group chats |
+| **skill-master** | Routing | Pick the right skill (this file) |
+| **smart-output** | Output quality | Shape output for channel/format needs when relevant |
+| **storage-router** | Routing | Decide where to save content: monday.com vs local vs MEMORY.md |
+| **supervisor** | Operations | Network-wide status dashboard -- all PAs, tasks, system health |
+| **usage-costs** | Analytics | Token usage and cost reports: per session, per day, per week |
 | **whatsapp-voice** | Utility | Transcribe WhatsApp voice messages via Whisper -- Hebrew and English |
+| **youtube-watcher** | Utility | Fetch and summarize YouTube video transcripts |
 
 ---
 
@@ -152,8 +166,8 @@ When a new skill is added:
 2. Add trigger phrases to **Quick Lookup** in SKILL.md.
 3. Update the **Decision Tree** if it fits a new category.
 4. Add to any relevant **Multi-Skill Workflows**.
-5. Check skill count -- stay under 32 active skills. Current count: 29.
-6. Add the skill name to the `KNOWN_SKILLS` list in `skill-analytics/SKILL.md`.
+5. Update the active skill count and remove stale/nonexistent references.
+6. Regenerate `skills/_manifest.json` so routing stays aligned.
 
 ---
 
