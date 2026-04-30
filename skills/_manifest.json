@@ -10,6 +10,16 @@
     ]
   },
   {
+    "name": "api-gateway",
+    "description": "Connect to 100+ APIs (Google Workspace, Microsoft 365, GitHub, Notion, Slack, Airtable, HubSpot, etc.) with managed OAuth. Use this skill when users want to interact with external services. Securit...",
+    "triggers": []
+  },
+  {
+    "name": "auto-skill-creator",
+    "description": "Automatically creates new skills from complex problem-solving sessions. Triggers at the end of multi-step tasks that required novel approaches, debugging sessions, or workflow creation. Use when: a...",
+    "triggers": []
+  },
+  {
     "name": "billing-monitor",
     "description": "Monitor for API billing errors and alert the owner and admin immediately. Use when: an API billing error is detected, a peer PA reports a billing error, or during routine health checks. Handles det...",
     "triggers": [
@@ -53,6 +63,22 @@
     ]
   },
   {
+    "name": "deep-recall",
+    "description": "Mandatory deep search before answering any question about past events, conversations, decisions, people, or context. Triggers when: someone asks \"did we discuss\", \"what happened with\", \"when did\", ...",
+    "triggers": []
+  },
+  {
+    "name": "devprocess",
+    "description": "Product development workflow for build tasks in this workspace. Use when building or changing code, features, flows, or infrastructure that deserves planning, delegation, testing, screenshots, and ...",
+    "triggers": [
+      "building",
+      "changing code",
+      "features",
+      "flows",
+      "or infrastructure that deserves planning"
+    ]
+  },
+  {
     "name": "eval",
     "description": "Evaluate everything the PA agent manages — tasks, skills, PA network health, billing, calendar connections, and memory quality. Use when: owner asks for an evaluation, wants to know what's working ...",
     "triggers": [
@@ -65,6 +91,16 @@
     "description": "Complete WhatsApp management for OpenClaw agents: per-conversation memory (groups + DMs), unanswered message tracking, loop prevention, and multi-PA coordination. Use when: tracking conversation co...",
     "triggers": [
       "tracking conversation co"
+    ]
+  },
+  {
+    "name": "knowledge-graph",
+    "description": "Knowledge graph and smart memory management using graphify + Obsidian-inspired patterns. Use when: setting up a knowledge graph, managing memory health, cross-linking notes, compiling wiki pages fr...",
+    "triggers": [
+      "setting up a knowledge graph",
+      "managing memory health",
+      "cross-linking notes",
+      "compiling wiki pages fr"
     ]
   },
   {
@@ -81,10 +117,7 @@
     "name": "monday",
     "description": "Manage Monday.com boards, items, columns, groups, updates, and subitems via the GraphQL API. Self-registers on Monday.com using HATCHA agent verification (reverse CAPTCHA). Use when the user asks t...",
     "triggers": [
-      "create Monday.com items",
-      "read Monday.com boards",
-      "update Monday.com work items",
-      "query Monday.com data"
+      "the user asks t"
     ]
   },
   {
@@ -125,6 +158,13 @@
     ]
   },
   {
+    "name": "ownership",
+    "description": "Product ownership loop for autonomous build-ship-verify work. Use when the owner says \"$ownership\", asks to execute a project with ownership, or wants an overnight/autonomous product loop that alwa...",
+    "triggers": [
+      "the owner says"
+    ]
+  },
+  {
     "name": "pa-maintenance",
     "description": "Unified workspace maintenance skill. Covers: (1) backing up the workspace to GitHub git repo, and (2) updating OpenClaw and skills. Use when: asked to backup, push to git, update openclaw, update s...",
     "triggers": [
@@ -158,17 +198,26 @@
   {
     "name": "proactive-pa",
     "description": "Proactive Personal Assistant behavior patterns. Transforms the agent from a reactive task-follower into a proactive partner that anticipates needs, surfaces insights autonomously, and continuously ...",
+    "triggers": []
+  },
+  {
+    "name": "publish-to-mdpage",
+    "description": "Turn any markdown into a shareable web page via md.page. Use when the user asks to \"share this\", \"publish this markdown\", \"create a shareable link\", \"make this a web page\", \"send this as a link\", \"...",
     "triggers": [
-      "setting up autonomous behaviors",
-      "heartbeat routines",
-      "cron-based proactive checks",
-      "agent should take initiative"
+      "the user asks to"
     ]
   },
   {
     "name": "research-synthesizer",
     "description": "Multi-source research synthesizer. Takes a question, runs 3-5 parallel web searches with varied phrasings, deduplicates, and returns a cited, concise answer. For Hebrew questions, searches in both ...",
     "triggers": []
+  },
+  {
+    "name": "self-brand",
+    "description": "Build and run Netanel's self-branding system in a structured way across LinkedIn, Substack, dev.to, X, profile rewrites, recurring series, and comment strategy. Use when the owner asks for position...",
+    "triggers": [
+      "the owner asks for position"
+    ]
   },
   {
     "name": "self-learning",
@@ -183,12 +232,16 @@
   {
     "name": "self-monitor",
     "description": "Proactive self-monitoring of infrastructure, services, and health. Tracks disk/memory/load, service health, cron job status, recent errors. Auto-fixes safe issues. Triggers on: health check, heartb...",
+    "triggers": []
+  },
+  {
+    "name": "self-reflection",
+    "description": "Turn owner feedback about agent behavior into concrete system changes. Use when the owner says something is off, wants the assistant to improve how it operates, asks for a reflection, or wants a du...",
     "triggers": [
-      "health check",
-      "heartbeat",
-      "monitor status",
-      "service status",
-      "infrastructure check"
+      "the owner says something is off",
+      "wants the assistant to improve how it operates",
+      "asks for a reflection",
+      "or wants a du"
     ]
   },
   {
@@ -199,6 +252,11 @@
   {
     "name": "skill-master",
     "description": "Skill routing. Loaded at startup. For full skill library, decision tree, and workflows see REFERENCE.md.",
+    "triggers": []
+  },
+  {
+    "name": "smart-output",
+    "description": "Skill: smart-output",
     "triggers": []
   },
   {
