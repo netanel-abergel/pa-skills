@@ -30,7 +30,7 @@ Back up the entire workspace to GitHub on a regular schedule or on demand.
 Priority order:
 1. **Git remote URL** — check if token is embedded:
    ```bash
-   git -C /opt/ocana/openclaw/workspace remote get-url origin
+   git -C /path/to/openclaw/workspace remote get-url origin
    ```
 2. **Environment variable:**
    ```bash
@@ -48,7 +48,7 @@ If no token found → report BLOCKED to owner.
 ### Step 2 — Commit and Push
 
 ```bash
-cd /opt/ocana/openclaw/workspace
+cd /path/to/openclaw/workspace
 
 # Stage all changes
 git add -A
@@ -78,7 +78,7 @@ openclaw cron add \
   --name "workspace-backup" \
   --every 6h \
   --session isolated \
-  --message "Run the maintenance skill, Section 1 (Workspace Backup). cd /opt/ocana/openclaw/workspace && git add -A && git commit -m 'Auto-backup: $(date -u +\"%Y-%m-%d %H:%M UTC\")' && git push origin main. Silent — do not message owner unless push fails." \
+  --message "Run the maintenance skill, Section 1 (Workspace Backup). cd /path/to/openclaw/workspace && git add -A && git commit -m 'Auto-backup: $(date -u +\"%Y-%m-%d %H:%M UTC\")' && git push origin main. Silent — do not message owner unless push fails." \
   --timeout-seconds 60
 ```
 
@@ -194,7 +194,7 @@ Prevent `sessions.json` from bloating (observed growing to 67MB+ with 600+ stale
 ### Step 1 — Check Size
 
 ```bash
-ls -lh /opt/ocana/openclaw/agents/main/sessions/sessions.json
+ls -lh /path/to/openclaw/agents/main/sessions/sessions.json
 ```
 
 If under 10MB → skip cleanup.
@@ -202,7 +202,7 @@ If under 10MB → skip cleanup.
 ### Step 2 — Clean Stale Cron Run Entries
 
 ```bash
-cd /opt/ocana/openclaw/agents/main/sessions
+cd /path/to/openclaw/agents/main/sessions
 
 # Backup first
 cp sessions.json sessions.json.bak.$(date +%Y%m%d-%H%M%S)
@@ -245,7 +245,7 @@ Sync all local skills to `netanel-abergel/pa-skills` (public repo for PA network
 
 ### How to Run
 ```bash
-bash /opt/ocana/openclaw/workspace/skills/pa-maintenance/sync-pa-skills.sh
+bash /path/to/workspace/skills/pa-maintenance/sync-pa-skills.sh
 ```
 
 ### Privacy Filter (MANDATORY)

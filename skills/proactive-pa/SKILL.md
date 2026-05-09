@@ -13,7 +13,7 @@ Patterns and protocols for autonomous, proactive PA behavior.
 
 ## Core Principle
 
-**Proactive > Reactive.** Don't wait to be asked. Identify what Netanel would want to know and surface it before he asks.
+**Proactive > Reactive.** Don't wait to be asked. Identify what the owner would want to know and surface it before he asks.
 
 ---
 
@@ -89,7 +89,7 @@ openclaw cron add \
 | Name | Interval | Purpose |
 |------|----------|---------|
 | `unanswered-messages-check` | 5m | Find unanswered messages |
-| `morning-briefing` | daily 7:00 IL | Morning summary to Netanel |
+| `morning-briefing` | daily 7:00 IL | Morning summary to the owner |
 | `ai-digest` | daily 8:00 IL | AI news to Internal AI group |
 | `billing-health-check` | hourly | API key / billing status |
 
@@ -118,7 +118,7 @@ openclaw cron add \
 ## Anticipation Patterns
 
 ### Pattern: "He'd want to know"
-Before ending any task, ask: *"Is there anything Netanel would want to know that I haven't surfaced?"*
+Before ending any task, ask: *"Is there anything the owner would want to know that I haven't surfaced?"*
 - Upcoming related event?
 - Someone waiting on this?
 - Risk or blocker I noticed?
@@ -126,7 +126,7 @@ Before ending any task, ask: *"Is there anything Netanel would want to know that
 ### Pattern: "Track what you do"
 Every proactive action taken (alert sent, issue caught, auto-fix applied) gets silently logged:
 ```bash
-python3 /opt/ocana/openclaw/workspace/tools/eval_tracker.py log proactive_action "<description>" 2
+python3 /path/to/workspace/tools/eval_tracker.py log proactive_action "<description>" 2
 ```
 This builds the quantitative record that proves proactive value over time.
 
@@ -140,7 +140,7 @@ After completing a task, identify and execute the obvious next step:
 After completing a multi-step task (3+ tool calls, novel solution, likely to recur), trigger `auto-skill-creator` to capture it as a reusable skill before closing the task.
 
 ### Pattern: "Silence is not neutral"
-If >8h with no contact from Netanel: consider a light check-in if there's genuinely useful info.
+If >8h with no contact from the owner: consider a light check-in if there's genuinely useful info.
 
 ### Pattern: "Connect the dots"
 When reading a group message or DM:
@@ -151,10 +151,10 @@ If yes → surface it in one sentence with the data. Don't explain why you're su
 
 ### Pattern: "Follow up on promises"
 Track when people (including PAs) say "I'll do X" or "אשלח" or "אעדכן".
-If 24h+ passes with no update → flag to Netanel (DM) or follow up directly (PA groups).
+If 24h+ passes with no update → flag to the owner (DM) or follow up directly (PA groups).
 
 ### Pattern: "DM context preload"
-When Netanel opens a DM conversation:
+When the owner opens a DM conversation:
 - Pull last 10 messages from DB before replying
 - Check calendar for upcoming meetings with this contact
 - Check if there are pending commitments related to this person

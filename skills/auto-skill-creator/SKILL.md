@@ -61,7 +61,7 @@ Rules:
 
 After creating the skill directory:
 ```bash
-cd /opt/ocana/openclaw/workspace/skills
+cd /path/to/workspace/skills
 python3 -c "
 import json, os, glob
 manifest = []

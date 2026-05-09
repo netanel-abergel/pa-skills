@@ -35,7 +35,7 @@ All contact data lives in **`contact-list.md`** (workspace root). This is the ON
 ### Find a contact by name
 
 ```bash
-grep -i "SEARCH_TERM" /opt/ocana/openclaw/workspace/contact-list.md
+grep -i "SEARCH_TERM" /path/to/workspace/contact-list.md
 ```
 
 Replace `SEARCH_TERM` with the name (partial match OK, case-insensitive).
@@ -43,7 +43,7 @@ Replace `SEARCH_TERM` with the name (partial match OK, case-insensitive).
 ### Find a PA by owner name
 
 ```bash
-grep -i "OWNER_NAME" /opt/ocana/openclaw/workspace/contact-list.md | head -5
+grep -i "OWNER_NAME" /path/to/workspace/contact-list.md | head -5
 ```
 
 The PA column in the contacts table shows `PA_NAME (+phone)`. The Active PAs section has the full mapping.
@@ -51,7 +51,7 @@ The PA column in the contacts table shows `PA_NAME (+phone)`. The Active PAs sec
 ### Find a group JID
 
 ```bash
-grep -i "GROUP_NAME" /opt/ocana/openclaw/workspace/contact-list.md
+grep -i "GROUP_NAME" /path/to/workspace/contact-list.md
 ```
 
 Look in the WhatsApp Groups section (bottom of file).

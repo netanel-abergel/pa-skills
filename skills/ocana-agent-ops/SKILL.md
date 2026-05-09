@@ -48,10 +48,10 @@ Use when:
 Refresh with the local gateway token:
 
 ```bash
-GATEWAY_TOKEN=$(cat /opt/ocana/openclaw/openclaw.json | python3 -c \
+GATEWAY_TOKEN=$(cat /path/to/openclaw/openclaw.json | python3 -c \
  "import json,sys; print(json.load(sys.stdin)['gateway']['auth']['token'])")
-AGENT_ID=$(grep "^AGENT_ID" /opt/ocana/agent-config.env | cut -d'=' -f2)
-CONTROL_PLANE_URL=$(grep "^CONTROL_PLANE_URL" /opt/ocana/agent-config.env | cut -d'=' -f2)
+AGENT_ID=$(grep "^AGENT_ID" /path/to/ocana/agent-config.env | cut -d'=' -f2)
+CONTROL_PLANE_URL=$(grep "^CONTROL_PLANE_URL" /path/to/ocana/agent-config.env | cut -d'=' -f2)
 
 curl -s -X POST "$CONTROL_PLANE_URL/api/agents/$AGENT_ID/management-token/refresh" \
  -H "Authorization: Bearer $GATEWAY_TOKEN" \
@@ -61,7 +61,7 @@ curl -s -X POST "$CONTROL_PLANE_URL/api/agents/$AGENT_ID/management-token/refres
 Then verify:
 
 ```bash
-grep MANAGEMENT_API_TOKEN /opt/ocana/agent-config.env
+grep MANAGEMENT_API_TOKEN /path/to/ocana/agent-config.env
 ```
 
 Rules:

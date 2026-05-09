@@ -7,9 +7,9 @@ Usage:
 """
 import os, sys, argparse, sqlite3, json, datetime, glob
 
-DAILY_DIR = "/opt/ocana/openclaw/workspace/memory/daily"
-LEARNINGS_DIR = "/opt/ocana/openclaw/workspace/.learnings"
-SQLITE_DB = "/opt/ocana/openclaw/memory/main.sqlite"
+DAILY_DIR = "/path/to/workspace/memory/daily"
+LEARNINGS_DIR = "/path/to/workspace/.learnings"
+SQLITE_DB = "/path/to/openclaw/memory/main.sqlite"
 
 def count_daily_entries(days=7):
     """Count entries in daily notes over the last N days."""

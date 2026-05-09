@@ -149,8 +149,8 @@ gog auth add owner@company.com --services gmail,calendar,drive,contacts
 
 `gog auth login` requires a browser — doesn't work on a headless server. Use the pre-existing credentials instead:
 
-- Credentials file: `/opt/ocana/openclaw/.gog/credentials.json`
-- Accounts: `agent` (genesis@ocana.ai), `owner` (netanelab@monday.com)
+- Credentials file: `/path/to/openclaw/.gog/credentials.json`
+- Accounts: `agent` (agent@example.com), `owner` (owner@company.com)
 - `~/.config/gws/credentials.json` (gog default) has a stale/broken token — ignore it
 
 ```bash

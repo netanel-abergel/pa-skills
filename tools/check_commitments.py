@@ -9,7 +9,7 @@ import json
 import sys
 from datetime import datetime, timezone, timedelta
 
-LOG = "/opt/ocana/openclaw/workspace/data/commitments.jsonl"
+LOG = "/path/to/workspace/data/commitments.jsonl"
 STALE_DAYS = 7
 
 

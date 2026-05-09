@@ -66,7 +66,7 @@ Use the **contact-list** skill → lookup by owner name in `contact-list.md`.
 The PA column shows `PA_NAME (+phone)`. The Active PAs section has full details.
 
 ```bash
-grep -i "OWNER_NAME" /opt/ocana/openclaw/workspace/contact-list.md
+grep -i "OWNER_NAME" /path/to/workspace/contact-list.md
 ```
 
 If no match found → ask your owner for the contact details.

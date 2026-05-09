@@ -214,7 +214,7 @@
   },
   {
     "name": "self-brand",
-    "description": "Build and run Netanel's self-branding system in a structured way across LinkedIn, Substack, dev.to, X, profile rewrites, recurring series, and comment strategy. Use when the owner asks for position...",
+    "description": "Build and run the owner's self-branding system in a structured way across LinkedIn, Substack, dev.to, X, profile rewrites, recurring series, and comment strategy. Use when the owner asks for position...",
     "triggers": [
       "the owner asks for position"
     ]

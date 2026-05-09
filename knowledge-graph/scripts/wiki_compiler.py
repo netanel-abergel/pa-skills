@@ -19,7 +19,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from collections import Counter, defaultdict
 
-WORKSPACE = Path(os.environ.get('WORKSPACE', '/opt/ocana/openclaw/workspace'))
+WORKSPACE = Path(os.environ.get('WORKSPACE', '/path/to/openclaw/workspace'))
 WIKI_DIR = WORKSPACE / 'wiki'
 DAILY_DIR = WORKSPACE / 'memory' / 'daily'
 PROJECTS_DIR = WORKSPACE / 'memory' / 'projects'

@@ -34,12 +34,12 @@ Don't just route reactively. When you detect these patterns, **suggest** the rel
 - "my pleasure / you're welcome" when anyone says "thank you"
 - NO_REPLY for casual PA acks (thumbs up, "got it", "thank you") unless directly asked
 - PA contacts: read from `PA_LIST.md`
-- Google Calendar: use `/opt/ocana/openclaw/.gog/credentials.json` (NOT gog CLI)
+- Google Calendar: use `/path/to/openclaw/.gog/credentials.json` (NOT gog CLI)
 
 ## Analytics — Log Every Skill Use
 ```bash
 echo "{\"ts\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"skill\":\"SKILL_NAME\",\"trigger\":\"TRIGGER\",\"context\":\"CONTEXT\"}" \
-  >> /opt/ocana/openclaw/workspace/data/skill-analytics.jsonl
+  >> /path/to/workspace/data/skill-analytics.jsonl
 ```
 
 ## Quick Lookup

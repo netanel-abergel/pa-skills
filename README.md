@@ -6,7 +6,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/netanel-abergel/pa-skills?style=social)](https://github.com/netanel-abergel/pa-skills)
 
 Open-source skill library for [OpenClaw](https://openclaw.ai) AI Personal Assistant agents.
-Built and battle-tested by [Heleni](https://netanel-abergel.github.io/pa-skills/), Netanel's production AI PA.
+Built and battle-tested by [Heleni](https://netanel-abergel.github.io/pa-skills/), the owner's production AI PA.
 
 > **What is OpenClaw?** An open-source platform for running AI Personal Assistants — it provides the runtime, gateway, and workspace infrastructure that skills plug into. Model-agnostic: works with Claude, GPT, Gemini, Llama, and others.
 

@@ -19,7 +19,7 @@ This causes duplicate content in a single reply.
 **Workaround:** Run dedup check at the start of every turn.
 
 ```bash
-python3 /opt/ocana/openclaw/workspace/tools/dedup_check.py "<message_id>"
+python3 /path/to/workspace/tools/dedup_check.py "<message_id>"
 # exit 0 = already seen → respond with exactly: NO_REPLY
 # exit 1 = new message → proceed normally
 ```
@@ -35,7 +35,7 @@ The script uses a 120-second TTL cache at `/tmp/heleni_dedup.json`.
 
 ## Load Local Context
 ```bash
-CONTEXT_FILE="/opt/ocana/openclaw/workspace/skills/heleni-whatsapp/.context"
+CONTEXT_FILE="/path/to/workspace/skills/heleni-whatsapp/.context"
 [ -f "$CONTEXT_FILE" ] && source "$CONTEXT_FILE"
 # Then use: $OWNER_PHONE, $JID_CORE_TEAM, $INBOX_FILE, etc.
 ```
@@ -162,7 +162,7 @@ If only one layer was checked, say that explicitly. Do not ask the owner to repe
 - When **I initiate a DM** (not responding — I'm the one who started) → add to inbox as `"waiting_reply": true`
 - At every heartbeat → check for pending outbound DMs and whether a reply came in
 - If reply came → read it, update context.md, mark resolved
-- If no reply after 30min → note in context.md but don't re-ping unless Netanel asks
+- If no reply after 30min → note in context.md but don't re-ping unless the owner asks
 - This solves the blind spot: when the other party replies in a new session, I still track it
 
 ### Post-Send Group Monitoring Rule
@@ -349,7 +349,7 @@ Never log: casual greetings, duplicate info, credentials.
 
 ## Part 2: Unanswered Message Tracking
 
-Inbox file: `/opt/ocana/openclaw/workspace/inbox/pending.json`
+Inbox file: `/path/to/workspace/inbox/pending.json`
 
 ### File Structure
 
@@ -378,7 +378,7 @@ Inbox file: `/opt/ocana/openclaw/workspace/inbox/pending.json`
 ```python
 import json, datetime
 
-INBOX = "/opt/ocana/openclaw/workspace/inbox/pending.json"
+INBOX = "/path/to/workspace/inbox/pending.json"
 
 with open(INBOX) as f:
     data = json.load(f)
@@ -405,7 +405,7 @@ with open(INBOX, "w") as f:
 ```python
 import json, datetime
 
-INBOX = "/opt/ocana/openclaw/workspace/inbox/pending.json"
+INBOX = "/path/to/workspace/inbox/pending.json"
 
 with open(INBOX) as f:
     data = json.load(f)
@@ -425,7 +425,7 @@ with open(INBOX, "w") as f:
 import json
 from datetime import datetime, timedelta, timezone
 
-INBOX = "/opt/ocana/openclaw/workspace/inbox/pending.json"
+INBOX = "/path/to/workspace/inbox/pending.json"
 MAX_AGE_HOURS = 24
 
 with open(INBOX) as f:
@@ -452,7 +452,7 @@ During heartbeat, check for unanswered messages from the last 2 hours:
 import json
 from datetime import datetime, timedelta, timezone
 
-INBOX = "/opt/ocana/openclaw/workspace/inbox/pending.json"
+INBOX = "/path/to/workspace/inbox/pending.json"
 
 with open(INBOX) as f:
     data = json.load(f)
@@ -475,7 +475,7 @@ if unanswered:
 import json
 from datetime import datetime, timedelta, timezone
 
-INBOX = "/opt/ocana/openclaw/workspace/inbox/pending.json"
+INBOX = "/path/to/workspace/inbox/pending.json"
 
 with open(INBOX) as f:
     data = json.load(f)
@@ -501,7 +501,7 @@ with open(INBOX, "w") as f:
 - Task details from owner's DM → never mention to third parties
 - When replying to person X → do NOT include context from conversation with person Y
 - Progress reports → owner in private DM only
-- ❌ Never write "To Netanel:" or any internal framing inside a message to a third party
+- ❌ Never write "To the owner:" or any internal framing inside a message to a third party
 - ❌ Never include the owner's name or intent in outbound messages to PAs or contacts
 
 ### Close the Loop With the Requester

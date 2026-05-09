@@ -13,7 +13,7 @@ import re
 import sys
 from datetime import datetime, timezone, timedelta
 
-LEARNINGS_FILE = "/opt/ocana/openclaw/workspace/.learnings/LEARNINGS.md"
+LEARNINGS_FILE = "/path/to/workspace/.learnings/LEARNINGS.md"
 
 # Map tags/areas to skills
 TAG_TO_SKILL = {

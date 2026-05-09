@@ -40,7 +40,7 @@ EOF
 ### Step 3 — Apply Schema
 
 ```bash
-sudo -u postgres psql heleni_memory < /opt/ocana/openclaw/audit-log-schema.sql
+sudo -u postgres psql heleni_memory < /path/to/openclaw/audit-log-schema.sql
 ```
 
 This creates the `messages` table with full-text search indexes.
@@ -145,7 +145,7 @@ cur.execute("""
   FROM messages
   WHERE chat_id = %s
   ORDER BY ts DESC LIMIT 50
-""", ("+972548834688",))
+""", ("+1234567890",))
 ```
 
 ### Find unanswered messages (last 24h)
@@ -190,7 +190,7 @@ import json, os, re, psycopg2
 from datetime import datetime, timezone
 
 DB_URL = os.environ.get('PA_DB_URL')
-SESSIONS_DIR = '/opt/ocana/openclaw/agents/main/sessions'
+SESSIONS_DIR = '/path/to/openclaw/agents/main/sessions'
 
 conn = psycopg2.connect(DB_URL)
 cur = conn.cursor()
@@ -275,7 +275,7 @@ print(f"Imported {inserted} messages")
 **Hook not logging messages:**
 ```bash
 # Check hook is enabled
-cat /opt/ocana/openclaw/openclaw.json | python3 -c "
+cat /path/to/openclaw/openclaw.json | python3 -c "
 import json,sys; d=json.load(sys.stdin)
 hook = d['hooks']['internal']['entries'].get('wa-audit-log', {})
 print('enabled:', hook.get('enabled'))

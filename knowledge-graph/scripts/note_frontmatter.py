@@ -18,7 +18,7 @@ from datetime import datetime
 from pathlib import Path
 from collections import Counter
 
-WORKSPACE = Path(os.environ.get('WORKSPACE', '/opt/ocana/openclaw/workspace'))
+WORKSPACE = Path(os.environ.get('WORKSPACE', '/path/to/openclaw/workspace'))
 DAILY_DIR = WORKSPACE / 'memory' / 'daily'
 PROJECTS_DIR = WORKSPACE / 'memory' / 'projects'
 
@@ -42,7 +42,7 @@ TAG_RULES = {
     'eval': 'eval',
     'auto_improve': 'self-improve',
     'skill': 'skills',
-    'netanel': 'owner',
+    'owner': 'owner',
 }
 
 

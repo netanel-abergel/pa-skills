@@ -213,11 +213,11 @@ Run daily (or alongside any health check). Uses only `sha256sum`/`shasum`, `grep
 ### Critical Files to Monitor
 
 ```
-/opt/ocana/openclaw/workspace/SOUL.md
-/opt/ocana/openclaw/workspace/IDENTITY.md
-/opt/ocana/openclaw/workspace/MEMORY.md
-/opt/ocana/openclaw/workspace/AGENTS.md
-/opt/ocana/openclaw/workspace/TOOLS.md
+/path/to/workspace/SOUL.md
+/path/to/workspace/IDENTITY.md
+/path/to/workspace/MEMORY.md
+/path/to/workspace/AGENTS.md
+/path/to/workspace/TOOLS.md
 ```
 
 ### 1. File Integrity (SHA256 Baseline)
@@ -234,7 +234,7 @@ Baseline format:
 {
   "generated_at": "2026-04-02T07:00:00Z",
   "files": {
-    "/opt/ocana/openclaw/workspace/SOUL.md": "sha256:<hash>"
+    "/path/to/workspace/SOUL.md": "sha256:<hash>"
   }
 }
 ```
@@ -307,7 +307,7 @@ Run daily at 06:00 UTC (before morning briefing). Silent unless CRITICAL found.
 Include this in the daily self-monitor report (after security checks).
 
 ```bash
-LOG="/opt/ocana/openclaw/workspace/data/skill-analytics.jsonl"
+LOG="/path/to/workspace/data/skill-analytics.jsonl"
 TODAY=$(date -u +%Y-%m-%d)
 
 if [ ! -f "$LOG" ] || [ $(wc -l < "$LOG") -eq 0 ]; then

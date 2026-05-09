@@ -5,7 +5,7 @@ description: "Central status dashboard for the PA agent. Use when: owner asks 'w
 
 ## Load Local Context
 ```bash
-CONTEXT_FILE="/opt/ocana/openclaw/workspace/skills/supervisor/.context"
+CONTEXT_FILE="/path/to/workspace/skills/supervisor/.context"
 [ -f "$CONTEXT_FILE" ] && source "$CONTEXT_FILE"
 # Then use: $OWNER_PHONE, $TASKS_FILE, $PA_LIST_FILE, $BILLING_STATUS_FILE, etc.
 ```
@@ -43,18 +43,18 @@ Supervisor is split into 2 subagents to avoid main thread timeouts.
 ```
 Run:
 1. vertex-ctl status
-2. git -C /opt/ocana/openclaw/workspace log -1 --format="%ar"
-3. Read /opt/ocana/openclaw/workspace/memory/billing-status.json
-4. Read /opt/ocana/openclaw/workspace/data/pa-directory.json → count active/issues
+2. git -C /path/to/openclaw/workspace log -1 --format="%ar"
+3. Read /path/to/workspace/memory/billing-status.json
+4. Read /path/to/workspace/data/pa-directory.json → count active/issues
 Return plain text block for the SYSTEM HEALTH and PA NETWORK sections of the supervisor report.
 ```
 
 **SA-2 — Groups + Tasks:**
 ```
 Run:
-1. tail -1 each file in /opt/ocana/openclaw/workspace/memory/whatsapp/groups/*/context.md
-2. grep WAITING /opt/ocana/openclaw/workspace/memory/whatsapp/dms/*/context.md
-3. cat /opt/ocana/openclaw/workspace/memory/tasks.md
+1. tail -1 each file in /path/to/workspace/memory/whatsapp/groups/*/context.md
+2. grep WAITING /path/to/workspace/memory/whatsapp/dms/*/context.md
+3. cat /path/to/workspace/memory/tasks.md
 Return plain text block for GROUP ACTIVITY, PENDING FOLLOW-UPS, and ACTIVE TASKS sections.
 ```
 
@@ -286,7 +286,7 @@ Use a larger model only if summarizing very long conversation histories.
 ## Communication Rules
 - React 👍 when owner asks for status (acknowledges you received the request)
 - After generating report: react ✅
-- PA contacts: read from `/opt/ocana/openclaw/workspace/PA_LIST.md`
+- PA contacts: read from `/path/to/workspace/PA_LIST.md`
 - "my pleasure / you're welcome" rule: if owner says "thank you" after the report, reply "my pleasure / you're welcome"
 
 **Never send the full supervisor report in a group.**

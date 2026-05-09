@@ -31,8 +31,8 @@ Briefing is split into 2 parallel subagents. Never run all sections in a single 
 
 ### SA-1 Task Template — Calendar
 ```
-Fetch today's Google Calendar events for netanelab@monday.com using direct API.
-Credentials: /opt/ocana/openclaw/.gog/credentials.json (use owner account with refresh_token flow)
+Fetch today's Google Calendar events for owner@company.com using direct API.
+Credentials: /path/to/openclaw/.gog/credentials.json (use owner account with refresh_token flow)
 OAuth token URL: https://oauth2.googleapis.com/token
 Calendar API: https://www.googleapis.com/calendar/v3/calendars/netanelab%40monday.com/events
 Time range: today 00:00–24:00 UTC
@@ -41,7 +41,7 @@ Return plain text list: "• HH:MM — Title (Xmin/Xh)" or "• No events today"
 
 ### SA-2 Task Template — Tasks
 ```
-Read /opt/ocana/openclaw/workspace/memory/tasks.md
+Read /path/to/workspace/memory/tasks.md
 Filter: only open tasks ([ ] not [x])
 Return plain text list: "• task name" or "• None — all clear!"
 ```
@@ -92,8 +92,8 @@ Have a great day! 🙌
 import json, sys, requests
 from datetime import datetime, timezone, timedelta
 
-CREDS_FILE = '/opt/ocana/openclaw/.gog/credentials.json'
-CALENDAR_ID = 'netanelab@monday.com'
+CREDS_FILE = '/path/to/openclaw/.gog/credentials.json'
+CALENDAR_ID = 'owner@company.com'
 
 try:
     with open(CREDS_FILE) as f:

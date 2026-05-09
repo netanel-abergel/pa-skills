@@ -3,10 +3,10 @@
     {
       "name": "Heleni",
       "phone": "+972555193968",
-      "owner": "Netanel Abergel",
-      "owner_phone": "+972548834688",
+      "owner": "the owner",
+      "owner_phone": "+1234567890",
       "owner_role": "Director R&D",
-      "owner_email": "netanelab@monday.com",
+      "owner_email": "owner@company.com",
       "status": "active",
       "notes": "Example entry — replace with your own network"
     }
@@ -25,10 +25,10 @@
   ],
   "owners": [
     {
-      "name": "Netanel Abergel",
-      "phone": "+972548834688",
+      "name": "the owner",
+      "phone": "+1234567890",
       "role": "Director R&D",
-      "email": "netanelab@monday.com",
+      "email": "owner@company.com",
       "pa": "Heleni",
       "pa_phone": "+972555193968",
       "contact_preference": "pa_first"

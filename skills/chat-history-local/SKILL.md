@@ -127,7 +127,7 @@ When `PA_DB_URL` is not set or DB is unreachable, search the file-based context 
 ### Search context files with grep
 ```bash
 SEARCH_TERM="budget"
-WHATSAPP_DIR="/opt/ocana/openclaw/workspace/memory/whatsapp"
+WHATSAPP_DIR="/path/to/workspace/memory/whatsapp"
 
 grep -r --include="*.md" -l "$SEARCH_TERM" "$WHATSAPP_DIR" | while read file; do
     echo "=== $file ==="
@@ -137,7 +137,7 @@ done
 
 ### Search by contact/group name
 ```bash
-CONTACT="Netanel"
+CONTACT="John"  # replace with actual contact name
 find "$WHATSAPP_DIR" -name "meta.json" | xargs grep -l "$CONTACT" | while read meta; do
     dir=$(dirname "$meta")
     echo "=== $(cat $meta | python3 -c 'import sys,json; d=json.load(sys.stdin); print(d.get(\"name\",\"unknown\"))') ==="

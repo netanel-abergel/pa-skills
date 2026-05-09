@@ -1,7 +1,7 @@
 ---
 name: storage-router
 version: "1.1.0"
-description: "Decide where to save any piece of information — monday.com, local file, daily notes, or MEMORY.md. Use this skill before saving anything to ensure the right destination. Prevents local clutter and ensures Netanel can access all relevant content in monday.com."
+description: "Decide where to save any piece of information — monday.com, local file, daily notes, or MEMORY.md. Use this skill before saving anything to ensure the right destination. Prevents local clutter and ensures the owner can access all relevant content in monday.com."
 ---
 
 # Storage Router
@@ -79,7 +79,7 @@ Before saving anything, route it to the correct destination.
 
 Load agent-specific IDs from `.context` file in this skill's directory:
 ```bash
-CONTEXT_FILE="/opt/ocana/openclaw/workspace/skills/storage-router/.context"
+CONTEXT_FILE="/path/to/workspace/skills/storage-router/.context"
 [ -f "$CONTEXT_FILE" ] && source "$CONTEXT_FILE"
 # Then use: $WORKSPACE_ID, $FOLDER_RESEARCH, $DOC_COMPETITIVE_ANALYSIS, etc.
 ```
@@ -111,7 +111,7 @@ If `.context` doesn't exist — use Structure Index doc (DOC_STRUCTURE_INDEX) fr
 
 Before saving any file or content, ask:
 
-1. **Will Netanel need to access or share this?** → monday.com
+1. **Will the owner need to access or share this?** → monday.com
 2. **Is this runtime/operational state?** → local
 3. **Is this a critical rule / owner correction / confirmed stable preference?** → MEMORY.md
 4. **Is this a new lesson, event, or observation that may matter later?** → `memory/daily/YYYY-MM-DD.md`

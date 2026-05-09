@@ -17,7 +17,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-WORKSPACE = Path(os.environ.get('WORKSPACE', '/opt/ocana/openclaw/workspace'))
+WORKSPACE = Path(os.environ.get('WORKSPACE', '/path/to/openclaw/workspace'))
 INDEX_PATH = WORKSPACE / 'graphify-out' / 'concept-index.json'
 GRAPH_PATH = WORKSPACE / 'graphify-out' / 'graph.json'
 SKILLS_DIR = WORKSPACE / 'skills'

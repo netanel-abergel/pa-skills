@@ -117,6 +117,6 @@ Voice OGG → [Whisper] → Text → [Intent] → [CRM update] + [monday task] +
 
 WhatsApp inbound media:
 ```
-/opt/ocana/openclaw/media/inbound/<uuid>.ogg
+/path/to/openclaw/media/inbound/<uuid>.ogg
 ```
 File path is in system metadata for each inbound media attachment.

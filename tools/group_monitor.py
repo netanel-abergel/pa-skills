@@ -3,7 +3,7 @@
 
 Detects:
 1. Messages directed at Heleni that got no response
-2. Links shared by Netanel that need summarizing
+2. Links shared by the owner that need summarizing
 3. Questions from anyone that went unanswered
 4. Groups where Heleni hasn't participated in >24h despite activity
 
@@ -20,7 +20,7 @@ from datetime import datetime, timedelta
 import psycopg2
 
 DB_URL = os.environ.get('PA_DB_URL', '')
-NETANEL_NAMES = {'Netanel', 'netanel'}
+OWNER_NAMES = {'owner'}  # add owner's actual display name(s)
 HELENI_NAMES = {'Heleni', 'heleni'}
 URL_PATTERN = re.compile(r'https?://\S+')
 QUESTION_PATTERN = re.compile(r'\?|מה |איך |למה |מתי |האם |אפשר |תוכלי|תעשי|תבדקי|תסכמי')
@@ -101,10 +101,10 @@ def analyze_group(conn, chat_id, hours=24):
                 'priority': 'high'
             })
         
-        # 2. Netanel shared a link
-        if sender in NETANEL_NAMES and URL_PATTERN.search(body) and not saw_heleni_after:
+        # 2. the owner shared a link
+        if sender in OWNER_NAMES and URL_PATTERN.search(body) and not saw_heleni_after:
             issues.append({
-                'type': 'netanel_link',
+                'type': 'owner_link',
                 'body': body[:120],
                 'ts': ts,
                 'priority': 'medium'
@@ -191,8 +191,8 @@ def format_report(all_issues):
     if medium:
         lines.append(f"MEDIUM ({len(medium)}):")
         for i in medium:
-            if i['type'] == 'netanel_link':
-                lines.append(f"  {i['group']}: Netanel shared link — {i['body']}")
+            if i['type'] == 'owner_link':
+                lines.append(f"  {i['group']}: the owner shared link — {i['body']}")
             elif i['type'] == 'silent_too_long':
                 lines.append(f"  {i['group']}: Silent {i['gap_hours']}h despite activity")
         lines.append("")

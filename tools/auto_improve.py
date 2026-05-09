@@ -18,7 +18,7 @@ from datetime import datetime, timedelta, timezone
 from collections import Counter, defaultdict
 from pathlib import Path
 
-WORKSPACE = os.environ.get("WORKSPACE", "/opt/ocana/openclaw/workspace")
+WORKSPACE = os.environ.get("WORKSPACE", "/path/to/openclaw/workspace")
 EVAL_FILE = os.path.join(WORKSPACE, "data/eval_metrics.jsonl")
 CANDIDATES_FILE = os.path.join(WORKSPACE, "data/improvement_candidates.jsonl")
 RULES_LOG = os.path.join(WORKSPACE, "data/auto_rules.jsonl")

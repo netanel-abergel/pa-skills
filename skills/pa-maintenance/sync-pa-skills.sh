@@ -3,9 +3,9 @@
 # Usage: bash sync-pa-skills.sh
 # Filters: skips .context files, data/ directories, README.md at root
 
-TOKEN=$(git -C /opt/ocana/openclaw/workspace remote get-url origin 2>/dev/null | sed 's/.*x-access-token:\([^@]*\)@.*/\1/')
+TOKEN=$(git -C /path/to/openclaw/workspace remote get-url origin 2>/dev/null | sed 's/.*x-access-token:\([^@]*\)@.*/\1/')
 REPO="netanel-abergel/pa-skills"
-LOCAL_SKILLS="/opt/ocana/openclaw/workspace/skills"
+LOCAL_SKILLS="/path/to/workspace/skills"
 
 # Files/patterns to NEVER sync to public repo
 SKIP_PATTERNS=(

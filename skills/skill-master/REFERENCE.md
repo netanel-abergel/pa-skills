@@ -91,7 +91,7 @@ What kind of task is this?
 | **personal-trainer** | Operations | Personal trainer client ops: check-ins, workout delivery, progress reminders, lead follow-up |
 | **publish-to-mdpage** | Publishing | Turn markdown into a shareable web page |
 | **research-synthesizer** | Research | Multi-source web research with dedup and citations |
-| **self-brand** | Content | Netanel personal brand system across LinkedIn/Substack/etc. |
+| **self-brand** | Content | the owner personal brand system across LinkedIn/Substack/etc. |
 | **self-learning** | Self-improvement | Log corrections and apply lessons |
 | **self-monitor** | Health | Infrastructure + security checks, disk/memory/service health |
 | **self-reflection** | Self-improvement | Turn owner feedback into concrete system changes |

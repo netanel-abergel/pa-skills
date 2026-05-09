@@ -8,8 +8,8 @@ Usage:
 """
 import os, sys, argparse, sqlite3, json
 
-SQLITE_DB = "/opt/ocana/openclaw/memory/main.sqlite"
-DAILY_DIR = "/opt/ocana/openclaw/workspace/memory/daily"
+SQLITE_DB = "/path/to/openclaw/memory/main.sqlite"
+DAILY_DIR = "/path/to/workspace/memory/daily"
 
 def search_fts(query, limit=10):
     """Search SQLite FTS5 index across all memory files."""

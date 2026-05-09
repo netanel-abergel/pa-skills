@@ -25,7 +25,7 @@ if _tools_dir in _sys.path:
     _sys.path.remove(_tools_dir)
 from datetime import datetime, timezone, timedelta
 
-WORKSPACE = "/opt/ocana/openclaw/workspace"
+WORKSPACE = "/path/to/openclaw/workspace"
 RETRO_DIR = os.path.join(WORKSPACE, "memory/retros")
 DAILY_DIR = os.path.join(WORKSPACE, "memory/daily")
 LEARNINGS_FILE = os.path.join(WORKSPACE, ".learnings/LEARNINGS.md")

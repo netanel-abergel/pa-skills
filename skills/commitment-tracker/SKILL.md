@@ -42,7 +42,7 @@ Before finalizing any reply:
 Before executing any commitment, write an intent record to prevent loss on gateway crash:
 
 ```bash
-COMMITMENTS=/opt/ocana/openclaw/workspace/data/commitments.jsonl
+COMMITMENTS=/path/to/workspace/data/commitments.jsonl
 mkdir -p $(dirname $COMMITMENTS)
 echo "{\"ts\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"action\":\"DESCRIBE_ACTION\",\"target\":\"TARGET\",\"status\":\"pending\"}" >> $COMMITMENTS
 ```
@@ -61,7 +61,7 @@ Scan for unresolved commitments:
 ```bash
 python3 -c "
 import json
-log = '/opt/ocana/openclaw/workspace/data/commitments.jsonl'
+log = '/path/to/workspace/data/commitments.jsonl'
 try:
     lines = [json.loads(l) for l in open(log)]
     done_actions = {l['action'] for l in lines if l.get('status')=='done'}
@@ -82,7 +82,7 @@ After recovery scan, remove all `done` entries — they served their purpose:
 ```bash
 python3 -c "
 import json
-log = '/opt/ocana/openclaw/workspace/data/commitments.jsonl'
+log = '/path/to/workspace/data/commitments.jsonl'
 try:
     lines = [json.loads(l) for l in open(log)]
     pending_only = [l for l in lines if l.get('status') != 'done']

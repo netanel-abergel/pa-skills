@@ -13,7 +13,7 @@
 set -e
 
 REPO="https://github.com/netanel-abergel/pa-skills.git"
-WORKSPACE="${OPENCLAW_WORKSPACE:-/opt/ocana/openclaw/workspace}"
+WORKSPACE="${OPENCLAW_WORKSPACE:-/path/to/openclaw/workspace}"
 SKILLS_DIR="$WORKSPACE/skills"
 TMPDIR_CLONE=$(mktemp -d)
 

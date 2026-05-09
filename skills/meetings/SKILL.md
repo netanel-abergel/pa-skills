@@ -17,7 +17,7 @@ Any model. For timezone reasoning or complex scheduling constraints, use a mediu
 - "schedule a meeting" / "set up a meeting with X" / "book a call with Y"
 - "summarize meeting notes" / "take notes" / "action items from meeting" / "extract tasks from this transcript"
 
-> ⚠️ CALENDAR AUTH: Do NOT use `gog` CLI — it's broken on this server. Use direct Google Calendar API with credentials from `/opt/ocana/openclaw/.gog/credentials.json`. See calendar-setup skill for full auth pattern.
+> ⚠️ CALENDAR AUTH: Do NOT use `gog` CLI — it's broken on this server. Use direct Google Calendar API with credentials from `/path/to/openclaw/.gog/credentials.json`. See calendar-setup skill for full auth pattern.
 
 ---
 
@@ -81,7 +81,7 @@ NEXT_WEEK=$(date -u -d '+7 days' +%Y-%m-%dT%H:%M:%SZ 2>/dev/null \
   || date -u -v+7d +%Y-%m-%dT%H:%M:%SZ)
 
 # BROKEN: replace with direct API call — see calendar-setup skill
-# ACCESS_TOKEN: use refresh_token flow from /opt/ocana/openclaw/.gog/credentials.json
+# ACCESS_TOKEN: use refresh_token flow from /path/to/openclaw/.gog/credentials.json
 GOG_ACCOUNT=owner@company.com gog calendar events primary \
   --from "$TODAY" \
   --to "$NEXT_WEEK" \
@@ -115,7 +115,7 @@ WORK_END_HOUR = 18
 
 try:
     # BROKEN: replace with direct API call — see calendar-setup skill
-    # ACCESS_TOKEN: use refresh_token flow from /opt/ocana/openclaw/.gog/credentials.json
+    # ACCESS_TOKEN: use refresh_token flow from /path/to/openclaw/.gog/credentials.json
     result = subprocess.run(
         ['gog', 'calendar', 'events', 'primary',
          '--from', datetime.now(timezone.utc).isoformat(),
@@ -211,7 +211,7 @@ import json, requests
 from datetime import datetime, timezone
 
 # Get access token (see auth pattern in calendar-setup skill)
-with open('/opt/ocana/openclaw/.gog/credentials.json') as f:
+with open('/path/to/openclaw/.gog/credentials.json') as f:
     creds = json.load(f)
 owner = next(a for a in creds['accounts'] if a['type'] == 'owner')
 resp = requests.post('https://oauth2.googleapis.com/token', data={
@@ -265,7 +265,7 @@ To the other PA:
 
 ```bash
 # BROKEN: replace with direct API call — see calendar-setup skill
-# ACCESS_TOKEN: use refresh_token flow from /opt/ocana/openclaw/.gog/credentials.json
+# ACCESS_TOKEN: use refresh_token flow from /path/to/openclaw/.gog/credentials.json
 
 # Find the event
 GOG_ACCOUNT=owner@company.com gog calendar events primary \
@@ -273,7 +273,7 @@ GOG_ACCOUNT=owner@company.com gog calendar events primary \
   --to "$(date -u -d '+14 days' +%Y-%m-%dT%H:%M:%SZ)"
 
 # BROKEN: replace with direct API call — see calendar-setup skill
-# ACCESS_TOKEN: use refresh_token flow from /opt/ocana/openclaw/.gog/credentials.json
+# ACCESS_TOKEN: use refresh_token flow from /path/to/openclaw/.gog/credentials.json
 # Delete old event: DELETE https://www.googleapis.com/calendar/v3/calendars/netanelab%40monday.com/events/{EVENT_ID}
 GOG_ACCOUNT=owner@company.com gog calendar delete primary EVENT_ID
 

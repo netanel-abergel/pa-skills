@@ -20,7 +20,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from collections import Counter
 
-WORKSPACE = Path(os.environ.get('WORKSPACE', '/opt/ocana/openclaw/workspace'))
+WORKSPACE = Path(os.environ.get('WORKSPACE', '/path/to/openclaw/workspace'))
 GRAPH_PATH = WORKSPACE / 'graphify-out' / 'graph.json'
 MEMORY_PATH = WORKSPACE / 'MEMORY.md'
 DAILY_DIR = WORKSPACE / 'memory' / 'daily'

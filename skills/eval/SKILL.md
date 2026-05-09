@@ -40,16 +40,16 @@ Main agent collects results and formats the final report.
 **SA-1 — System Health:**
 ```
 Run system health check using ONLY fast targeted commands (do NOT run openclaw status):
-1. /opt/ocana/bifrost/vertex-ctl.sh status 2>&1 | head -3
+1. /path/to/ocana/bifrost/vertex-ctl.sh status 2>&1 | head -3
 2. curl -s --max-time 5 http://127.0.0.1:18789/ | head -1 || echo 'gateway unreachable'
-3. git -C /opt/ocana/openclaw/workspace log -1 --format="%ar"
+3. git -C /path/to/openclaw/workspace log -1 --format="%ar"
 4. python3 -c "import os,subprocess; db=os.environ.get('PA_DB_URL',''); r=subprocess.run(['psql',db,'-c','SELECT COUNT(*) FROM messages;','-t'],capture_output=True,text=True,timeout=5) if db else None; print(r.stdout.strip() if r else 'no DB')"
 Return JSON: {"vertex": "RUNNING/DOWN", "gateway": "reachable/unreachable", "backup": "X ago", "db": "X msgs"}
 ```
 
 **SA-2 — PA Network:**
 ```
-Read /opt/ocana/openclaw/workspace/contact-list.md
+Read /path/to/workspace/contact-list.md
 Find all PA entries (lines with "PA:" or under WhatsApp Groups / PAs section)
 Count total PAs, check for any notes about issues/offline/billing
 Return JSON: {"total": N, "online": N, "issues": [{"pa": "name", "issue": "description"}]}
@@ -58,8 +58,8 @@ Return JSON: {"total": N, "online": N, "issues": [{"pa": "name", "issue": "descr
 **SA-3 — Tasks + Memory + Skills:**
 ```
 Check:
-1. wc -l /opt/ocana/openclaw/workspace/MEMORY.md
-2. ls /opt/ocana/openclaw/workspace/skills | wc -l
+1. wc -l /path/to/workspace/MEMORY.md
+2. ls /path/to/workspace/skills | wc -l
 3. Check today's daily note exists
 4. grep tasks.md for open/done count
 Return JSON: {"memory_lines": N, "skills": N, "daily_note": true/false, "tasks_open": N, "tasks_done": N}
@@ -179,7 +179,7 @@ grep "\[ \]" "$TASKS_FILE" | grep -v "$(date +%Y-%m-%d)" | grep -v "$(date -u -d
 
 ```bash
 # PA network is tracked in contact-list.md (not billing-status.json)
-grep -i "PA:" /opt/ocana/openclaw/workspace/contact-list.md | head -30
+grep -i "PA:" /path/to/workspace/contact-list.md | head -30
 ```
 
 ### Step 4 — Skills Audit
@@ -231,7 +231,7 @@ fi
 
 ```bash
 TODAY=$(date -u +%Y-%m-%d)
-WORKSPACE="/opt/ocana/openclaw/workspace"
+WORKSPACE="/path/to/openclaw/workspace"
 
 # Layer 1: MEMORY.md (long-term rules)
 MEMORY_LINES=$(wc -l < "$WORKSPACE/MEMORY.md" 2>/dev/null || echo 0)
@@ -270,11 +270,11 @@ else:
 PYEOF
 
 # Layer 4: SQLite semantic (vector memory)
-# IMPORTANT: correct path is /opt/ocana/openclaw/memory/main.sqlite (NOT workspace)
+# IMPORTANT: correct path is /path/to/openclaw/memory/main.sqlite (NOT workspace)
 python3 << 'PYEOF'
 try:
     import sqlite3, sqlite_vec
-    db = sqlite3.connect('/opt/ocana/openclaw/memory/main.sqlite')
+    db = sqlite3.connect('/path/to/openclaw/memory/main.sqlite')
     db.enable_load_extension(True)
     sqlite_vec.load(db)
     db.enable_load_extension(False)

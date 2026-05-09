@@ -54,7 +54,7 @@ grep -rn "<keyword>" memory/whatsapp/dms/*/context.md
 - Any question starting with "did we", "when did", "what about", "do you remember"
 - Before saying "I don't have context on this"
 - Before saying "I'll need to check"
-- When Netanel references something from a past conversation
+- When the owner references something from a past conversation
 - When another PA asks about a previous interaction
 
 ## Output Rules

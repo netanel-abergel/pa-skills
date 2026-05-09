@@ -1,7 +1,7 @@
 ---
 name: self-brand
 description: |
-  Build and run Netanel's self-branding system in a structured way across LinkedIn, Substack, dev.to, X, profile rewrites, recurring series, and comment strategy. Use when the owner asks for positioning, a branding plan, profile updates, content drafts, a publishing sequence, comment ideas, or help maintaining a consistent public voice. Optimize for operator credibility: specific experience, defensible numbers, concrete artifacts, and category ownership.
+  Build and run the owner's self-branding system in a structured way across LinkedIn, Substack, dev.to, X, profile rewrites, recurring series, and comment strategy. Use when the owner asks for positioning, a branding plan, profile updates, content drafts, a publishing sequence, comment ideas, or help maintaining a consistent public voice. Optimize for operator credibility: specific experience, defensible numbers, concrete artifacts, and category ownership.
 triggers:
   - self brand
   - personal brand
@@ -18,7 +18,7 @@ Run self-brand work like a system: positioning first, proof second, cadence thir
 
 ## Core Goal
 
-Turn Netanel into the clear operator voice for **Agentic Engineering**.
+Turn the owner into the clear operator voice for **Agentic Engineering**.
 
 Not generic AI leadership.
 Not motivational content.
@@ -26,7 +26,7 @@ Not consultant branding.
 
 ## Current Brand Spine
 
-Default to these concepts unless Netanel changes direction:
+Default to these concepts unless the owner changes direction:
 
 1. **Agentic Engineering** — the category to own
 2. **Three Levels** — Model / Context / Harness
@@ -64,9 +64,9 @@ Default to these concepts unless Netanel changes direction:
 
 ## Default Content Mix
 
-Use this mix unless Netanel says otherwise:
+Use this mix unless the owner says otherwise:
 - **70% original operator insight** from real work
-- **30% reactions** to industry news, through Netanel’s own lens
+- **30% reactions** to industry news, through the owner’s own lens
 
 Any reaction post must answer:
 1. What happened?
@@ -226,11 +226,11 @@ Keep it decisive.
 
 ## Proactive Operating Mode
 
-Do not wait for Netanel to ask for every branding move.
+Do not wait for the owner to ask for every branding move.
 Run the system continuously when there is clear value and no approval boundary is crossed.
 
 ### Default proactive responsibilities
-- watch for moments where Netanel should join the conversation with a real operator angle
+- watch for moments where the owner should join the conversation with a real operator angle
 - notice gaps between profile, current posts, active themes, and recent work
 - propose the next strongest asset before the current one goes stale
 - keep a light queue of publish-worthy ideas, proof points, and comment opportunities
@@ -252,7 +252,7 @@ Default triggers for proactive action:
 - new internal artifact, metric, postmortem, screenshot, or lesson that can become content
 - repeated conversation themes across recent chats that indicate a category claim worth packaging
 - long gaps after an agreed content direction without a next draft or review packet
-- strong external post/comment opportunities where Netanel has a differentiated view
+- strong external post/comment opportunities where the owner has a differentiated view
 
 ### Proactive output formats
 Use one of these formats when initiating work:
@@ -270,7 +270,7 @@ Keep the system warm by default:
 - when there is no strong opportunity, stay quiet instead of manufacturing activity
 
 ### Escalation threshold
-Interrupt Netanel only when the opportunity is genuinely good, timely, or blocked on approval.
+Interrupt the owner only when the opportunity is genuinely good, timely, or blocked on approval.
 Otherwise, quietly prepare the asset, save the draft, and surface it when it is review-worthy.
 
 ## Ongoing Operating Cadence

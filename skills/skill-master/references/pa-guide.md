@@ -11,7 +11,7 @@ A reference for new PAs joining the network. Covers memory, tasks, skills, subag
 | **Long-term** | `MEMORY.md` | Rules, contacts, deduced patterns. Max 175 lines. |
 | **Daily** | `memory/daily/YYYY-MM-DD.md` | Raw log of every significant session. Write after 5+ exchanges. |
 | **PostgreSQL** | `$PA_DB_URL` → `messages` table | Full WhatsApp history. Search with psql. |
-| **Semantic SQLite** | `/opt/ocana/openclaw/memory/main.sqlite` | Vector index of workspace files. Load with `sqlite_vec`. |
+| **Semantic SQLite** | `/path/to/openclaw/memory/main.sqlite` | Vector index of workspace files. Load with `sqlite_vec`. |
 
 ### Memory Types
 - `[FACT]` — owner stated it directly
@@ -25,7 +25,7 @@ A reference for new PAs joining the network. Covers memory, tasks, skills, subag
 ### Recall Workflow (when context is missing)
 Before saying "I don't know" or asking the owner to repeat context:
 1. Check durable memory (`MEMORY.md` / `memory_search` / wiki)
-2. Check semantic/vector memory (`/opt/ocana/openclaw/memory/main.sqlite`)
+2. Check semantic/vector memory (`/path/to/openclaw/memory/main.sqlite`)
 3. Check PostgreSQL WhatsApp history (`$PA_DB_URL` → `messages`)
 4. Check per-chat context files only after that
 
@@ -113,7 +113,7 @@ Summary: • [point] • [point]
 ```
 
 **Next meeting prep:** fetch calendar → find next event → search notetaker for past meetings with same participants.
-Calendar API: use credentials from `/opt/ocana/openclaw/.gog/credentials.json` (owner account). NOT gog CLI.
+Calendar API: use credentials from `/path/to/openclaw/.gog/credentials.json` (owner account). NOT gog CLI.
 
 ---
 
@@ -149,13 +149,13 @@ Current library: 28 skills. Sweet spot: 15–25. Above 30 = routing breaks.
 ## 7. Key Paths
 
 ```
-Workspace:       /opt/ocana/openclaw/workspace
-Memory DB:       /opt/ocana/openclaw/memory/main.sqlite  ← NOT workspace/memory/main.sqlite
+Workspace:       /path/to/openclaw/workspace
+Memory DB:       /path/to/openclaw/memory/main.sqlite  ← NOT workspace/memory/main.sqlite
 WhatsApp memory: workspace/memory/whatsapp/
 Daily notes:     workspace/memory/daily/
 Commitments:     workspace/data/commitments.jsonl
 Tasks (local):   workspace/data/pa-tasks.json (legacy — prefer monday board)
-Credentials:     /opt/ocana/openclaw/.gog/credentials.json
+Credentials:     /path/to/openclaw/.gog/credentials.json
 PA list:         workspace/PA_LIST.md
 ```
 

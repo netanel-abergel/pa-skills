@@ -5,7 +5,7 @@ description: "Personal CRM built on monday.com. Tracks contacts, last interactio
 
 ## Load Local Context
 ```bash
-CONTEXT_FILE="/opt/ocana/openclaw/workspace/skills/personal-crm/.context"
+CONTEXT_FILE="/path/to/workspace/skills/personal-crm/.context"
 [ -f "$CONTEXT_FILE" ] && source "$CONTEXT_FILE"
 # Then use: $CRM_BOARD_ID, $OWNER_EMAIL, etc.
 ```
@@ -18,7 +18,7 @@ CRM נבנה על monday.com — ללא integrations חדשות. מבוסס על
 
 ## Board Structure
 
-- *Board:* Personal CRM — Netanel (ID in .context)
+- *Board:* Personal CRM — the owner (ID in .context)
 - *Columns:* Name | Email | Phone | Role | Last Contact | Next Meeting | Relationship | Notes | Last Topic
 - *Groups:* Leadership | Team | External
 
@@ -30,7 +30,7 @@ CRM נבנה על monday.com — ללא integrations חדשות. מבוסס על
 ```bash
 # Use Calendar API directly (gog CLI auth is broken — use credentials.json)
 # See calendar-setup skill for full auth flow
-ACCESS_TOKEN=$(...)  # refresh from /opt/ocana/openclaw/.gog/credentials.json
+ACCESS_TOKEN=$(...)  # refresh from /path/to/openclaw/.gog/credentials.json
 
 TODAY=$(date -u +%Y-%m-%d)
 TOMORROW=$(date -u -d '+1 day' +%Y-%m-%d 2>/dev/null || date -u -v+1d +%Y-%m-%d)
@@ -74,13 +74,13 @@ Attendees:
   [No history] if first time
 ```
 
-Send to Netanel via WhatsApp before the meeting (30 min prior if possible).
+Send to the owner via WhatsApp before the meeting (30 min prior if possible).
 
 ---
 
 ## Manual Query
 
-When Netanel asks "מה אני יודע על X" or "מתי דיברתי עם X":
+When the owner asks "מה אני יודע על X" or "מתי דיברתי עם X":
 1. Search CRM board by name (use get_board_items_page with searchTerm)
 2. Return: Role, Last Contact, Next Meeting, Last Topic, Notes
 3. If not in CRM → say so, offer to add
@@ -115,9 +115,9 @@ openclaw cron add \
 ```bash
 # personal-crm/.context
 CRM_BOARD_ID="18407279559"
-OWNER_EMAIL="netanelab@monday.com"
-OWNER_PHONE="+972548834688"
-GOG_CREDS="/opt/ocana/openclaw/.gog/credentials.json"
+OWNER_EMAIL="owner@company.com"
+OWNER_PHONE="+1234567890"
+GOG_CREDS="/path/to/openclaw/.gog/credentials.json"
 
 # Column IDs
 COL_EMAIL="email_mm24sjhq"

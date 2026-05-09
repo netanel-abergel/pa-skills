@@ -187,7 +187,7 @@ Key things to include:
 
 2. **Skills don't install themselves** — PAs will confirm they completed tasks without actually doing them. Always verify: ask for line count, file listing, or a functional test. Don't accept "done" without evidence.
 
-3. **Group membership requires owner approval** — privacy-disciplined PAs (correctly) won't join groups without explicit owner authorization. Don't send invite links directly. Flow: Heleni asks Netanel → Netanel contacts the PA's owner → owner authorizes → PA joins.
+3. **Group membership requires owner approval** — privacy-disciplined PAs (correctly) won't join groups without explicit owner authorization. Don't send invite links directly. Flow: Heleni asks the owner → the owner contacts the PA's owner → owner authorizes → PA joins.
 
 4. **invite link vs. manual add** — PAs cannot click links. Only humans can join via link. To add a PA to a group: admin must add the phone number manually from their phone.
 
@@ -248,11 +248,11 @@ SQL
 ### 3. Apply schema
 ```bash
 psql postgresql://heleni:heleni_mem_2026@localhost:5432/heleni_memory \
-  -f /opt/ocana/openclaw/audit-log-schema.sql
+  -f /path/to/openclaw/audit-log-schema.sql
 ```
 
 ### 4. Add PA_DB_URL to hook env in openclaw.json
-In `/opt/ocana/openclaw/openclaw.json`, find `hooks → internal → entries → wa-audit-log → env` and add:
+In `/path/to/openclaw/openclaw.json`, find `hooks → internal → entries → wa-audit-log → env` and add:
 ```json
 "env": {
   "HELENI_DB_URL": "postgresql://heleni:heleni_mem_2026@localhost:5432/heleni_memory",

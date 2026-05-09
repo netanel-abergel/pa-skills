@@ -12,7 +12,7 @@ Reports token usage and estimated costs from OpenClaw sessions.
 
 ## Load Local Context
 ```bash
-CONTEXT_FILE="/opt/ocana/openclaw/workspace/skills/usage-costs/.context"
+CONTEXT_FILE="/path/to/workspace/skills/usage-costs/.context"
 [ -f "$CONTEXT_FILE" ] && source "$CONTEXT_FILE"
 # Provides: $OWNER_PHONE, $PRICING_INPUT, $PRICING_OUTPUT, $PRICING_CACHE_READ
 ```
@@ -22,8 +22,8 @@ CONTEXT_FILE="/opt/ocana/openclaw/workspace/skills/usage-costs/.context"
 ## Data Sources
 
 1. **Live sessions** → `openclaw status --deep` (current token counts per session)
-2. **Cron run history** → `/opt/ocana/openclaw/cron/runs/*.jsonl` (usage field per run)
-3. **Token history** → `/opt/ocana/openclaw/workspace/data/token-history.jsonl` (daily aggregates)
+2. **Cron run history** → `/path/to/openclaw/cron/runs/*.jsonl` (usage field per run)
+3. **Token history** → `/path/to/workspace/data/token-history.jsonl` (daily aggregates)
 
 ---
 
@@ -64,7 +64,7 @@ def get_cron_usage(days_back=1):
     total_output = 0
     runs = []
 
-    for f in glob.glob('/opt/ocana/openclaw/cron/runs/*.jsonl'):
+    for f in glob.glob('/path/to/openclaw/cron/runs/*.jsonl'):
         job_name = os.path.basename(f).replace('.jsonl', '')
         with open(f) as fh:
             for line in fh:
@@ -112,7 +112,7 @@ Note: Main session cost is estimated — cache reduces actual cost by ~90%.
 ```
 
 ### "How much this week?"
-- Read from `/opt/ocana/openclaw/workspace/data/token-history.jsonl`
+- Read from `/path/to/workspace/data/token-history.jsonl`
 - Sum daily entries for the last 7 days
 - Show per-day breakdown + total
 
@@ -125,7 +125,7 @@ Note: Main session cost is estimated — cache reduces actual cost by ~90%.
 
 ## Save Daily Report
 
-Append to `/opt/ocana/openclaw/workspace/data/token-history.jsonl`:
+Append to `/path/to/workspace/data/token-history.jsonl`:
 
 ```json
 {"date": "2026-04-04", "input": 133, "output": 17376, "cache_read": 900000, "cost_usd": 0.54, "cron_runs": 25, "subagent_runs": 4}
@@ -142,7 +142,7 @@ python3 -c "
 import json, glob, os
 from datetime import datetime, timezone
 
-sessions_dir = '/opt/ocana/openclaw/agents/main/sessions'
+sessions_dir = '/path/to/openclaw/agents/main/sessions'
 files = glob.glob(f'{sessions_dir}/*.jsonl')
 today = datetime.now(timezone.utc).date()
 total_cost = 0

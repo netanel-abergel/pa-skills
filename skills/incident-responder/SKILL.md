@@ -23,12 +23,12 @@ Standardizes failure handling. No more ad-hoc.
 
 1. **Classify** using table above
 2. **Diagnose** — collect logs (`tools/error_tracker.py log <component> <msg>`)
-3. **Notify** — DM Netanel ONLY (not the affected PA's owner)
+3. **Notify** — DM the owner ONLY (not the affected PA's owner)
 4. **Mitigate** — execute the first action from the table
 5. **Log** — append daily-note: `[HH:MM IL] INCIDENT <class>: <one-line summary>; resolved=<yes/no>`
 6. **Postmortem** (if user-visible impact >5min) — create `memory/incidents/YYYY-MM-DD-<class>.md`
 
 ## Anti-patterns
 - Do NOT loop trying the same fix twice
-- Do NOT tell the PA's owner there's a problem before Netanel knows
+- Do NOT tell the PA's owner there's a problem before the owner knows
 - Do NOT skip the daily-note log entry

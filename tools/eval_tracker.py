@@ -18,9 +18,9 @@ import sys
 from datetime import datetime, timezone, timedelta
 
 IL_TZ = timezone(timedelta(hours=3))
-DATA_DIR = "/opt/ocana/openclaw/workspace/data"
+DATA_DIR = "/path/to/workspace/data"
 EVAL_FILE = os.path.join(DATA_DIR, "eval_metrics.jsonl")
-WEEKLY_DIR = "/opt/ocana/openclaw/workspace/memory/eval"
+WEEKLY_DIR = "/path/to/workspace/memory/eval"
 
 
 def ensure_dirs():

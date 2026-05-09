@@ -17,7 +17,7 @@ THINKING_PATTERNS = [
     r"(?:^|\. )(?:Let me|Looking at|First I|Here's my|Based on|The (?:problem|issue|bug) is)",
     r"(?:^|\. )(?:They'?re not listening|stuck in a.*loop|not responding to)",
     # Describing internal actions to third parties
-    r"(?:^|\. )I (?:sent|reported|updated|asked|messaged|contacted|pinged|DMed) (?:him|her|them|Netanel|the owner)",
+    r"(?:^|\. )I (?:sent|reported|updated|asked|messaged|contacted|pinged|DMed) (?:him|her|them|the owner)",
     r"(?:^|\. )(?:Already flagged|Already told|Already sent|Already reported)",
     # Hebrew thinking
     r"(?:^|[.!?] )(?:בודקת|זיהיתי|הבעיה היא|צריכה ל|אני רואה ש|שלחתי ל|דיווחתי ל|עדכנתי את|בדקתי ו)",
