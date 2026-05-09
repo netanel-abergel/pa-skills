@@ -1,9 +1,10 @@
 ---
 name: ownership
 description: |-
-  Product ownership loop for autonomous build-ship-verify work. Use when the owner says "$ownership",
-  asks to execute a project with ownership, or wants an overnight/autonomous product loop that
-  always ends with code committed, deployed, and verified on production.
+  Autonomous build-ship-verify loop that ends with code committed, deployed, and confirmed live.
+  Triggers on: "$ownership", "execute X with ownership", "build this overnight", or any request
+  for an autonomous product loop with no human checkpoints until production is verified.
+  NOT for: one-off tasks, quick fixes, or supervised dev work (use devprocess for those).
 ---
 
 # $ownership — Product Ownership Loop

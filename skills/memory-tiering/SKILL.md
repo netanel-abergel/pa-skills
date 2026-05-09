@@ -1,6 +1,10 @@
 ---
 name: memory-tiering
-description: Automated multi-tiered memory management (HOT, WARM, COLD). Use this skill to organize, prune, and archive context during memory operations or compactions.
+description: |-
+  Multi-tiered memory management (HOT/WARM/COLD) for context compaction. Invoke ONLY for explicit
+  compaction events: post-`/compact` cleanup, MEMORY.md tier promotion, archive batch, or "trim my context".
+  NOT for general recall (use deep-recall) or routine memory writes (use storage-router).
+  Triggers: "compact memory", "promote to durable", "archive old context", "tier this".
 ---
 
 # Memory Tiering Skill 🧠⚖️
@@ -50,6 +54,40 @@ openclaw memory status --deep   # see what Dreaming already promoted
 ### Step 4: Verify
 - MEMORY.md should be <200 lines after cleanup
 - Check `DREAMS.md` — are Dreaming's promotions accurate? Prune bad ones.
+
+## Progressive Context Compaction (inspired by Claude Code harness patterns)
+
+Long sessions degrade quality as context fills. Apply progressive compression by conversation age:
+
+### Compression Layers (oldest → newest)
+
+| Layer | Age | Strategy | Detail Level |
+|---|---|---|---|
+| **HISTORY_SNIP** | >50 turns | Drop entirely or keep 1-line summary | ~5% |
+| **Microcompact** | 30-50 turns | Aggressive: decisions + outcomes only | ~15% |
+| **CONTEXT_COLLAPSE** | 15-30 turns | Medium: key exchanges, skip tool noise | ~40% |
+| **Full Detail** | <15 turns | No compression | 100% |
+
+### When to Apply
+- Session exceeds 30 turns
+- Context window pressure detected (tool responses getting truncated)
+- After any `/compact` command
+
+### How to Apply (Manual)
+1. Identify turn count in current session
+2. For turns older than 30: summarize into a single "Session context so far" block
+3. For turns 15-30: keep decisions and outcomes, drop tool output and exploration
+4. Keep last 15 turns at full detail
+5. Always preserve: owner corrections, final decisions, error causes
+
+### What Never Gets Compressed
+- Owner corrections and preferences
+- Permission decisions (approved/denied actions)
+- Error root causes and fixes applied
+- Active task state and pending items
+
+### Gap vs. Claude Code
+Claude Code does this in the harness layer (code, not prompt). We currently rely on manual `/compact` and prompt-level instructions. Future improvement: move compaction logic into OpenClaw's session management layer so it runs automatically without consuming agent tokens.
 
 ## Usage Trigger
 - Trigger manually: "Run memory tiering" or when MEMORY.md >200 lines

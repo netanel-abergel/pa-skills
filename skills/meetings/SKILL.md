@@ -1,6 +1,11 @@
 ---
 name: meetings
-description: "All-in-one meetings skill. Section 1: Schedule a meeting by coordinating with another PA, finding free slots, and sending a calendar invite. Section 2: Paste meeting notes or transcript → get summary, action items with owners and deadlines."
+description: |-
+  Schedule meetings, parse meeting notes, extract action items. Three distinct intents covered.
+  Invoke when user mentions a specific meeting (past or future) by name or context.
+  NOT for general calendar checks (use direct calendar.py), NOT for time-zone math.
+  Triggers: "schedule with X", "minutes of the X meeting", "action items from yesterday's meeting",
+  "prep me for meeting with X".
 ---
 
 # Meetings Skill

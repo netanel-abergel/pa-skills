@@ -1,6 +1,10 @@
 ---
 name: spec-lite
-description: "Lightweight task contract for non-trivial work. Use when a request will take more than 10-15 minutes, has multiple steps, affects external delivery, or needs an explicit definition of done. Turns a vague ask into a mini spec: goal, constraints, acceptance criteria, verification, and done gate."
+description: |-
+  Write a 5-part mini spec (goal, constraints, acceptance criteria, verification, done gate) before
+  starting any multi-step, externally-delivered, or risky task.
+  Triggers when: a request has 3+ steps, touches external delivery, or is easy to declare done too early.
+  NOT for: single lookups, one-line edits, routine acks, or simple factual answers.
 ---
 
 # Spec Lite

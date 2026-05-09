@@ -1,392 +1,213 @@
 ---
 name: calendar-setup
-description: "Step-by-step wizard for connecting an owner's Google Calendar to their OpenClaw PA agent, including granting write permissions. Use when: setting up calendar access for the first time, troubleshooting calendar connection issues, fixing read-only calendar access, re-authenticating after permission errors, or handling multiple calendar accounts (work + personal). Works with any LLM model."
+description: "Step-by-step setup and troubleshooting for connecting an owner's Google Calendar to an OpenClaw agent with read and write access. Use when: setting up calendar access for the first time, fixing read-only access, re-authenticating a broken Google connection, explaining the difference between the owner's Google account and the agent's Google account, how an OpenClaw agent accesses Gmail or Google Workspace, where credentials are stored, how to use the agent inbox, how to give the agent write access to the owner's calendar, or guiding another agent or user through the email or calendar setup model."
 ---
 
-# Calendar Setup Skill
+# Calendar Setup
 
-## Minimum Model
-Any model that can follow numbered steps.
+Use this skill when calendar access needs to be established or repaired.
 
----
+## Core model
 
-## Key Concept
+Treat these as separate identities:
+- **Owner account**: the human's Google account and calendar
+- **Agent account**: the PA's own Google account
 
-Two accounts are involved:
-- **Agent email** — the PA's own Google account (e.g. `agent@agentdomain.com`)
-- **Owner email** — the human's Google account (e.g. `owner@company.com`)
+The agent does not get calendar access automatically. The owner must share access, and the agent must authenticate the relevant Google account in `gog`.
 
-The agent needs access to the **owner's** calendar. These are separate Google accounts. The OpenClaw dashboard "calendar connected" status reflects the *agent's own* calendar — not the owner's. Verify write access explicitly.
+## Standard setup
 
----
+### 1. Owner shares the calendar
 
-## Step 1 — Owner Shares Calendar
+The owner should do this in Google Calendar:
+1. Open `calendar.google.com`
+2. Open the primary calendar's **Settings and sharing**
+3. Under **Share with specific people**, add the agent email
+4. Grant **Make changes to events**
 
-The **owner** does this in Google Calendar (not the agent):
+If external sharing is blocked, the owner's Google Workspace admin has to allow it.
 
-1. Open [calendar.google.com](https://calendar.google.com) as the **owner**
-2. Find the primary calendar in the left sidebar (usually their name)
-3. Click the three-dot menu → **Settings and sharing**
-4. Under **Share with specific people** → click **+ Add people**
-5. Enter the **agent email**
-6. Set permission to **"Make changes to events"** — not "See all event details" (that is read-only)
-7. Click **Send**
-
-✅ Done. The agent receives an email confirmation — no action needed from the agent side yet.
-
-**If owner can't find the calendar:** Scroll down in the sidebar to "Other calendars".
-
-**If sharing is blocked:** The owner's organization may restrict external sharing. They need to ask their IT admin to allow it.
-
----
-
-## Step 2 — Agent Authenticates
-
-The **agent** runs:
+### 2. Authenticate with `gog`
 
 ```bash
-# Add the owner's account to gog
 gog auth add owner@company.com --services gmail,calendar,drive,contacts
-
-# Verify it was added
 gog auth list
 ```
 
-Expected output of `gog auth list`:
-```
-owner@company.com  [gmail, calendar, drive, contacts]
-```
+Use the actual owner email. If a stale auth entry exists:
 
-If re-authenticating after a permission change or expired token:
 ```bash
 gog auth remove owner@company.com
 gog auth add owner@company.com --services gmail,calendar,drive,contacts
 ```
 
-**If `gog` is not found:** Check PATH or reinstall via your OpenClaw distribution.
-
-**If OAuth fails with "access blocked":** Owner must allow access in Google Account → Security → Third-party apps.
-
----
-
-## Step 3 — Test Write Access
+### 3. Verify write access
 
 ```bash
-# Generate timestamps (works on Linux and macOS)
-START=$(date -u -d '+1 hour' +%Y-%m-%dT%H:%M:%SZ 2>/dev/null \
-  || date -u -v+1H +%Y-%m-%dT%H:%M:%SZ)
-END=$(date -u -d '+2 hours' +%Y-%m-%dT%H:%M:%SZ 2>/dev/null \
-  || date -u -v+2H +%Y-%m-%dT%H:%M:%SZ)
+START=$(date -u -d '+1 hour' +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v+1H +%Y-%m-%dT%H:%M:%SZ)
+END=$(date -u -d '+2 hours' +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v+2H +%Y-%m-%dT%H:%M:%SZ)
 
-# Create a test event in the owner's calendar
 GOG_ACCOUNT=owner@company.com gog calendar create primary \
-  --summary "PA Setup Test — delete me" \
+  --summary "PA setup test, delete me" \
   --start "$START" \
   --end "$END"
 ```
 
-Check the owner's Google Calendar. The test event should appear within 30 seconds.
+Then confirm the event appears in the owner's calendar and delete it.
 
-Delete it after verifying:
-```bash
-# Use EVENT_ID from the output of the create command above
-GOG_ACCOUNT=owner@company.com gog calendar delete primary EVENT_ID
-```
+## Troubleshooting order
 
----
+Work in this order:
+1. Confirm whether the problem is about the owner account or the agent account.
+2. Run `gog auth list` and confirm the needed account exists.
+3. Confirm the shared calendar permission is **Make changes to events**.
+4. Use `GOG_ACCOUNT=owner@company.com` explicitly in commands.
+5. Retry after `gog auth remove` + `gog auth add` if auth is stale.
 
-## Common Issues and Fixes
+## Common failures
 
-### Dashboard shows "connected" but agent can't write
+### Dashboard says connected, but writes fail
+The dashboard may reflect the agent's own Google connection, not the owner's calendar permission. Re-check sharing and `GOG_ACCOUNT`.
 
-**Cause:** Dashboard reflects the agent's own calendar, not the owner's.
+### Insufficient permissions
+The calendar was shared read-only. Re-share with **Make changes to events**.
 
-**Fix:**
-1. Confirm owner shared their calendar with the agent email (Step 1)
-2. Confirm agent ran `gog auth add` for the owner's account (Step 2)
-3. Always use `GOG_ACCOUNT=owner@company.com` in all commands
+### No browser or interactive auth is unavailable
+Use an already-provisioned `gog` account if one exists. If no valid Google auth is available on the host, stop and report that manual re-authentication is required.
 
----
-
-### "Insufficient permissions" error
-
-**Cause:** Calendar was shared with read-only permission.
-
-**Fix:** Owner goes back to Step 1 and changes the permission to "Make changes to events".
-
----
-
-### "Token expired" or authentication failure
+### Multiple calendars
+Authenticate each account separately and use the specific calendar ID from:
 
 ```bash
-gog auth remove owner@company.com
-gog auth add owner@company.com --services gmail,calendar,drive,contacts
-```
-
-**Alternative — use refresh token directly (no browser needed):**
-
-Access tokens expire after ~1 hour. If the PA is in a new session and gets 401/auth errors, use the refresh token to get a fresh access token without re-authenticating:
-
-```python
-import json, requests
-
-creds = json.load(open('/opt/ocana/openclaw/.gog/credentials.json'))
-acc = creds['accounts']['owner']  # or 'agent' — whichever account
-
-resp = requests.post('https://oauth2.googleapis.com/token', data={
-    'client_id': acc['client_id'],
-    'client_secret': acc['client_secret'],
-    'refresh_token': acc['refresh_token'],
-    'grant_type': 'refresh_token'
-})
-access_token = resp.json()['access_token']
-# access_token is valid for ~1 hour — use immediately
-```
-
-**When to use this:**
-- New session started and gog CLI returns auth errors
-- No browser available for interactive re-auth
-- PA is running in automated/cron context
-
-**Key rule:** Refresh tokens don't expire (unless revoked). Access tokens do (~1h). Always use refresh_token → access_token flow when running in background sessions.
-
----
-
-### Multiple calendars (work + personal)
-
-```bash
-# Add both accounts
-gog auth add work@company.com --services calendar
-gog auth add personal@gmail.com --services calendar
-
-# See what calendars each account has
-GOG_ACCOUNT=work@company.com gog calendar list
-GOG_ACCOUNT=personal@gmail.com gog calendar list
-
-# Use the specific calendar ID (from list output) instead of "primary"
-GOG_ACCOUNT=work@company.com gog calendar create CALENDAR_ID \
-  --summary "Meeting" \
-  --start "2026-04-02T10:00:00+00:00" \
-  --end "2026-04-02T11:00:00+00:00"
-```
-
----
-
-### macOS date command
-
-```bash
-# Linux: use -d
-date -u -d '+1 hour' +%Y-%m-%dT%H:%M:%SZ
-
-# macOS: use -v
-date -u -v+1H +%Y-%m-%dT%H:%M:%SZ
-```
-
----
-
-## Useful Commands
-
-```bash
-# List all authenticated accounts
-gog auth list
-
-# List owner's calendars
 GOG_ACCOUNT=owner@company.com gog calendar list
-
-# List events (next 7 days)
-GOG_ACCOUNT=owner@company.com gog calendar events primary \
-  --from $(date -u +%Y-%m-%dT%H:%M:%SZ) \
-  --to $(date -u -d '+7 days' +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v+7d +%Y-%m-%dT%H:%M:%SZ)
-
-# Create event with attendee
-GOG_ACCOUNT=owner@company.com gog calendar create primary \
-  --summary "Meeting title" \
-  --start "2026-04-02T10:00:00+00:00" \
-  --end "2026-04-02T11:00:00+00:00" \
-  --attendees "attendee@company.com"
-
-# Delete event
-GOG_ACCOUNT=owner@company.com gog calendar delete primary EVENT_ID
-
-# Remove authenticated account
-gog auth remove owner@company.com
 ```
+
+## Verification checklist
+
+- [ ] Owner shared the correct calendar with the agent email
+- [ ] Permission is `Make changes to events`
+- [ ] `gog auth list` shows the required account
+- [ ] Commands use explicit `GOG_ACCOUNT=...`
+- [ ] A test event can be created and deleted
+
+## Notes
+
+- Do not print OAuth secrets or credential file contents in chat.
+- Prefer the shortest path that restores working read/write calendar access.
+- If the issue is really about Gmail or Drive access, switch to the `gog` skill after clarifying the exact service.
 
 ---
 
-## Direct API — Preferred Method (no browser needed)
+## Email Model Appendix
 
-**When to use:** gog CLI auth is broken/expired, no browser on server, or running in automated context.
+*(Absorbed from `openclaw-email-orientation` on 2026-05-09.)*
 
-**Helper script:** `scripts/gog-token.sh` — generates a fresh access token from stored credentials.
+### Minimum Model
+Any model. This appendix is explanation and troubleshooting only — no complex reasoning needed.
 
-```bash
-# Get token and use immediately
-source scripts/gog-token.sh owner
+### The Core Concept
 
-# Use $GOG_ACCESS_TOKEN directly in API calls:
-curl -s "https://www.googleapis.com/calendar/v3/calendars/primary/events?singleEvents=true&orderBy=startTime&timeMin=2026-04-13T00:00:00Z&timeMax=2026-04-13T23:59:59Z" \
-  -H "Authorization: Bearer $GOG_ACCESS_TOKEN"
-```
-
-Or in Python:
-```python
-import json, requests
-
-creds = json.load(open('/opt/ocana/openclaw/.gog/credentials.json'))
-acc = creds['accounts']['owner']
-
-resp = requests.post('https://oauth2.googleapis.com/token', data={
-    'client_id': acc['client_id'],
-    'client_secret': acc['client_secret'],
-    'refresh_token': acc['refresh_token'],
-    'grant_type': 'refresh_token'
-})
-access_token = resp.json()['access_token']
-
-# Then call any Google API:
-events = requests.get(
-    'https://www.googleapis.com/calendar/v3/calendars/primary/events',
-    params={'singleEvents': 'true', 'orderBy': 'startTime',
-            'timeMin': '2026-04-13T00:00:00Z', 'timeMax': '2026-04-13T23:59:59Z'},
-    headers={'Authorization': f'Bearer {access_token}'}
-).json().get('items', [])
-```
-
-**Key facts (verified in production, April 2026):**
-- Refresh tokens don't expire unless revoked — access tokens expire after ~1h
-- `gog auth status` may show `token_valid: false` but refresh still works
-- `GOG_ACCOUNT=owner` with `gog` CLI may fail with 401 even when refresh token is valid — use direct API call instead
-- Always use `/opt/ocana/openclaw/.gog/credentials.json` account `owner` as source of truth
-- `gog auth login` is broken on this host (no browser) — never suggest it
-
----
-
-## Direct API Fallback (when gog CLI fails)
-
-When `gog auth login` or `gog auth add` fail (e.g. no browser access on a server), use the credentials file directly:
-
-**Step 1 — Find the credentials file:**
-```
-/opt/ocana/openclaw/.gog/credentials.json
-```
-Look for account `owner` — it contains `client_id`, `client_secret`, and `refresh_token`.
-
-**Step 2 — Get an access token:**
-```python
-import json, requests
-
-d = json.load(open('/opt/ocana/openclaw/.gog/credentials.json'))
-owner = d['accounts']['owner']
-
-resp = requests.post('https://oauth2.googleapis.com/token', data={
-    'client_id': owner['client_id'],
-    'client_secret': owner['client_secret'],
-    'refresh_token': owner['refresh_token'],
-    'grant_type': 'refresh_token'
-})
-access_token = resp.json()['access_token']
-```
-
-**Step 3 — Call Calendar API directly:**
-```python
-cal_resp = requests.get(
-    'https://www.googleapis.com/calendar/v3/calendars/owner%40company.com/events',
-    params={
-        'timeMin': '2026-04-05T10:00:00Z',
-        'timeMax': '2026-04-05T14:00:00Z',
-        'singleEvents': 'true',
-        'orderBy': 'startTime'
-    },
-    headers={'Authorization': f'Bearer {access_token}'}
-)
-events = cal_resp.json().get('items', [])
-```
-
-**Key insight (learned in production, April 2026):**
-- `/root/.config/gws/credentials.json` — gog default path, token often expires
-- `/opt/ocana/openclaw/gcp-adc.json` — gcloud CLI token, no calendar scope
-- `/opt/ocana/openclaw/.gog/credentials.json` account `owner` — always try this first
-- Never declare blocked before checking all credential files
-
----
-
-## Verification Checklist
-
-- [ ] Owner shared calendar with agent email
-- [ ] Permission is "Make changes to events" (not read-only)
-- [ ] Agent ran `gog auth add` for owner's account
-- [ ] `gog auth list` shows owner's account with calendar service
-- [ ] Test event created successfully in owner's calendar
-- [ ] Test event deleted after verification
-- [ ] All calendar commands use `GOG_ACCOUNT=owner@company.com`
-
----
-
-## Cost Tips
-
-- **Cheap:** This is a one-time setup — very low ongoing cost
-- **Small model OK:** All steps are procedural — any model can follow them
-- **Avoid:** Don't re-authenticate repeatedly — tokens last a long time if not revoked
-- **Batch:** Add all needed services in one `gog auth add` call (gmail,calendar,drive,contacts) instead of separate calls
-
----
-
-## Email & Workspace Orientation (Merged from openclaw-email-orientation skill)
-
-### The Core Concept: Two Separate Accounts
+There are two separate accounts:
 
 | | Account |
 |---|---|
 | **Owner** | The human's Google account (e.g. `owner@company.com`) |
 | **Agent** | The PA's own Google account (e.g. `agent@agentdomain.com`) |
 
-**These are separate.** Having an agent email does NOT automatically give access to the owner's email or calendar. Owner must explicitly share, and agent must explicitly authenticate.
+These are separate. Having an agent email does NOT automatically give access to the owner's email or calendar. To access the owner's email/calendar: (1) owner must share access with the agent email, and (2) agent must authenticate using `gog`.
 
-### Key Files
+### Key Paths and Files
 
 | File | Purpose |
 |---|---|
 | `~/.openclaw/.gog/credentials.json` | gog OAuth client credentials |
 | `~/.openclaw/agents/main/agent/auth-profiles.json` | OpenClaw auth profiles |
-| `skills/gog/SKILL.md` | gog usage reference |
+| `~/.openclaw/workspace/skills/gog/SKILL.md` | gog usage reference |
 
-**Security:** Never print the contents of these files in chat. Path is fine; content is not.
+**Security rule:** Never show the contents of these files in chat. Mentioning the path is fine; printing the content is not.
 
-### Using gog
+### Common gog Commands
 
 ```bash
-# One-time: load OAuth credentials
+# One-time setup: load OAuth credentials
 gog auth credentials /path/to/client_secret.json
 
-# Add an owner account (opens browser for OAuth)
+# Add an account (opens browser for OAuth flow)
 gog auth add owner@company.com --services gmail,calendar,drive,contacts,sheets,docs
 
-# Verify
+# Verify the account was added
 gog auth list
 
-# Always use GOG_ACCOUNT= in all commands
+# Use the account in commands (always include GOG_ACCOUNT=...)
 GOG_ACCOUNT=owner@company.com gog gmail search 'is:unread' --max 10
-GOG_ACCOUNT=owner@company.com gog calendar events primary \
-  --from "2026-04-01T09:00:00Z" --to "2026-04-01T18:00:00Z"
+
+# Search email
+GOG_ACCOUNT=owner@company.com gog gmail search 'newer_than:7d' --max 10
+
+# Send email
 GOG_ACCOUNT=owner@company.com gog gmail send \
-  --to "recipient@example.com" --subject "Hello" --body "Message text"
+  --to "recipient@example.com" \
+  --subject "Hello" \
+  --body "Message text"
+
+# List calendar events in a time window
+GOG_ACCOUNT=owner@company.com gog calendar events primary \
+  --from "2026-04-01T09:00:00Z" \
+  --to "2026-04-01T18:00:00Z"
+
+# Create a calendar event
+GOG_ACCOUNT=owner@company.com gog calendar create primary \
+  --summary "Meeting" \
+  --start "2026-04-02T10:00:00+00:00" \
+  --end "2026-04-02T11:00:00+00:00"
 ```
 
-### Troubleshooting Email/Calendar Access
+### Additional Troubleshooting
 
-Work through in order:
-1. **Two accounts?** — Is the question about agent email or owner email?
-2. **gog installed?** — `which gog` — if missing, check PATH
-3. **Account added?** — `gog auth list` — does owner's account appear?
-4. **Write scope?** — OAuth must include calendar write scope, not read-only
-5. **GOG_ACCOUNT set?** — All commands must include `GOG_ACCOUNT=owner@company.com`
-6. **Permission level?** — Must be "Make changes to events", not "See all event details"
-
-**"Insufficient permissions" error** → Owner re-shares calendar with write permission (Step 1 above).
-
-**"Token expired" error:**
+**If "Token expired" error:**
 ```bash
+# Remove the expired account
 gog auth remove owner@company.com
+
+# Re-add it (will open browser for re-auth)
 gog auth add owner@company.com --services gmail,calendar,drive,contacts
 ```
+
+### Response Style
+
+- Lead with the **owner vs. agent** distinction — this resolves most confusion.
+- Give commands first, explanation second.
+- When asked "where is X stored?" → give the path, do not print the file contents.
+- When asked for step-by-step → follow the Calendar Write Access section above.
+
+### Heleni-Specific: Direct API Workaround (when gog CLI auth fails on server)
+
+`gog auth login` requires a browser — doesn't work on a headless server. Use the pre-existing credentials instead:
+
+- Credentials file: `/opt/ocana/openclaw/.gog/credentials.json`
+- Accounts: `agent` (<agent-email>), `owner` (<owner-email>)
+- `~/.config/gws/credentials.json` (gog default) has a stale/broken token — ignore it
+
+```bash
+# Step 1: Refresh access token using owner credentials from .gog file
+curl -s -X POST https://oauth2.googleapis.com/token \
+  -d "client_id=<client_id_from_file>" \
+  -d "client_secret=<client_secret_from_file>" \
+  -d "refresh_token=<refresh_token_from_file>" \
+  -d "grant_type=refresh_token"
+
+# Step 2: Use access_token for direct API calls
+# List events:
+curl -s "https://www.googleapis.com/calendar/v3/calendars/netanelab%40monday.com/events?timeMin=<ISO>&timeMax=<ISO>&singleEvents=true&orderBy=startTime" \
+  -H "Authorization: Bearer $ACCESS_TOKEN"
+
+# List all calendars:
+curl -s "https://www.googleapis.com/calendar/v3/users/me/calendarList" \
+  -H "Authorization: Bearer $ACCESS_TOKEN"
+```
+
+### Cost Tips
+
+- **Very cheap:** This appendix is explanation only — minimal LLM tokens needed.
+- **Small model OK:** Any model can explain these concepts and provide commands.
+- **Avoid:** Do not re-explain the full orientation every time. Ask what specifically is confusing, then address only that.

@@ -68,19 +68,24 @@ If you say "אדווח / אשלח / I'll update" → **execute in the same turn*
 
 ## 3. Subagent Spawning
 
-**Spawn when:** task >30 seconds, many steps, could block main session, parallelism helps.
-**Stay in main session when:** task <10 seconds, needs conversation context.
+**Main session = the brain.** Keep context, decisions, and user communication in the main session.
+
+**Spawn when:** task >30 seconds, many steps, execution-heavy, could block main session, or parallelism helps.
+**Stay in main session when:** task <10 seconds, needs conversation context, needs owner-sensitive judgment, or is mostly about talking rather than doing.
 
 ```python
 sessions_spawn(
-    task="[what | inputs | output | done looks like]",
+    task="[goal | inputs | constraints | output | what done looks like]",
     mode="run", runtime="subagent", runTimeoutSeconds=300
 )
 ```
 
 **Rules:**
 - Always set `runTimeoutSeconds`
+- Brief the subagent with: goal, inputs, constraints, and definition of done
 - Wait for push-based completion — do NOT poll
+- Subagent returns results only: findings, diffs, commands, drafts
+- Main session reviews the output and decides what actually gets run or sent
 - One level only — no sub-subagents
 - Subagents cannot: rm -rf, force-push git, delete monday boards, modify SOUL.md/MEMORY.md, send WhatsApp messages
 

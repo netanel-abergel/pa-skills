@@ -649,39 +649,3 @@ Ideas for extending this skill:
 3. **Cost forecasting** — Predict monthly spend based on recent usage
 4. **Provider health monitoring** — Track API latency and failures
 5. **A/B testing** — Compare quality across different routing strategies
-
----
-
-### 7. Terse Mode for Background Work (NEW!)
-
-**Inspired by [caveman](https://github.com/JuliusBrussee/caveman)** — reduce output tokens by 50-75% on non-user-facing work.
-
-**The idea**: Crons, subagents, and internal processing don't need full sentences. Adding a terse-mode prefix to their prompts cuts output tokens dramatically without losing technical accuracy.
-
-**Terse prefix** (add to cron prompts and subagent task descriptions):
-```
-INTERNAL MODE: Respond in minimal fragments. No filler, no pleasantries, no articles. Technical substance only. Abbreviate freely.
-```
-
-**Where to apply**:
-- Cron job `payload.message` fields
-- Subagent `task` descriptions at spawn time
-- Any internal processing that doesn't produce user-facing output
-
-**Where NOT to apply**:
-- Owner DMs (keep natural language)
-- Group messages (keep professional tone)
-- External messages (hotel, contacts, etc.)
-- User-facing briefing output (the processing is terse, but the final output is clean)
-
-**Expected savings**: 50-75% output token reduction on background work. Combined with sonnet-for-crons routing, this can cut background costs by 80-90%.
-
-**Example — cron prompt without terse mode** (42 tokens output):
-```
-"Sure! Here's the morning briefing for today. I've checked the calendar and found the following meetings scheduled..."
-```
-
-**Same cron with terse mode** (12 tokens output):
-```
-"3 meetings today. 09:00 standup, 11:00 design review, 14:00 1:1 with Avi."
-```

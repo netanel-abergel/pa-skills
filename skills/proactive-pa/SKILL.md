@@ -1,11 +1,10 @@
 ---
 name: proactive-pa
 description: |-
-  Proactive Personal Assistant behavior patterns. Transforms the agent from a reactive task-follower
-  into a proactive partner that anticipates needs, surfaces insights autonomously, and continuously improves.
-  Use when setting up autonomous behaviors, heartbeat routines, cron-based proactive checks,
-  or when the agent should take initiative without being asked.
-  Triggers on: be proactive, check autonomously, proactive PA, take initiative, anticipate needs, autonomous checks.
+  Configures autonomous heartbeat and cron-based proactive routines (e.g., morning briefing setup,
+  unanswered-message scan cadence). Invoke when user is SETTING UP or MODIFYING a proactive routine,
+  not when the routine itself fires. Cron crons execute their own logic — they do NOT load this skill.
+  Triggers: "set up proactive check", "configure heartbeat", "add morning briefing", "tune cron cadence".
 ---
 
 # Proactive PA
@@ -80,7 +79,7 @@ openclaw cron add \
   --every <interval> \
   --session isolated \
   --message "<what to check and what to do if found>" \
-  --to "+972548834688" \
+  --to "<OWNER_PHONE>" \
   --channel whatsapp \
   --announce \
   --timeout-seconds 60
@@ -142,6 +141,42 @@ After completing a multi-step task (3+ tool calls, novel solution, likely to rec
 
 ### Pattern: "Silence is not neutral"
 If >8h with no contact from Netanel: consider a light check-in if there's genuinely useful info.
+
+### Pattern: "Connect the dots"
+When reading a group message or DM:
+- Check: does this relate to something from another group, DM, or calendar event?
+- Check: did someone promise to do this and not follow up?
+- Check: is there data in the DB that would help this discussion?
+If yes → surface it in one sentence with the data. Don't explain why you're surfacing it.
+
+### Pattern: "Follow up on promises"
+Track when people (including PAs) say "I'll do X" or "אשלח" or "אעדכן".
+If 24h+ passes with no update → flag to Netanel (DM) or follow up directly (PA groups).
+
+### Pattern: "DM context preload"
+When Netanel opens a DM conversation:
+- Pull last 10 messages from DB before replying
+- Check calendar for upcoming meetings with this contact
+- Check if there are pending commitments related to this person
+- Surface relevant context proactively in the first reply
+
+---
+
+## Proactivity Guardrails
+
+**Proactive ≠ verbose.** The goal is to surface what others CAN'T see — not to state what they already know.
+
+Never:
+- State the obvious ("I see you have a meeting at 10")
+- Summarize what just happened (they were there)
+- Repeat what someone said in different words
+- Add "just to confirm" or "as mentioned" filler
+- Offer unsolicited opinions on topics you have no data on
+
+Always:
+- Lead with the NEW information: the connection, the risk, the data point
+- One sentence. If it needs more, it's not proactive — it's a report.
+- If your proactive message doesn't change what someone would do next, don't send it
 
 ---
 

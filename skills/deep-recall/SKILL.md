@@ -1,11 +1,10 @@
 ---
 name: deep-recall
 description: |-
-  Mandatory deep search before answering any question about past events, conversations, decisions, 
-  people, or context. Triggers when: someone asks "did we discuss", "what happened with", 
-  "when did", "do you remember", "what did X say", or any recall/history question.
-  Also use proactively when context seems missing or when about to say "I don't know" about 
-  something that might be in history.
+  4-layer recall procedure (durable → semantic → PostgreSQL → daily notes) before claiming "no context".
+  Invoke when user explicitly asks "do you remember", "what did we discuss about X", "search history".
+  NOT a general assistant — only fires when recall is the explicit task. Drop the prior "use proactively" rule.
+  Triggers: "do you remember", "what did we discuss", "when did", "find that conversation about".
 ---
 
 # Deep Recall

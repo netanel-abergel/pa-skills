@@ -1,6 +1,6 @@
 ---
 name: monday-for-agents
-description: "Set up a monday.com account for an OpenClaw agent and work with monday.com boards, items, and updates via the GraphQL API or MCP server. Use when: creating a monday.com workspace for a PA, connecting the PA to monday.com, querying boards and items, creating or updating items, or troubleshooting monday.com API access. Covers GraphQL cookbook, column types, and MCP configuration. Works with any LLM model."
+description: "Set up a monday.com account for an OpenClaw agent and work with monday.com boards, items, and updates via the GraphQL API or MCP server. Use when: creating a monday.com workspace for a PA, connecting the PA to monday.com, querying boards and items, creating or updating items, troubleshooting monday.com API access, self-registering an agent on monday.com via HATCHA agent verification, or integrating with monday.com workflows. Covers GraphQL cookbook, column types, MCP configuration, and HATCHA self-registration. Works with any LLM model."
 metadata:
   {
     "openclaw":
@@ -8,7 +8,9 @@ metadata:
         "emoji": "📋",
         "requires":
           {
+            "bins": ["playwright"],
             "env": ["MONDAY_API_TOKEN"],
+            "skills": ["gog"],
           },
       },
   }
@@ -16,7 +18,84 @@ metadata:
 
 # monday.com for Agents
 
-One skill for everything monday.com: account setup, daily operations, GraphQL API, MCP server, and troubleshooting.
+One skill for everything monday.com: account setup, daily operations, GraphQL API, MCP server, HATCHA self-registration, and troubleshooting.
+
+---
+
+## Quick Ops Reference Appendix
+
+*(Absorbed from `monday` skill on 2026-05-09. Contains HATCHA self-registration and raw-curl quick-reference examples.)*
+
+### HATCHA Self-Registration
+
+First-time setup can be fully automated via `scripts/register.py` (requires `playwright` binary and `gog` skill for email verification):
+
+1. Navigate to the Monday.com agent signup page
+2. Solve a HATCHA challenge (see `scripts/hatcha.py` for the solver)
+3. Enter email, agent name, and password
+4. Retrieve the verification email via `gog` or `himalaya`
+5. Complete signup and extract the API token
+
+```bash
+python3 scripts/register.py \
+  --email agent@example.com \
+  --agent-name "My Agent" \
+  --password "SecureP4ss!"
+```
+
+After registration:
+```bash
+export MONDAY_API_TOKEN="your_token_here"
+```
+
+### Raw curl Quick-Reference (no helper function)
+
+Use these when the `monday_query` helper is not available (e.g. one-shot shell scripts or debugging):
+
+```bash
+# List boards
+curl -s -X POST "https://api.monday.com/graphql" \
+  -H "Authorization: $MONDAY_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -H "API-Version: 2024-10" \
+  -d '{"query": "{ boards(limit: 5) { id name } }"}' | jq
+
+# Get items from a board
+curl -s -X POST "https://api.monday.com/graphql" \
+  -H "Authorization: $MONDAY_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "{ boards(ids: [BOARD_ID]) { items_page(limit: 50) { cursor items { id name group { id title } column_values { id title text type } } } } }"}' | jq
+
+# Create an item
+curl -s -X POST "https://api.monday.com/graphql" \
+  -H "Authorization: $MONDAY_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "mutation { create_item(board_id: BOARD_ID, group_id: \"GROUP_ID\", item_name: \"New Task\") { id name } }"}' | jq
+
+# Update a column value
+curl -s -X POST "https://api.monday.com/graphql" \
+  -H "Authorization: $MONDAY_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "mutation { change_column_value(item_id: ITEM_ID, board_id: BOARD_ID, column_id: \"status\", value: \"\\\"Done\\\"\") { id } }"}' | jq
+
+# Add an update (comment) to an item
+curl -s -X POST "https://api.monday.com/graphql" \
+  -H "Authorization: $MONDAY_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "mutation { create_update(item_id: ITEM_ID, body: \"Status update: task completed.\") { id created_at } }"}' | jq
+
+# Query subitems
+curl -s -X POST "https://api.monday.com/graphql" \
+  -H "Authorization: $MONDAY_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "{ items(ids: [ITEM_ID]) { subitems { id name column_values { id text } } } }"}' | jq
+```
+
+### MCP Server (alternate endpoint)
+
+The hosted MCP server at `https://mcp.monday.com/mcp` exposes board/item/column CRUD as MCP tools using the same bearer token. See Section 3 for full MCP configuration.
+
+---
 
 ## Minimum Model
 Any model for routine operations. Use a medium model for debugging GraphQL errors.

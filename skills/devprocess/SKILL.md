@@ -1,9 +1,10 @@
 ---
 name: devprocess
 description: |-
-  Product development workflow for build tasks in this workspace. Use when building or changing code,
-  features, flows, or infrastructure that deserves planning, delegation, testing, screenshots, and
-  clean git history. Prefer this for non-trivial engineering work.
+  Structured build workflow: branch, delegate to coding agent, test, screenshot, and commit.
+  Triggers on: "$devprocess", "build this properly", "use the coding agent workflow", or any
+  feature/refactor/infrastructure change that is too large for a direct edit.
+  NOT for: one-line fixes, doc edits, prompt tweaks, or simple config changes — do those directly.
 ---
 
 # $devprocess — How We Build

@@ -1,6 +1,10 @@
 ---
 name: skill-master
-description: "Skill routing. Loaded at startup. For full skill library, decision tree, and workflows see REFERENCE.md."
+description: |-
+  Startup skill router: maps any incoming request to the correct skill using Quick Lookup table
+  and _manifest.json. Loaded automatically at session start.
+  Triggers on: every new request — this is the dispatch layer, not a user-facing skill.
+  NOT for: executing tasks directly — always routes to a domain-specific skill.
 ---
 
 # Skill Master

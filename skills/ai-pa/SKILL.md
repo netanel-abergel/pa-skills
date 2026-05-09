@@ -1,6 +1,11 @@
 ---
 name: ai-pa
-description: "AI Personal Assistant network skill for multi-agent PA coordination. Use when: contacting another PA, coordinating with peer agents, scheduling meetings between owners, broadcasting messages to PA groups, or looking up contacts from the local PA directory. Reads contact data from data/pa-directory.json in the workspace."
+description: |-
+  Route and execute inter-PA coordination tasks in the OpenClaw multi-agent PA network.
+  Triggers when: contacting another PA, passing a message between owners, broadcasting to a PA group,
+  handling group lead/silence rules, or adding a new PA to the directory.
+  NOT for: contact lookups (use contact-list skill), calendar invites (use meetings skill),
+  or billing issues (use billing-monitor skill).
 ---
 
 # AI-PA Network Skill
@@ -69,7 +74,7 @@ If no match found → ask your owner for the contact details.
 ### Schedule a Meeting
 
 ```
-1. Find the other PA's phone from pa-directory.json (use script above)
+1. Use the contact-list skill to find the other PA's phone and owner details in contact-list.md
 2. Message the PA:
    "Hey [PA Name], [your owner] wants to meet [their owner].
     Are they available [proposed time]? Or what works best?"
@@ -89,7 +94,7 @@ If no match found → ask your owner for the contact details.
 ### Broadcast to All PAs
 
 ```
-1. Find the group JID with purpose "pa_coordination" in pa-directory.json
+1. Use contact-list.md to find the PA coordination group JID
 2. Send to the group (not individual DMs)
 3. For personal follow-ups only: DM each PA individually
 ```
@@ -160,8 +165,8 @@ Use the **contact-list** skill's "Add a New PA" flow. It updates `contact-list.m
 
 | Error | Cause | Fix |
 |---|---|---|
-| `pa-directory.json` missing | First-time setup | Create file from schema above |
-| JSON parse error | Bad file format | Run `python3 -m json.tool data/pa-directory.json` |
-| PA not found | Spelling mismatch or not added | Search by partial name; add to directory |
+| Legacy `pa-directory.json` missing | Usually harmless, because `contact-list.md` is the source of truth | Ignore unless a legacy consumer explicitly requires the JSON mirror |
+| JSON parse error in legacy directory | Bad file format in an optional compatibility file | Run `python3 -m json.tool data/pa-directory.json` only if that legacy file is still in use |
+| PA not found | Spelling mismatch or not added | Search by partial name in `contact-list.md`; add the PA there |
 | gog auth error | Token expired | Re-run `gog auth add owner@company.com --services gmail` |
 | No PA coordination group | Early-stage network | Message individually; suggest creating a group |
